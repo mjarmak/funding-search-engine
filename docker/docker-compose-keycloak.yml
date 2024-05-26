@@ -1,0 +1,40 @@
+version: '3'
+services:
+
+  keycloak_db:
+    container_name: keycloak_db
+    restart: always
+    ports:
+      - 5433:5432
+    image: postgres
+    volumes:
+      - /var/data/db_keycloak/:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_DB=jenius_auth
+      - POSTGRES_USER=mjarmak
+      - POSTGRES_PASSWORD=Mj314159265!
+      - POSTGRES_MAX_CONNECTIONS=100
+
+  jenius_auth:
+    image: jeniustech/keycloak:latest
+    container_name: jenius_auth
+    restart: always
+    ports:
+      - 8180:8080
+    volumes:
+      - /etc/letsencrypt/archive/auth.iwaiter.be:/etc/ssl
+      - /home/docker_files/keycloak/theme/custom:/opt/jboss/keycloak/themes/custom
+    environment:
+      - KEYCLOAK_USER=admin
+      - KEYCLOAK_PASSWORD=Mj314159265!
+      - KEYCLOAK_FRONTEND_URL=https://auth.iwaiter.be/auth
+
+      - DB_VENDOR=postgres
+      - DB_ADDR=keycloak_db
+      - DB_DATABASE=jenius_auth
+      - DB_USER=mjarmak
+      - DB_PASSWORD=Mj314159265!
+      - DB_SCHEMA=public
+      - DB_MAX_POOL_SIZE=50
+    depends_on:
+      - keycloak_db

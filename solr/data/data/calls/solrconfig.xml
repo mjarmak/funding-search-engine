@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<config>
+  <!-- Libraries and plugins -->
+  <luceneMatchVersion>8.4.1</luceneMatchVersion>
+
+  <!-- Data Directory -->
+  <dataDir>${solr.data.dir:}</dataDir>
+
+  <!-- Request Handlers -->
+  <requestHandler name="/select" class="solr.SearchHandler">
+    <lst name="defaults">
+      <str name="echoParams">explicit</str>
+      <int name="rows">10</int>
+    </lst>
+  </requestHandler>
+
+  <requestHandler name="/update" class="solr.UpdateRequestHandler" />
+
+  <!-- Query Settings -->
+  <query>
+    <filterCache class="solr.FastLRUCache" size="512" initialSize="512" />
+    <queryResultCache class="solr.LRUCache" size="512" initialSize="512" />
+    <documentCache class="solr.LRUCache" size="512" initialSize="512" />
+  </query>
+</config>

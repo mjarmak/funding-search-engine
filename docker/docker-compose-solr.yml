@@ -1,0 +1,15 @@
+version: '3.8'
+
+services:
+  solr:
+    image: solr:latest
+    container_name: solr
+    ports:
+      - "8983:8983"
+    environment:
+      - SOLR_JAVA_MEM=-Xms512m -Xmx512m
+    volumes:
+      - /var/solr:/var/solr
+
+volumes:
+  solr_data:
