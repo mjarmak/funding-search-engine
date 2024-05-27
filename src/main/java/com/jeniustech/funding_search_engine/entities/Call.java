@@ -9,9 +9,7 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
-import java.math.BigDecimal;
 import java.sql.Timestamp;
-import java.time.LocalDateTime;
 
 @Data
 @Builder
@@ -50,5 +48,19 @@ public class Call {
 
     @Version
     private Integer version;
+
+    public CallDocument toDocument() {
+        return CallDocument.builder()
+                .id(this.id)
+                .identifier(this.identifier)
+                .title(this.title)
+                .description(this.description)
+                .actionType(this.actionType)
+                .submissionDeadlineDate(this.submissionDeadlineDate)
+                .openDate(this.openDate)
+                .budget(this.budget)
+                .projectNumber(this.projectNumber)
+                .build();
+    }
 
 }

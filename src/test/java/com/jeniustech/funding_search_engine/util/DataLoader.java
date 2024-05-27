@@ -3,30 +3,27 @@ package com.jeniustech.funding_search_engine.util;
 import com.jeniustech.funding_search_engine.entities.Call;
 import com.jeniustech.funding_search_engine.enums.ActionTypeEnum;
 import com.jeniustech.funding_search_engine.mappers.DateMapper;
+import com.jeniustech.funding_search_engine.repository.solr.CallDocumentRepository;
 import com.jeniustech.funding_search_engine.repository.CallRepository;
+import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.junit.jupiter.api.Test;
-import org.postgresql.util.PSQLException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.dao.DataIntegrityViolationException;
 
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.List;
+import java.time.Duration;
 import java.util.Optional;
-
-
-import org.apache.poi.ss.usermodel.*;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.dao.DataIntegrityViolationException;
 
 @SpringBootTest
 public class DataLoader {
 
-    @Autowired
-    CallRepository callRepository;
+    @Autowired CallRepository callRepository;
+    @Autowired CallDocumentRepository callDocumentRepository;
 
     @Test
     void loadData() {
@@ -110,8 +107,10 @@ public class DataLoader {
                     callToSave.setDescription(call.getDescription());
                     callToSave.setProjectNumber(call.getProjectNumber());
                     callRepository.save(callToSave);
+                    callDocumentRepository.save(call.toDocument(), Duration.ofMillis(100_000));
                 } else {
                     callRepository.save(call);
+                    callDocumentRepository.save(call.toDocument(), Duration.ofMillis(100_000));
                 }
 
             }
