@@ -3,8 +3,8 @@ package com.jeniustech.funding_search_engine.util;
 import com.jeniustech.funding_search_engine.entities.Call;
 import com.jeniustech.funding_search_engine.enums.ActionTypeEnum;
 import com.jeniustech.funding_search_engine.mappers.DateMapper;
-import com.jeniustech.funding_search_engine.repository.solr.CallDocumentRepository;
 import com.jeniustech.funding_search_engine.repository.CallRepository;
+import com.jeniustech.funding_search_engine.services.SolrClientService;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.junit.jupiter.api.Test;
@@ -16,14 +16,15 @@ import org.springframework.dao.DataIntegrityViolationException;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.sql.Timestamp;
-import java.time.Duration;
 import java.util.Optional;
+
+import static org.junit.jupiter.api.Assertions.fail;
 
 @SpringBootTest
 public class DataLoader {
 
     @Autowired CallRepository callRepository;
-    @Autowired CallDocumentRepository callDocumentRepository;
+    @Autowired SolrClientService solrClientService;
 
     @Test
     void loadData() {
@@ -98,24 +99,27 @@ public class DataLoader {
                 Optional<Call> existingCall = callRepository.findByIdentifier(call.getIdentifier());
                 if (existingCall.isPresent() && call.getIdentifier().equals(existingCall.get().getIdentifier())) {
                     Call callToSave = existingCall.get();
+                    callToSave.setId(existingCall.get().getId());
+                    callToSave.setIdentifier(call.getIdentifier());
                     callToSave.setTitle(call.getTitle());
+                    callToSave.setDescription(call.getDescription());
                     callToSave.setSubmissionDeadlineDate(call.getSubmissionDeadlineDate());
                     callToSave.setActionType(call.getActionType());
                     callToSave.setOpenDate(call.getOpenDate());
                     callToSave.setSubmissionDeadline2Date(call.getSubmissionDeadline2Date());
                     callToSave.setBudget(call.getBudget());
-                    callToSave.setDescription(call.getDescription());
                     callToSave.setProjectNumber(call.getProjectNumber());
                     callRepository.save(callToSave);
-                    callDocumentRepository.save(call.toDocument(), Duration.ofMillis(100_000));
+                    solrClientService.add(callToSave.toSolrDocument(), 100_000);
                 } else {
-                    callRepository.save(call);
-                    callDocumentRepository.save(call.toDocument(), Duration.ofMillis(100_000));
+                    Call savedCall = callRepository.save(call);
+                    solrClientService.add(savedCall.toSolrDocument(), 100_000);
                 }
 
             }
         } catch (IOException | DataIntegrityViolationException e) {
             e.printStackTrace();
+            fail();
         }
     }
 

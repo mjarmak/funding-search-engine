@@ -4,7 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public enum ActionTypeEnum {
-    NA,
+    UNKNOWN,
     RIA,
     CSA,
     COFUND,
@@ -15,14 +15,18 @@ public enum ActionTypeEnum {
 
     public static ActionTypeEnum of(String actionType) {
         if (actionType == null) {
-            return NA;
+            return UNKNOWN;
         }
         try {
             return ActionTypeEnum.valueOf(actionType);
         } catch (IllegalArgumentException e) {
             log.error("Invalid action type: {}", actionType);
-            return NA;
+            return UNKNOWN;
         }
+    }
+
+    public String getName() {
+        return this.name();
     }
 }
 

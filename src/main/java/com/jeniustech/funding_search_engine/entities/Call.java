@@ -6,10 +6,14 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.apache.solr.common.SolrInputDocument;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.sql.Timestamp;
+import java.util.Objects;
+
+import static com.jeniustech.funding_search_engine.constants.Constants.displayDescriptionMaxLength;
 
 @Data
 @Builder
@@ -49,18 +53,23 @@ public class Call {
     @Version
     private Integer version;
 
-    public CallDocument toDocument() {
-        return CallDocument.builder()
-                .id(this.id)
-                .identifier(this.identifier)
-                .title(this.title)
-                .description(this.description)
-                .actionType(this.actionType)
-                .submissionDeadlineDate(this.submissionDeadlineDate)
-                .openDate(this.openDate)
-                .budget(this.budget)
-                .projectNumber(this.projectNumber)
-                .build();
+    public SolrInputDocument toSolrDocument() {
+        SolrInputDocument document = new SolrInputDocument();
+        document.addField("id", this.id);
+        document.addField("identifier", this.identifier);
+        document.addField("title", this.title);
+        document.addField("description_display", this.description.substring(0, Math.min(this.description.length(), displayDescriptionMaxLength)));
+        document.addField("description", this.description);
+        document.addField("action_type", this.getActionTypeName());
+        document.addField("submission_deadline_date", this.submissionDeadlineDate);
+        document.addField("open_date", this.openDate);
+        document.addField("budget", 10F);
+        document.addField("project_number", this.projectNumber);
+        return document;
+    }
+
+    private String getActionTypeName() {
+        return Objects.requireNonNullElse(this.actionType, ActionTypeEnum.UNKNOWN).getName();
     }
 
 }

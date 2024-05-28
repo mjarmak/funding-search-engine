@@ -8,17 +8,27 @@
   <field name="id" type="tlong" indexed="true" stored="true" required="true" multiValued="false"/>
   <field name="identifier" type="text_en_splitting" indexed="true" stored="true"/>
   <field name="title" type="text_en_splitting" indexed="true" stored="true"/>
-  <field name="description" type="text_en_splitting" indexed="true" stored="true"/>
+  <field name="description_display" type="text_en_splitting" indexed="false" stored="true"/>
+  <field name="description" type="text_en_splitting" indexed="true" stored="false"/>
   <field name="action_type" type="string" indexed="true" stored="true"/>
   <field name="submission_deadline_date" type="tdate" indexed="true" stored="true"/>
   <field name="open_date" type="tdate" indexed="true" stored="true"/>
   <field name="budget" type="tfloat" indexed="true" stored="true"/>
   <field name="project_number" type="tint" indexed="true" stored="true"/>
 
+  <!-- catch all -->
+  <field name="text" type="text_en_splitting" indexed="true" stored="false" multiValued="true"/>
+  <copyField source="identifier" dest="text"/>
+  <copyField source="title" dest="text"/>
+  <copyField source="description" dest="text"/>
+  <copyField source="action_type" dest="text"/>
+
+
+
   <fieldType name="string" class="solr.StrField" sortMissingLast="true" />
 
-    <!-- boolean type: "true" or "false" -->
-    <fieldType name="boolean" class="solr.BoolField" sortMissingLast="true"/>
+  <!-- boolean type: "true" or "false" -->
+  <fieldType name="boolean" class="solr.BoolField" sortMissingLast="true"/>
 
   <!-- sortMissingLast and sortMissingFirst attributes are optional attributes are
        currently supported on types that are sorted internally as strings

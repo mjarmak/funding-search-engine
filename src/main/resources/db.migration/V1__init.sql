@@ -1,7 +1,7 @@
 CREATE TABLE calls (
     id bigserial PRIMARY KEY,
 
-    identifier varchar(64) NOT NULL,
+    identifier varchar(64) NOT NULL UNIQUE,
     title varchar(255) NOT NULL,
     description varchar(25000),
     action_type smallint,
@@ -11,7 +11,6 @@ CREATE TABLE calls (
     budget varchar(255),
 
     project_number smallint,
-
 
     created_at timestamp DEFAULT now(),
     updated_at timestamp DEFAULT now(),
