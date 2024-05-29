@@ -3,6 +3,7 @@ package com.jeniustech.funding_search_engine.util;
 import com.jeniustech.funding_search_engine.entities.Call;
 import com.jeniustech.funding_search_engine.enums.ActionTypeEnum;
 import com.jeniustech.funding_search_engine.mappers.DateMapper;
+import com.jeniustech.funding_search_engine.mappers.SolrMapper;
 import com.jeniustech.funding_search_engine.repository.CallRepository;
 import com.jeniustech.funding_search_engine.services.SolrClientService;
 import org.apache.poi.ss.usermodel.*;
@@ -16,6 +17,8 @@ import org.springframework.dao.DataIntegrityViolationException;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.sql.Timestamp;
+import java.time.LocalDate;
+import java.util.Date;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.fail;
@@ -81,9 +84,9 @@ public class DataLoader {
                     numberOfProjects = "1";
                 }
 
-                Timestamp submissionDL = getDate(submissionDLIndex, row);
-                Timestamp submissionDL2 = getDate(submissionDL2Index, row);
-                Timestamp openDate = getDate(openDateIndex, row);
+                LocalDate submissionDL = getDate(submissionDLIndex, row);
+                LocalDate submissionDL2 = getDate(submissionDL2Index, row);
+                LocalDate openDate = getDate(openDateIndex, row);
 
                 Call call = Call.builder()
                         .identifier(row.getCell(identifierIndex).getStringCellValue())
@@ -92,7 +95,7 @@ public class DataLoader {
                         .actionType(actionType)
                         .openDate(openDate)
                         .submissionDeadline2Date(submissionDL2)
-                        .budget(budget)
+                        .budget(Call.processBudget(budget))
                         .description(row.getCell(descriptionIndex).getStringCellValue())
                         .projectNumber(Short.parseShort(numberOfProjects))
                         .build();
@@ -103,17 +106,18 @@ public class DataLoader {
                     callToSave.setIdentifier(call.getIdentifier());
                     callToSave.setTitle(call.getTitle());
                     callToSave.setDescription(call.getDescription());
+                    callToSave.setDisplayDescription(call.getDisplayDescription());
                     callToSave.setSubmissionDeadlineDate(call.getSubmissionDeadlineDate());
                     callToSave.setActionType(call.getActionType());
                     callToSave.setOpenDate(call.getOpenDate());
                     callToSave.setSubmissionDeadline2Date(call.getSubmissionDeadline2Date());
-                    callToSave.setBudget(call.getBudget());
+                    callToSave.setBudget(Call.processBudget(call.getBudget()));
                     callToSave.setProjectNumber(call.getProjectNumber());
                     callRepository.save(callToSave);
-                    solrClientService.add(callToSave.toSolrDocument(), 100_000);
+                    solrClientService.add(SolrMapper.map(callToSave), 100_000);
                 } else {
                     Call savedCall = callRepository.save(call);
-                    solrClientService.add(savedCall.toSolrDocument(), 100_000);
+                    solrClientService.add(SolrMapper.map(savedCall), 100_000);
                 }
 
             }
@@ -142,8 +146,11 @@ public class DataLoader {
         return budget;
     }
 
-    private static Timestamp getDate(int submissionDLIndex, Row row) {
-        return DateMapper.map(row.getCell(submissionDLIndex) != null ? row.getCell(submissionDLIndex).getLocalDateTimeCellValue() : null);
+    private static LocalDate getDate(int submissionDLIndex, Row row) {
+        if (row.getCell(submissionDLIndex) == null || row.getCell(submissionDLIndex).getLocalDateTimeCellValue() == null) {
+            return null;
+        }
+        return row.getCell(submissionDLIndex).getLocalDateTimeCellValue().toLocalDate();
     }
 
 }

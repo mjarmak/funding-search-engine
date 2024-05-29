@@ -6,11 +6,11 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.apache.solr.common.SolrInputDocument;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.sql.Timestamp;
+import java.time.LocalDate;
 import java.util.Objects;
 
 import static com.jeniustech.funding_search_engine.constants.Constants.displayDescriptionMaxLength;
@@ -32,12 +32,16 @@ public class Call {
 
     @Column(name = "description", length = 10240)
     private String description;
+
+    @Column(name = "description_display", length = 10240)
+    private String displayDescription;
+
     private ActionTypeEnum actionType;
-    private Timestamp submissionDeadlineDate;
+    private LocalDate submissionDeadlineDate;
 
     @Column(name = "submission_deadline2_date")
-    private Timestamp submissionDeadline2Date;
-    private Timestamp openDate;
+    private LocalDate submissionDeadline2Date;
+    private LocalDate openDate;
     private String budget;
 
     private Short projectNumber;
@@ -53,23 +57,29 @@ public class Call {
     @Version
     private Integer version;
 
-    public SolrInputDocument toSolrDocument() {
-        SolrInputDocument document = new SolrInputDocument();
-        document.addField("id", this.id);
-        document.addField("identifier", this.identifier);
-        document.addField("title", this.title);
-        document.addField("description_display", this.description.substring(0, Math.min(this.description.length(), displayDescriptionMaxLength)));
-        document.addField("description", this.description);
-        document.addField("action_type", this.getActionTypeName());
-        document.addField("submission_deadline_date", this.submissionDeadlineDate);
-        document.addField("open_date", this.openDate);
-        document.addField("budget", 10F);
-        document.addField("project_number", this.projectNumber);
-        return document;
+    public String getDisplayDescription() {
+        if (displayDescription != null) {
+            return displayDescription;
+        }
+        displayDescription = this.description.substring(0, Math.min(this.description.length(), displayDescriptionMaxLength));
+        return displayDescription;
     }
 
-    private String getActionTypeName() {
+    public String getActionTypeName() {
         return Objects.requireNonNullElse(this.actionType, ActionTypeEnum.UNKNOWN).getName();
     }
 
+    public static String processBudget(String budget) {
+        if (budget == null) {
+            return null;
+        }
+        return budget
+                .toLowerCase()
+                .replace("to", "-")
+                .replace(" ", "")
+                .replace("\n","")
+                .replace("\t","")
+                .replace(".00","")
+                .trim();
+    }
 }
