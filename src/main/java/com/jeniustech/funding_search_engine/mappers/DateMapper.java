@@ -3,6 +3,7 @@ package com.jeniustech.funding_search_engine.mappers;
 import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Date;
 
 public final class DateMapper {
 
@@ -25,6 +26,13 @@ public final class DateMapper {
             return null;
         }
         return Timestamp.valueOf(localDate.atStartOfDay());
+    }
+
+    public static LocalDate map(Date date) {
+        if (date == null) {
+            return null;
+        }
+        return new Timestamp(date.getTime()).toLocalDateTime().toLocalDate();
     }
 
 }

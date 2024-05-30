@@ -6,14 +6,11 @@ import com.jeniustech.funding_search_engine.enums.ActionTypeEnum;
 import org.apache.solr.common.SolrDocument;
 import org.apache.solr.common.SolrInputDocument;
 
-import java.sql.Timestamp;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
 public class SolrMapper {
-
-
     public static final String ID = "id";
     public static final String IDENTIFIER = "identifier";
     public static final String TITLE = "title";
@@ -48,8 +45,8 @@ public class SolrMapper {
                 .description((String) solrDocument.getFieldValue(DESCRIPTION))
                 .displayDescription((String) solrDocument.getFieldValue(DESCRIPTION_DISPLAY))
                 .actionType(ActionTypeEnum.valueOf((String) solrDocument.getFieldValue(ACTION_TYPE)))
-                .submissionDeadlineDate((Date) solrDocument.getFieldValue(SUBMISSION_DEADLINE_DATE))
-                .openDate((Date) solrDocument.getFieldValue(OPEN_DATE))
+                .submissionDeadlineDate(DateMapper.map((Date) solrDocument.getFieldValue(SUBMISSION_DEADLINE_DATE)))
+                .openDate(DateMapper.map((Date) solrDocument.getFieldValue(OPEN_DATE)))
                 .budget((String) solrDocument.getFieldValue(BUDGET))
                 .projectNumber(Optional.of(solrDocument.getFieldValue(PROJECT_NUMBER))
                         .map(Integer.class::cast)

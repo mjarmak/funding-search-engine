@@ -80,6 +80,7 @@ public class Call {
                 .replace("\n","")
                 .replace("\t","")
                 .replace(".00","")
+                .replace("around","")
                 .trim();
     }
 }

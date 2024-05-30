@@ -5,6 +5,7 @@ import com.jeniustech.funding_search_engine.enums.ActionTypeEnum;
 import lombok.Builder;
 import lombok.Value;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 @Builder
@@ -17,8 +18,8 @@ public class CallDTO {
     String description;
     String displayDescription;
     ActionTypeEnum actionType;
-    Date submissionDeadlineDate;
-    Date openDate;
+    LocalDate submissionDeadlineDate;
+    LocalDate openDate;
     String budget;
     Short projectNumber;
 }
