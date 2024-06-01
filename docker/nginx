@@ -1,0 +1,51 @@
+# ------------------------------------------
+# angular funding test
+# ------------------------------------------
+server {
+    listen 80;
+    server_name app-funding.jarmak.tech;
+
+    # Redirect all HTTP traffic to HTTPS
+    return 301 https://$host$request_uri;
+}
+
+server {
+    listen 443 ssl;
+    server_name app-funding.jarmak.tech;
+
+    ssl_certificate /etc/letsencrypt/live/app-funding.jarmak.tech/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/app-funding.jarmak.tech/privkey.pem;
+
+    location / {
+        root /var/app-funding/jarmak.tech;
+        index index.html;
+        try_files $uri $uri/ /inde.html;
+    }
+}
+
+# ------------------------------------------
+# backend
+# ------------------------------------------
+server {
+    listen 80;
+    server_name api-funding.jarmak.tech;
+
+    # Redirect all HTTP traffic to HTTPS
+    return 301 https://$host$request_uri;
+}
+
+server {
+    listen 443 ssl;
+    server_name api-funding.jarmak.tech;
+
+    ssl_certificate /etc/letsencrypt/live/api-funding.jarmak.tech/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/api-funding.jarmak.tech/privkey.pem;
+
+    location / {
+        proxy_pass http://77.37.87.184:8081;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+}

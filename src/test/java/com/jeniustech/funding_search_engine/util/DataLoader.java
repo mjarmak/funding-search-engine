@@ -2,7 +2,6 @@ package com.jeniustech.funding_search_engine.util;
 
 import com.jeniustech.funding_search_engine.entities.Call;
 import com.jeniustech.funding_search_engine.enums.ActionTypeEnum;
-import com.jeniustech.funding_search_engine.mappers.DateMapper;
 import com.jeniustech.funding_search_engine.mappers.SolrMapper;
 import com.jeniustech.funding_search_engine.repository.CallRepository;
 import com.jeniustech.funding_search_engine.services.SolrClientService;
@@ -16,9 +15,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.sql.Timestamp;
 import java.time.LocalDate;
-import java.util.Date;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.fail;

@@ -13,7 +13,7 @@ import static com.jeniustech.funding_search_engine.mappers.SolrMapper.SUBMISSION
 
 @RestController
 @RequiredArgsConstructor
-@CrossOrigin(origins = "http://localhost:4200")
+@CrossOrigin(origins = {"http://localhost:4200", "https://app-funding.jarmak.tech"})
 public class SearchController {
 
     private final SolrClientService solrClientService;

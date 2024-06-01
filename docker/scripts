@@ -1,0 +1,14 @@
+Run in order:
+
+docker build -t funding-search-engine:0.0.1 .
+docker tag funding-search-engine:0.0.1 jeniustech/funding-search-engine:0.0.1
+docker push jeniustech/funding-search-engine:0.0.1
+
+sudo chown 8983:8983 /var/data/data_solr/
+
+docker compose -f docker-compose-postgres.yml up -d
+docker compose -f docker-compose-solr.yml up -d
+docker compose -f docker-compose-funding-search-engine.yml up -d
+
+sudo certbot certonly --nginx -d app-funding.jarmak.tech
+sudo certbot certonly --nginx -d api-funding.jarmak.tech
