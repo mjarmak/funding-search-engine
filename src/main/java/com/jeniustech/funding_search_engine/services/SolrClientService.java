@@ -10,7 +10,6 @@ import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.impl.Http2SolrClient;
 import org.apache.solr.client.solrj.response.QueryResponse;
 import org.apache.solr.client.solrj.response.UpdateResponse;
-import org.apache.solr.common.SolrDocumentList;
 import org.apache.solr.common.SolrInputDocument;
 import org.apache.solr.common.params.CommonParams;
 import org.springframework.beans.factory.annotation.Value;
@@ -43,12 +42,13 @@ public class SolrClientService {
         }
     }
 
-    public SearchDTO<CallDTO> search(String query) {
+    public SearchDTO<CallDTO> search(String query, int pageNumber, int pageSize, String sort, String direction) {
         try {
             final SolrQuery solrQuery = new SolrQuery(
                     CommonParams.Q, query,
-//                    "sort", "identifier",
-                    "rows", "20"
+                    CommonParams.START, String.valueOf(pageNumber * pageSize),
+                    CommonParams.ROWS, String.valueOf(pageSize),
+                    CommonParams.SORT, sort + " " + direction
             );
             QueryResponse response = this.solrClient.query(solrQuery);
             return SearchDTO.<CallDTO>builder()
