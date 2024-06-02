@@ -1,5 +1,6 @@
 package com.jeniustech.funding_search_engine.services;
 
+import com.jeniustech.funding_search_engine.constants.Constants;
 import com.jeniustech.funding_search_engine.dto.CallDTO;
 import com.jeniustech.funding_search_engine.dto.SearchDTO;
 import com.jeniustech.funding_search_engine.exceptions.DocumentSaveException;
@@ -15,6 +16,9 @@ import org.apache.solr.common.params.CommonParams;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import java.util.concurrent.TimeUnit;
+
+import static com.jeniustech.funding_search_engine.constants.Constants.OPEN_DATE;
+import static com.jeniustech.funding_search_engine.constants.Constants.SUBMISSION_DEADLINE_DATE;
 
 @Service
 public class SolrClientService {
@@ -42,14 +46,25 @@ public class SolrClientService {
         }
     }
 
-    public SearchDTO<CallDTO> search(String query, int pageNumber, int pageSize, String sort, String direction) {
+    public SearchDTO<CallDTO> search(String query, int pageNumber, int pageSize) {
         try {
             final SolrQuery solrQuery = new SolrQuery(
                     CommonParams.Q, query,
                     CommonParams.START, String.valueOf(pageNumber * pageSize),
-                    CommonParams.ROWS, String.valueOf(pageSize),
-                    CommonParams.SORT, sort + " " + direction
+                    CommonParams.ROWS, String.valueOf(pageSize)
             );
+//            solrQuery.addField("is_future_opening:if(ms(NOW,open_date) > 0,1,0)");
+//            solrQuery.addField("is_currently_open:if(ms(NOW,open_date) <= 0 AND ms(submission_deadline_date,NOW) > 0,1,0)");
+
+            solrQuery.setSort("score", SolrQuery.ORDER.desc);
+//            solrQuery.addSort("is_future_opening", SolrQuery.ORDER.desc);
+//            solrQuery.addSort("is_currently_open", SolrQuery.ORDER.desc);
+
+                        // open
+            solrQuery.setSort("if(ms(NOW,"+ OPEN_DATE +") > 0, 1, 0)", SolrQuery.ORDER.asc);
+            // upcoming
+            solrQuery.setSort("sum(abs(ms(NOW,"+ OPEN_DATE+ ")),abs(ms(NOW," + SUBMISSION_DEADLINE_DATE + ")))", SolrQuery.ORDER.asc);
+
             QueryResponse response = this.solrClient.query(solrQuery);
             return SearchDTO.<CallDTO>builder()
                     .results(SolrMapper.map(response.getResults()))

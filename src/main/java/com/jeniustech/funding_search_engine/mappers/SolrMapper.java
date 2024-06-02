@@ -10,17 +10,9 @@ import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
+import static com.jeniustech.funding_search_engine.constants.Constants.*;
+
 public class SolrMapper {
-    public static final String ID = "id";
-    public static final String IDENTIFIER = "identifier";
-    public static final String TITLE = "title";
-    public static final String DESCRIPTION_DISPLAY = "description_display";
-    public static final String DESCRIPTION = "description";
-    public static final String ACTION_TYPE = "action_type";
-    public static final String SUBMISSION_DEADLINE_DATE = "submission_deadline_date";
-    public static final String OPEN_DATE = "open_date";
-    public static final String BUDGET = "budget";
-    public static final String PROJECT_NUMBER = "project_number";
 
     public static SolrInputDocument map(Call call) {
         SolrInputDocument document = new SolrInputDocument();
