@@ -11,12 +11,18 @@ public class CallMapper {
                 .identifier(call.getIdentifier())
                 .title(call.getTitle())
                 .description(call.getDescription())
-                .displayDescription(call.getDisplayDescription())
+                .destinationDetails(call.getDestinationDetails())
+                .missionDetails(call.getMissionDetails())
                 .actionType(call.getActionType())
-                .submissionDeadlineDate(call.getSubmissionDeadlineDate())
-                .openDate(call.getOpenDate())
-                .budget(call.getBudget())
+                .submissionDeadlineDate(DateMapper.map(call.getSubmissionDeadlineDate()))
+                .submissionDeadlineDate2(DateMapper.map(call.getSubmissionDeadlineDate2()))
+                .openDate(DateMapper.map(call.getOpenDate()))
+                .budget(call.getBudgetString())
                 .projectNumber(call.getProjectNumber())
+                .pathId(call.getPathId())
+                .reference(call.getReference())
+                .typeOfMGA(call.getTypeOfMGA())
+                .typeOfMGADescription(call.getTypeOfMGADescription())
                 .build();
     }
 

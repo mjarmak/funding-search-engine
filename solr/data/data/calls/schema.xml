@@ -10,7 +10,11 @@
   <field name="title" type="text_en_splitting" indexed="true" stored="true" multiValued="false"/>
   <field name="description_display" type="text_en_splitting" indexed="false" stored="true" multiValued="false"/>
   <field name="description" type="text_en_splitting" indexed="true" stored="false" multiValued="false"/>
-  <field name="action_type" type="string" indexed="true" stored="true" multiValued="false"/>
+  <field name="destination_details" type="text_en_splitting" indexed="true" stored="false" multiValued="false"/>
+  <field name="mission_details" type="text_en_splitting" indexed="true" stored="false" multiValued="false"/>
+  <field name="action_type" type="text_en_splitting" indexed="true" stored="true" multiValued="false"/>
+  <field name="path_id" type="string" indexed="false" stored="true" multiValued="false"/>
+  <field name="reference" type="string" indexed="false" stored="true" multiValued="false"/>
   <field name="submission_deadline_date" type="tdate" indexed="true" stored="true" multiValued="false"/>
   <field name="open_date" type="tdate" indexed="true" stored="true" multiValued="false"/>
   <field name="budget" type="text_general" indexed="true" stored="true" multiValued="false"/>

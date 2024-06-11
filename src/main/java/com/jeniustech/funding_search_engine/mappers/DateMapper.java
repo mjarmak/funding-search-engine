@@ -21,18 +21,11 @@ public final class DateMapper {
         return Timestamp.valueOf(localDateTime);
     }
 
-    public static Timestamp map(LocalDate localDate) {
-        if (localDate == null) {
-            return null;
-        }
-        return Timestamp.valueOf(localDate.atStartOfDay());
-    }
-
-    public static LocalDate map(Date date) {
+    public static LocalDateTime map(Date date) {
         if (date == null) {
             return null;
         }
-        return new Timestamp(date.getTime()).toLocalDateTime().toLocalDate();
+        return new Timestamp(date.getTime()).toLocalDateTime();
     }
 
 }

@@ -1,6 +1,6 @@
 package com.jeniustech.funding_search_engine.entities;
 
-import com.jeniustech.funding_search_engine.enums.ActionTypeEnum;
+import com.jeniustech.funding_search_engine.enums.SubmissionProcedureEnum;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,9 +9,9 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.sql.Timestamp;
-import java.time.LocalDate;
-import java.util.Objects;
 
 import static com.jeniustech.funding_search_engine.constants.Constants.displayDescriptionMaxLength;
 
@@ -30,22 +30,41 @@ public class Call {
     private String identifier;
     private String title;
 
-    @Column(name = "description", length = 10240)
+    @Column(length = 25000)
     private String description;
 
-    @Column(name = "description_display", length = 10240)
+    @Column(name = "description_display")
     private String displayDescription;
 
-    private ActionTypeEnum actionType;
-    private LocalDate submissionDeadlineDate;
+    @Column(length = 25000)
+    private String destinationDetails;
 
-    @Column(name = "submission_deadline2_date")
-    private LocalDate submissionDeadline2Date;
-    private LocalDate openDate;
-    private String budget;
+    @Column(length = 25000)
+    private String missionDetails;
+
+    private String actionType;
+
+    @Enumerated(EnumType.ORDINAL)
+    private SubmissionProcedureEnum submissionProcedure;
+
+    private Timestamp submissionDeadlineDate;
+    private Timestamp submissionDeadlineDate2;
+
+    private Timestamp openDate;
+
+    private BigDecimal budgetMin;
+    private BigDecimal budgetMax;
 
     private Short projectNumber;
 
+    @Column(length = 50)
+    private String pathId;
+
+    @Column(length = 150)
+    private String reference;
+
+    private String typeOfMGA;
+    private String typeOfMGADescription;
 
     @CreationTimestamp
     @Column(updatable = false)
@@ -65,22 +84,15 @@ public class Call {
         return displayDescription;
     }
 
-    public String getActionTypeName() {
-        return Objects.requireNonNullElse(this.actionType, ActionTypeEnum.UNKNOWN).getName();
-    }
-
-    public static String processBudget(String budget) {
+    // format to millions
+    public static String processBudget(BigDecimal budget) {
         if (budget == null) {
             return null;
         }
-        return budget
-                .toLowerCase()
-                .replace("to", "-")
-                .replace(" ", "")
-                .replace("\n","")
-                .replace("\t","")
-                .replace(".00","")
-                .replace("around","")
-                .trim();
+        return budget.divide(new BigDecimal(1000000), 2, RoundingMode.HALF_EVEN).toString();
+    }
+
+    public String getBudgetString() {
+        return processBudget(budgetMin) + "-" + processBudget(budgetMax) + "M";
     }
 }

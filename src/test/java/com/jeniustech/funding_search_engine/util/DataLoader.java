@@ -1,7 +1,8 @@
 package com.jeniustech.funding_search_engine.util;
 
 import com.jeniustech.funding_search_engine.entities.Call;
-import com.jeniustech.funding_search_engine.enums.ActionTypeEnum;
+import com.jeniustech.funding_search_engine.enums.SubmissionProcedureEnum;
+import com.jeniustech.funding_search_engine.mappers.DateMapper;
 import com.jeniustech.funding_search_engine.mappers.SolrMapper;
 import com.jeniustech.funding_search_engine.repository.CallRepository;
 import com.jeniustech.funding_search_engine.services.SolrClientService;
@@ -15,13 +16,32 @@ import org.springframework.dao.DataIntegrityViolationException;
 
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.time.LocalDate;
+import java.math.BigDecimal;
+import java.sql.Timestamp;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.fail;
 
 @SpringBootTest
 public class DataLoader {
+
+    public static final String IDENTIFIER = "identifier";
+    public static final String TITLE = "title";
+    public static final String ACTION_TYPE = "action_type";
+    public static final String TYPE_OF_MGA = "type_of_mga";
+    public static final String TYPE_OF_MGA_DESCRIPTION = "type_of_mga_description";
+    public static final String SUBMISSION_DL = "deadline";
+    public static final String SUBMISSION_DL2 = "deadline2";
+    public static final String SUBMISSION_PROCEDURE = "submission_procedure";
+    public static final String DATE_OPEN = "start_date";
+    public static final String BUDGET_MIN = "budget_min";
+    public static final String BUDGET_MAX = "budget_max";
+    public static final String NUMBER_OF_PROJECTS = "project_number";
+    public static final String PATH_ID = "path_id";
+    public static final String REFERENCE = "reference";
+    public static final String DESCRIPTION = "description";
+    public static final String MISSION_DETAILS = "mission_details";
+    public static final String DESTINATION_DETAILS = "destination_details";
 
     @Autowired CallRepository callRepository;
     @Autowired SolrClientService solrClientService;
@@ -37,25 +57,43 @@ public class DataLoader {
 
             // get headers
             int identifierIndex = 0;
-            int titleIndex = 1;
-            int submissionDLIndex = 2;
-            int actionTypeIndex = 3;
-            int openDateIndex = 4;
-            int submissionDL2Index = 5;
-            int budgetIndex = 6;
-            int descriptionIndex = 7;
+            int titleIndex = 0;
+            int submissionDLIndex = 0;
+            int submissionDL2Index = 0;
+            int actionTypeIndex = 0;
+            int openDateIndex = 0;
+            int budgetMinIndex = 0;
+            int budgetMaxIndex = 0;
+            int descriptionIndex = 0;
+            int destinationDetailsIndex = 0;
+            int missionDetailsIndex = 0;
+            int numberOfProjectsIndex = 0;
+            int pathIdIndex = 0;
+            int referenceIndex = 0;
+            int typeOfMGAIndex = 0;
+            int typeOfMGADescriptionIndex = 0;
+            int submissionProcedureIndex = 0;
 
             var headers = sheet.getRow(0);
             for (Cell cell : headers) {
                 switch (cell.getStringCellValue().toLowerCase().replace(" ", "_")) {
-                    case "identifier" -> identifierIndex = cell.getColumnIndex();
-                    case "title" -> titleIndex = cell.getColumnIndex();
-                    case "submission_dl" -> submissionDLIndex = cell.getColumnIndex();
-                    case "action_type" -> actionTypeIndex = cell.getColumnIndex();
-                    case "date_open" -> openDateIndex = cell.getColumnIndex();
-                    case "submission_dl2" -> submissionDL2Index = cell.getColumnIndex();
-                    case "budget" -> budgetIndex = cell.getColumnIndex();
-                    case "topic_discription" -> descriptionIndex = cell.getColumnIndex();
+                    case IDENTIFIER -> identifierIndex = cell.getColumnIndex();
+                    case TITLE -> titleIndex = cell.getColumnIndex();
+                    case SUBMISSION_DL -> submissionDLIndex = cell.getColumnIndex();
+                    case SUBMISSION_DL2 -> submissionDL2Index = cell.getColumnIndex();
+                    case ACTION_TYPE -> actionTypeIndex = cell.getColumnIndex();
+                    case DATE_OPEN -> openDateIndex = cell.getColumnIndex();
+                    case BUDGET_MIN -> budgetMinIndex = cell.getColumnIndex();
+                    case BUDGET_MAX -> budgetMaxIndex = cell.getColumnIndex();
+                    case DESCRIPTION -> descriptionIndex = cell.getColumnIndex();
+                    case NUMBER_OF_PROJECTS -> numberOfProjectsIndex = (int) cell.getNumericCellValue();
+                    case PATH_ID -> pathIdIndex = cell.getColumnIndex();
+                    case REFERENCE -> referenceIndex = cell.getColumnIndex();
+                    case DESTINATION_DETAILS -> destinationDetailsIndex = cell.getColumnIndex();
+                    case MISSION_DETAILS -> missionDetailsIndex = cell.getColumnIndex();
+                    case TYPE_OF_MGA -> typeOfMGAIndex = cell.getColumnIndex();
+                    case TYPE_OF_MGA_DESCRIPTION -> typeOfMGADescriptionIndex = cell.getColumnIndex();
+                    case SUBMISSION_PROCEDURE -> submissionProcedureIndex = cell.getColumnIndex();
                 }
             }
 
@@ -64,42 +102,38 @@ public class DataLoader {
                 if (row.getRowNum() == 0) {
                     continue; // skip headers
                 } else if (row.getCell(identifierIndex) == null || row.getCell(identifierIndex).getStringCellValue().isEmpty()) {
+                    System.out.println("Identifier is empty for row: " + row.getRowNum());
                     continue; // stop when identifier is empty
                 }
 
-                ActionTypeEnum actionType = getActionType(actionTypeIndex, row);
-
-                String budgetFullString = getBudget(budgetIndex, row);
-                String budget;
-                String numberOfProjects;
-
-                if (budgetFullString.contains("-")) {
-                    budget = budgetFullString.split("-")[0].trim();
-                    numberOfProjects = budgetFullString.split("-")[1].trim();
-                } else {
-                    budget = budgetFullString;
-                    numberOfProjects = "1";
-                }
-
-                LocalDate submissionDL = getDate(submissionDLIndex, row);
-                LocalDate submissionDL2 = getDate(submissionDL2Index, row);
-                LocalDate openDate = getDate(openDateIndex, row);
+//                if (actionType == null) {
+//                    System.out.println("Action type is null for row: " + row.getRowNum());
+//                    continue; // stop when action type is null
+//                }
 
                 Call call = Call.builder()
                         .identifier(row.getCell(identifierIndex).getStringCellValue())
                         .title(row.getCell(titleIndex).getStringCellValue())
-                        .submissionDeadlineDate(submissionDL)
-                        .actionType(actionType)
-                        .openDate(openDate)
-                        .submissionDeadline2Date(submissionDL2)
-                        .budget(Call.processBudget(budget))
                         .description(row.getCell(descriptionIndex).getStringCellValue())
-                        .projectNumber(Short.parseShort(numberOfProjects))
+                        .destinationDetails(row.getCell(destinationDetailsIndex).getStringCellValue())
+                        .missionDetails(row.getCell(missionDetailsIndex).getStringCellValue())
+                        .submissionProcedure(SubmissionProcedureEnum.of(row.getCell(submissionProcedureIndex).getStringCellValue()))
+                        .submissionDeadlineDate(getDate(submissionDLIndex, row))
+                        .submissionDeadlineDate2(getDate(submissionDL2Index, row))
+                        .actionType(row.getCell(actionTypeIndex).getStringCellValue())
+                        .openDate(getDate(openDateIndex, row))
+                        .budgetMin(BigDecimal.valueOf(row.getCell(budgetMinIndex).getNumericCellValue()))
+                        .budgetMax(BigDecimal.valueOf(row.getCell(budgetMaxIndex).getNumericCellValue()))
+                        .projectNumber(Short.parseShort(row.getCell(numberOfProjectsIndex).getStringCellValue()))
+                        .pathId(row.getCell(pathIdIndex).getStringCellValue())
+                        .reference(row.getCell(referenceIndex).getStringCellValue())
+                        .typeOfMGA(row.getCell(typeOfMGAIndex).getStringCellValue())
+                        .typeOfMGADescription(row.getCell(typeOfMGADescriptionIndex).getStringCellValue())
                         .build();
+                call.setDisplayDescription(call.getDisplayDescription());
                 Optional<Call> existingCall = callRepository.findByIdentifier(call.getIdentifier());
                 if (existingCall.isPresent() && call.getIdentifier().equals(existingCall.get().getIdentifier())) {
                     Call callToSave = existingCall.get();
-                    callToSave.setId(existingCall.get().getId());
                     callToSave.setIdentifier(call.getIdentifier());
                     callToSave.setTitle(call.getTitle());
                     callToSave.setDescription(call.getDescription());
@@ -107,9 +141,17 @@ public class DataLoader {
                     callToSave.setSubmissionDeadlineDate(call.getSubmissionDeadlineDate());
                     callToSave.setActionType(call.getActionType());
                     callToSave.setOpenDate(call.getOpenDate());
-                    callToSave.setSubmissionDeadline2Date(call.getSubmissionDeadline2Date());
-                    callToSave.setBudget(Call.processBudget(call.getBudget()));
+                    callToSave.setBudgetMin(call.getBudgetMin());
+                    callToSave.setBudgetMax(call.getBudgetMax());
                     callToSave.setProjectNumber(call.getProjectNumber());
+                    callToSave.setPathId(call.getPathId());
+                    callToSave.setReference(call.getReference());
+                    callToSave.setSubmissionProcedure(call.getSubmissionProcedure());
+                    callToSave.setDestinationDetails(call.getDestinationDetails());
+                    callToSave.setMissionDetails(call.getMissionDetails());
+                    callToSave.setTypeOfMGA(call.getTypeOfMGA());
+                    callToSave.setTypeOfMGADescription(call.getTypeOfMGADescription());
+
                     callRepository.save(callToSave);
                     solrClientService.add(SolrMapper.map(callToSave), 100_000);
                 } else {
@@ -124,12 +166,11 @@ public class DataLoader {
         }
     }
 
-    private static ActionTypeEnum getActionType(int actionTypeIndex, Row row) {
-        ActionTypeEnum actionType = null;
+    private static String getActionType(int actionTypeIndex, Row row) {
         if (row.getCell(actionTypeIndex) != null) {
-            actionType = ActionTypeEnum.of(row.getCell(actionTypeIndex).getStringCellValue());
+            return row.getCell(actionTypeIndex).getStringCellValue();
         }
-        return actionType;
+        return null;
     }
 
     private static String getBudget(int budgetIndex, Row row) {
@@ -143,11 +184,11 @@ public class DataLoader {
         return budget;
     }
 
-    private static LocalDate getDate(int submissionDLIndex, Row row) {
+    private static Timestamp getDate(int submissionDLIndex, Row row) {
         if (row.getCell(submissionDLIndex) == null || row.getCell(submissionDLIndex).getLocalDateTimeCellValue() == null) {
             return null;
         }
-        return row.getCell(submissionDLIndex).getLocalDateTimeCellValue().toLocalDate();
+        return DateMapper.map(row.getCell(submissionDLIndex).getLocalDateTimeCellValue());
     }
 
 }
