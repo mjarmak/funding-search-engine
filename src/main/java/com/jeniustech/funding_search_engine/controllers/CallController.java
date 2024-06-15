@@ -1,23 +1,45 @@
 package com.jeniustech.funding_search_engine.controllers;
 
 import com.jeniustech.funding_search_engine.dto.CallDTO;
+import com.jeniustech.funding_search_engine.mappers.UserDataMapper;
+import com.jeniustech.funding_search_engine.models.JwtModel;
 import com.jeniustech.funding_search_engine.services.CallService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.oauth2.jwt.Jwt;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
-@CrossOrigin(origins = {"http://localhost:4200", "https://app-funding.jarmak.tech"})
 public class CallController {
 
     private final CallService callService;
 
     @GetMapping("/call/{id}")
-    public CallDTO getCallById(@PathVariable Long id) {
-        return callService.getCallById(id);
+    public ResponseEntity<CallDTO> getCallById(@PathVariable Long id) {
+        return ResponseEntity.ok(callService.getCallDTOById(id));
+    }
+
+    @GetMapping("/call/{id}/favorite")
+    public ResponseEntity<Void> favoriteCall(@PathVariable Long id,
+                             @AuthenticationPrincipal Jwt jwt
+                             ) {
+        JwtModel jwtModel = UserDataMapper.map(jwt);
+        callService.favoriteCall(id, jwtModel.getUserId());
+        return ResponseEntity.noContent().build();
+    }
+
+    @DeleteMapping("/call/{id}/favorite")
+    public ResponseEntity<Void> unFavoriteCall(@PathVariable Long id,
+                               @AuthenticationPrincipal Jwt jwt
+                               ) {
+        JwtModel jwtModel = UserDataMapper.map(jwt);
+        callService.unFavoriteCall(id, jwtModel.getUserId());
+        return ResponseEntity.noContent().build();
     }
 
 }

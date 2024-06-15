@@ -5,23 +5,23 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Date;
 
-public final class DateMapper {
+public interface DateMapper {
 
-    public static LocalDateTime map(Timestamp timestamp) {
+    static LocalDateTime map(Timestamp timestamp) {
         if (timestamp == null) {
             return null;
         }
         return timestamp.toLocalDateTime();
     }
 
-    public static Timestamp map(LocalDateTime localDateTime) {
+    static Timestamp map(LocalDateTime localDateTime) {
         if (localDateTime == null) {
             return null;
         }
         return Timestamp.valueOf(localDateTime);
     }
 
-    public static LocalDateTime map(Date date) {
+    static LocalDateTime map(Date date) {
         if (date == null) {
             return null;
         }

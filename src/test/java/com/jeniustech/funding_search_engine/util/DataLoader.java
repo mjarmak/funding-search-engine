@@ -131,16 +131,16 @@ public class DataLoader {
                         .typeOfMGADescription(row.getCell(typeOfMGADescriptionIndex).getStringCellValue())
                         .build();
                 call.setDisplayDescription(call.getDisplayDescription());
-                Optional<Call> existingCall = callRepository.findByIdentifier(call.getIdentifier());
+                Optional<Call> existingCall = callRepository.findByIdentifierAndStartDateAndEndDate(call.getIdentifier(), call.getStartDate(), call.getEndDate());
                 if (existingCall.isPresent() && call.getIdentifier().equals(existingCall.get().getIdentifier())) {
                     Call callToSave = existingCall.get();
                     callToSave.setIdentifier(call.getIdentifier());
                     callToSave.setTitle(call.getTitle());
                     callToSave.setDescription(call.getDescription());
                     callToSave.setDisplayDescription(call.getDisplayDescription());
-                    callToSave.setSubmissionDeadlineDate(call.getSubmissionDeadlineDate());
+                    callToSave.setEndDate(call.getEndDate());
                     callToSave.setActionType(call.getActionType());
-                    callToSave.setOpenDate(call.getOpenDate());
+                    callToSave.setStartDate(call.getStartDate());
                     callToSave.setBudgetMin(call.getBudgetMin());
                     callToSave.setBudgetMax(call.getBudgetMax());
                     callToSave.setProjectNumber(call.getProjectNumber());

@@ -1,11 +1,13 @@
 package com.jeniustech.funding_search_engine.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.jeniustech.funding_search_engine.enums.SubmissionProcedureEnum;
+import com.jeniustech.funding_search_engine.enums.LongTextTypeEnum;
+import com.jeniustech.funding_search_engine.enums.UrlTypeEnum;
 import lombok.Builder;
 import lombok.Value;
 
 import java.time.LocalDateTime;
+import java.util.Map;
 
 @Builder
 @Value
@@ -14,20 +16,20 @@ public class CallDTO {
     Long id;
     String identifier;
     String title;
-    String description;
-    String displayDescription;
-    String actionType;
-    LocalDateTime submissionDeadlineDate;
-    LocalDateTime submissionDeadlineDate2;
-    LocalDateTime openDate;
-    String budget;
-    Short projectNumber;
-    String pathId;
-    String reference;
 
-    SubmissionProcedureEnum submissionProcedure;
-    String destinationDetails;
-    String missionDetails;
-    String typeOfMGA;
+    Map<LongTextTypeEnum, String> longTexts;
+
+    String displayDescription;
+
+    String actionType;
+    LocalDateTime endDate;
+    LocalDateTime endDate2;
+    LocalDateTime startDate;
+    String budgetMin;
+    String budgetMax;
+    Short projectNumber;
+    String urlId;
+    UrlTypeEnum urlType;
+
     String typeOfMGADescription;
 }

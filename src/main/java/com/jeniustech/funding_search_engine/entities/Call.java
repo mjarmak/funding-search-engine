@@ -1,6 +1,8 @@
 package com.jeniustech.funding_search_engine.entities;
 
+import com.jeniustech.funding_search_engine.enums.LongTextTypeEnum;
 import com.jeniustech.funding_search_engine.enums.SubmissionProcedureEnum;
+import com.jeniustech.funding_search_engine.enums.UrlTypeEnum;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -12,6 +14,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.sql.Timestamp;
+import java.util.List;
 
 import static com.jeniustech.funding_search_engine.constants.Constants.displayDescriptionMaxLength;
 
@@ -31,39 +34,33 @@ public class Call {
     private String title;
 
     @Column(length = 25000)
-    private String description;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "call")
+    private List<LongText> longTexts;
 
     @Column(name = "description_display")
     private String displayDescription;
-
-    @Column(length = 25000)
-    private String destinationDetails;
-
-    @Column(length = 25000)
-    private String missionDetails;
 
     private String actionType;
 
     @Enumerated(EnumType.ORDINAL)
     private SubmissionProcedureEnum submissionProcedure;
 
-    private Timestamp submissionDeadlineDate;
-    private Timestamp submissionDeadlineDate2;
+    private Timestamp endDate;
+    private Timestamp endDate2;
 
-    private Timestamp openDate;
+    private Timestamp startDate;
 
     private BigDecimal budgetMin;
     private BigDecimal budgetMax;
 
     private Short projectNumber;
 
-    @Column(length = 50)
-    private String pathId;
+    @Enumerated(EnumType.ORDINAL)
+    private UrlTypeEnum urlType;
 
     @Column(length = 150)
-    private String reference;
+    private String urlId;
 
-    private String typeOfMGA;
     private String typeOfMGADescription;
 
     @CreationTimestamp
@@ -80,8 +77,34 @@ public class Call {
         if (displayDescription != null) {
             return displayDescription;
         }
-        displayDescription = this.description.substring(0, Math.min(this.description.length(), displayDescriptionMaxLength));
+        String priorityDescription = this.longTexts.stream()
+                .filter(longText -> longText.getType().equals(LongTextTypeEnum.DESCRIPTION))
+                .findFirst()
+                .map(LongText::getText)
+                .orElse(
+                        this.longTexts.stream()
+                                .filter(longText -> longText.getType().equals(LongTextTypeEnum.FURTHER_INFORMATION))
+                                .findFirst()
+                                .map(LongText::getText)
+                                .orElse(
+                                        this.longTexts.stream()
+                                                .filter(longText -> longText.getType().equals(LongTextTypeEnum.BENEFICIARY_ADMINISTRATION))
+                                                .findFirst()
+                                                .map(LongText::getText)
+                                                .orElse("")
+                                )
+                );
+
+        displayDescription = priorityDescription.substring(0, Math.min(priorityDescription.length(), displayDescriptionMaxLength));
         return displayDescription;
+    }
+
+    public String getLongTextsToString() {
+        StringBuilder longTextsString = new StringBuilder();
+        for (LongText longText : longTexts) {
+            longTextsString.append(longText.getText()).append("\n");
+        }
+        return longTextsString.toString();
     }
 
     // format to millions

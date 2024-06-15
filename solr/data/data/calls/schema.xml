@@ -9,15 +9,15 @@
   <field name="identifier" type="text_en_splitting" indexed="true" stored="true" multiValued="false"/>
   <field name="title" type="text_en_splitting" indexed="true" stored="true" multiValued="false"/>
   <field name="description_display" type="text_en_splitting" indexed="false" stored="true" multiValued="false"/>
-  <field name="description" type="text_en_splitting" indexed="true" stored="false" multiValued="false"/>
-  <field name="destination_details" type="text_en_splitting" indexed="true" stored="false" multiValued="false"/>
-  <field name="mission_details" type="text_en_splitting" indexed="true" stored="false" multiValued="false"/>
+  <field name="long_text" type="text_en_splitting" indexed="true" stored="false" multiValued="false"/>
   <field name="action_type" type="text_en_splitting" indexed="true" stored="true" multiValued="false"/>
-  <field name="path_id" type="string" indexed="false" stored="true" multiValued="false"/>
-  <field name="reference" type="string" indexed="false" stored="true" multiValued="false"/>
+  <field name="url_id" type="string" indexed="false" stored="true" multiValued="false"/>
+  <field name="url_type" type="string" indexed="false" stored="true" multiValued="false"/>
   <field name="submission_deadline_date" type="tdate" indexed="true" stored="true" multiValued="false"/>
+  <field name="submission_deadline_date2" type="tdate" indexed="true" stored="true" multiValued="false"/>
   <field name="open_date" type="tdate" indexed="true" stored="true" multiValued="false"/>
-  <field name="budget" type="text_general" indexed="true" stored="true" multiValued="false"/>
+  <field name="budget_min" type="text_general" indexed="true" stored="true" multiValued="false"/>
+  <field name="budget_max" type="text_general" indexed="true" stored="true" multiValued="false"/>
   <field name="project_number" type="tint" indexed="true" stored="true" multiValued="false"/>
 
   <!-- catch all -->

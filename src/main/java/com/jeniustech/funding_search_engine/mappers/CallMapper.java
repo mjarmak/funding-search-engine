@@ -2,26 +2,28 @@ package com.jeniustech.funding_search_engine.mappers;
 
 import com.jeniustech.funding_search_engine.dto.CallDTO;
 import com.jeniustech.funding_search_engine.entities.Call;
+import com.jeniustech.funding_search_engine.entities.LongText;
 
-public class CallMapper {
+import java.util.stream.Collectors;
 
-    public static CallDTO map(Call call) {
+public interface CallMapper {
+
+    static CallDTO map(Call call) {
         return CallDTO.builder()
                 .id(call.getId())
                 .identifier(call.getIdentifier())
                 .title(call.getTitle())
-                .description(call.getDescription())
-                .destinationDetails(call.getDestinationDetails())
-                .missionDetails(call.getMissionDetails())
+                .longTexts(call.getLongTexts().stream()
+                        .collect(Collectors.toMap(LongText::getType, LongText::getText)))
                 .actionType(call.getActionType())
-                .submissionDeadlineDate(DateMapper.map(call.getSubmissionDeadlineDate()))
-                .submissionDeadlineDate2(DateMapper.map(call.getSubmissionDeadlineDate2()))
-                .openDate(DateMapper.map(call.getOpenDate()))
-                .budget(call.getBudgetString())
+                .endDate(DateMapper.map(call.getEndDate()))
+                .endDate2(DateMapper.map(call.getEndDate2()))
+                .startDate(DateMapper.map(call.getStartDate()))
+                .budgetMin(call.getBudgetMin().toString())
+                .budgetMax(call.getBudgetMax().toString())
                 .projectNumber(call.getProjectNumber())
-                .pathId(call.getPathId())
-                .reference(call.getReference())
-                .typeOfMGA(call.getTypeOfMGA())
+                .urlId(call.getUrlId())
+                .urlType(call.getUrlType())
                 .typeOfMGADescription(call.getTypeOfMGADescription())
                 .build();
     }
