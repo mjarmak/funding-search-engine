@@ -82,6 +82,17 @@ public interface UserDataMapper {
                 .build();
     }
 
+    static UserDataDTO mapToDisplayDTO(UserData userData) {
+        if (userData == null) {
+            return null;
+        }
+        return UserDataDTO.builder()
+                .firstName(userData.getFirstName())
+                .lastName(userData.getLastName())
+                .userName(userData.getUserName())
+                .build();
+    }
+
     static UserData map(UserRepresentation userRepresentation) {
         if (userRepresentation == null) {
             return null;

@@ -20,7 +20,5 @@ public interface Constants {
     String BUDGET_MIN = "budget_min";
     String BUDGET_MAX = "budget_max";
     String PROJECT_NUMBER = "project_number";
-    String URL_ID = "url_id";
-    String URL_TYPE = "url_type";
 
 }

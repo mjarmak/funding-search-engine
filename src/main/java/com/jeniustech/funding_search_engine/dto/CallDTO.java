@@ -28,8 +28,7 @@ public class CallDTO {
     String budgetMin;
     String budgetMax;
     Short projectNumber;
-    String urlId;
-    UrlTypeEnum urlType;
+    String url;
 
     String typeOfMGADescription;
 }

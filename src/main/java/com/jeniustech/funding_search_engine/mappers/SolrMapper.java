@@ -2,7 +2,6 @@ package com.jeniustech.funding_search_engine.mappers;
 
 import com.jeniustech.funding_search_engine.dto.CallDTO;
 import com.jeniustech.funding_search_engine.entities.Call;
-import com.jeniustech.funding_search_engine.enums.UrlTypeEnum;
 import org.apache.solr.common.SolrDocument;
 import org.apache.solr.common.SolrInputDocument;
 
@@ -29,8 +28,6 @@ public interface SolrMapper {
         document.addField(BUDGET_MIN, call.getBudgetMin());
         document.addField(BUDGET_MAX, call.getBudgetMax());
         document.addField(PROJECT_NUMBER, call.getProjectNumber());
-        document.addField(URL_ID, call.getUrlId());
-        document.addField(URL_TYPE, call.getUrlType());
         return document;
     }
 
@@ -49,8 +46,6 @@ public interface SolrMapper {
                         .map(Integer.class::cast)
                         .map(Integer::shortValue)
                         .orElse(null))
-                .urlId((String) solrDocument.getFieldValue(URL_ID))
-                .urlType(UrlTypeEnum.valueOf((String) solrDocument.getFieldValue(URL_TYPE)))
                 .build(
         );
     }

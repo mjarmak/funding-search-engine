@@ -9,6 +9,7 @@ import com.jeniustech.funding_search_engine.enums.CurrencyEnum;
 import com.jeniustech.funding_search_engine.enums.PaymentStatusEnum;
 import com.jeniustech.funding_search_engine.enums.SubscriptionJoinType;
 import com.jeniustech.funding_search_engine.enums.SubscriptionTypeEnum;
+import com.jeniustech.funding_search_engine.exceptions.MapperException;
 import com.jeniustech.funding_search_engine.exceptions.NotFoundItemException;
 import com.jeniustech.funding_search_engine.mappers.DateMapper;
 import com.jeniustech.funding_search_engine.mappers.UserDataMapper;
@@ -65,46 +66,43 @@ public class UserDataService {
                 .toList();
     }
 
-    public UserDataDTO addUserToSubscription(Long subscriptionId, JwtModel jwtModel, String username) {
+    public UserDataDTO addUser(Long subscriptionId, JwtModel jwtModel, UserDataDTO userDataDTO) {
         UserSubscription subscription = subscriptionRepository.findById(subscriptionId).orElseThrow(() -> new NotFoundItemException("Subscription not found"));
 
         validateUserIsAdmin(jwtModel, subscription);
 
-        UserRepresentation userRepresentation;
-        try {
-            userRepresentation = keycloak.realm(serviceRealm).users().search(username, true)
-                    .stream().findFirst().orElseThrow(NotFoundItemException::new);
+            Optional<UserData> userDataOptional = userDataRepository.findByUserName(userDataDTO.getUserName());
 
-            UserData userData = userDataRepository.findBySubjectId(userRepresentation.getId())
-                    .orElseThrow(() -> new NotFoundItemException("User not found"));
-
-            if (!userData.getMainActiveSubscription().getType().equals(SubscriptionTypeEnum.TRIAL)) {
-                throw new ForbiddenException("User already has a subscription");
+            if (userDataOptional.isPresent()) {
+                return addExistingUserToSubscription(subscription, userDataOptional.get());
+            } else {
+                return createUserAndAddToSubscription(subscription, userDataDTO);
             }
-
-            UserSubscriptionJoin userSubscriptionJoin = UserSubscriptionJoin.builder()
-                    .userData(userData)
-                    .type(SubscriptionJoinType.USER)
-                    .subscription(subscription)
-                    .build();
-
-            userSubscriptionJoinRepository.save(userSubscriptionJoin);
-
-            subscription.getUserSubscriptionJoins().add(userSubscriptionJoin);
-            subscriptionRepository.save(subscription);
-
-            return UserDataMapper.mapToDTO(userData.getId(), userRepresentation);
-
-        } catch (NotFoundItemException e) {
-            throw new NotFoundItemException("User not found");
-        }
     }
 
-    public UserDataDTO createUserAndSubscription(Long subscriptionId, JwtModel jwtModel, UserDataDTO userDataDTO) {
+    private UserDataDTO addExistingUserToSubscription(UserSubscription subscription, UserData userData) {
 
-        UserSubscription subscription = subscriptionRepository.findById(subscriptionId).orElseThrow(() -> new NotFoundItemException("Subscription not found"));
+        if (!userData.getMainActiveSubscription().getType().equals(SubscriptionTypeEnum.TRIAL)) {
+            throw new ForbiddenException("User already has a subscription");
+        }
 
-        validateUserIsAdmin(jwtModel, subscription);
+        UserSubscriptionJoin userSubscriptionJoin = UserSubscriptionJoin.builder()
+                .userData(userData)
+                .type(SubscriptionJoinType.USER)
+                .subscription(subscription)
+                .build();
+
+        userSubscriptionJoinRepository.save(userSubscriptionJoin);
+
+        subscription.getUserSubscriptionJoins().add(userSubscriptionJoin);
+        subscriptionRepository.save(subscription);
+
+        return UserDataMapper.mapToDTO(userData, false);
+    }
+
+    private UserDataDTO createUserAndAddToSubscription(UserSubscription subscription, UserDataDTO userDataDTO) {
+
+        validateUserToCreate(userDataDTO);
 
         UserRepresentation userRepresentation = UserDataMapper.map(userDataDTO);
 
@@ -131,6 +129,18 @@ public class UserDataService {
             }
         } catch (Exception e) {
             throw new InternalError("Error creating user, " + e.getMessage());
+        }
+    }
+
+    private void validateUserToCreate(UserDataDTO userDataDTO) {
+        if (
+                userDataDTO.getEmail() == null || userDataDTO.getEmail().isBlank() ||
+                        userDataDTO.getFirstName() == null || userDataDTO.getFirstName().isBlank() ||
+                        userDataDTO.getLastName() == null || userDataDTO.getLastName().isBlank() ||
+                        userDataDTO.getUserName() == null || userDataDTO.getUserName().isBlank() ||
+                        userDataDTO.getPassword() == null || userDataDTO.getPassword().isBlank()
+        ) {
+            throw new MapperException("User data is incomplete");
         }
     }
 
@@ -202,8 +212,6 @@ public class UserDataService {
 
         validateUserIsAdmin(jwtModel, subscription);
 
-        UserData userData = userDataRepository.findById(userId).orElseThrow(() -> new NotFoundItemException("User not found"));
-
         UserSubscriptionJoin userSubscriptionJoin = subscription.getUserSubscriptionJoins().stream()
                 .filter(join -> join.getUserData().getId().equals(userId))
                 .findFirst().orElseThrow(() -> new NotFoundItemException("User not found in subscription"));
@@ -211,5 +219,10 @@ public class UserDataService {
         subscription.getUserSubscriptionJoins().remove(userSubscriptionJoin);
         subscriptionRepository.save(subscription);
         userSubscriptionJoinRepository.delete(userSubscriptionJoin);
+    }
+
+    public UserDataDTO getUserDataByUsername(String username) {
+        UserData userData = userDataRepository.findByUserName(username).orElseThrow(() -> new NotFoundItemException("User not found"));
+        return UserDataMapper.mapToDisplayDTO(userData);
     }
 }

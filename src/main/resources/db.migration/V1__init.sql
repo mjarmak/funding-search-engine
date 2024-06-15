@@ -76,6 +76,7 @@ CREATE TABLE user_data (
 );
 
 CREATE INDEX user_data_subject_id_idx ON user_data(subject_id);
+CREATE INDEX user_data_user_name_idx ON user_data(user_name);
 
 CREATE TABLE user_call_join (
     id bigserial PRIMARY KEY,

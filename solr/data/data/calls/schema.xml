@@ -11,8 +11,6 @@
   <field name="description_display" type="text_en_splitting" indexed="false" stored="true" multiValued="false"/>
   <field name="long_text" type="text_en_splitting" indexed="true" stored="false" multiValued="false"/>
   <field name="action_type" type="text_en_splitting" indexed="true" stored="true" multiValued="false"/>
-  <field name="url_id" type="string" indexed="false" stored="true" multiValued="false"/>
-  <field name="url_type" type="string" indexed="false" stored="true" multiValued="false"/>
   <field name="submission_deadline_date" type="tdate" indexed="true" stored="true" multiValued="false"/>
   <field name="submission_deadline_date2" type="tdate" indexed="true" stored="true" multiValued="false"/>
   <field name="open_date" type="tdate" indexed="true" stored="true" multiValued="false"/>

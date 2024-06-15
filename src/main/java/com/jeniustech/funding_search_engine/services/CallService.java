@@ -11,7 +11,12 @@ import com.jeniustech.funding_search_engine.repository.CallRepository;
 import com.jeniustech.funding_search_engine.repository.UserCallJoinRepository;
 import com.jeniustech.funding_search_engine.repository.UserDataRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -22,25 +27,41 @@ public class CallService {
     private final UserDataRepository userDataRepository;
 
     public CallDTO getCallDTOById(Long id) {
-        return CallMapper.map(getCallById(id));
+        return CallMapper.map(getCallById(id), true);
     }
 
-    private Call getCallById(Long id) {
-        return callRepository.findById(id).orElseThrow(() -> new CallNotFoundException("Call not found"));
+    private Call getCallById(Long callId) {
+        return callRepository.findById(callId).orElseThrow(() -> new CallNotFoundException("Call not found"));
     }
 
-    public void favoriteCall(Long id, String userId) {
-        UserData userData = userDataRepository.findBySubjectId(userId).orElseThrow(() -> new CallNotFoundException("User not found"));
-        Call call = getCallById(id);
+    public void favoriteCall(Long callId, String subjectId) {
+        UserData userData = userDataRepository.findBySubjectId(subjectId).orElseThrow(() -> new CallNotFoundException("User not found"));
+        Call call = getCallById(callId);
         UserCallJoin userCallJoin = UserCallJoin.builder()
                 .userData(userData)
                 .callData(call)
                 .type(UserCallJoinTypeEnum.FAVORITE)
                 .build();
+        userCallJoinRepository.save(userCallJoin);
     }
 
-    public void unFavoriteCall(Long id, String userId) {
-        throw new UnsupportedOperationException("Not implemented yet");
+    public void unFavoriteCall(Long callId, String subjectId) {
+        UserData userData = userDataRepository.findBySubjectId(subjectId).orElseThrow(() -> new CallNotFoundException("User not found"));
+        Call call = getCallById(callId);
+        UserCallJoin userCallJoin = userCallJoinRepository.findFavoriteByCallAndUserId(call.getId(), userData.getId())
+                .orElseThrow(() -> new CallNotFoundException("Favorite not found"));
+        userCallJoinRepository.delete(userCallJoin);
+    }
+
+    public List<CallDTO> getFavoritesByUserId(String subjectId, int pageNumber, int pageSize) {
+        UserData userData = userDataRepository.findBySubjectId(subjectId).orElseThrow(() -> new CallNotFoundException("User not found"));
+
+        Pageable pageable = PageRequest.of(pageNumber, pageSize, Sort.sort(UserCallJoin.class).by(UserCallJoin::getCreatedAt).descending());
+
+        return userCallJoinRepository.findFavoritesByUserId(userData.getId(), pageable).stream()
+                .map(UserCallJoin::getCallData)
+                .map(call -> CallMapper.map(call, false))
+                .toList();
     }
 
 }

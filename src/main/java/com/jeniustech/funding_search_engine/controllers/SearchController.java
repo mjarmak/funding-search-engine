@@ -17,8 +17,8 @@ public class SearchController {
     @GetMapping("/search")
     public SearchDTO<CallDTO> search(
             @RequestParam String query,
-            @RequestParam(required = false, defaultValue = "0") int pageNumber,
-            @RequestParam(required = false, defaultValue = "20") int pageSize
+            @RequestParam(required = true, defaultValue = "0") int pageNumber,
+            @RequestParam(required = true, defaultValue = "20") int pageSize
     ) {
         return solrClientService.search(
                 query,

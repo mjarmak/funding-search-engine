@@ -3,11 +3,13 @@ package com.jeniustech.funding_search_engine.entities;
 import com.jeniustech.funding_search_engine.enums.UserCallJoinTypeEnum;
 import jakarta.persistence.*;
 import lombok.Builder;
+import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.sql.Timestamp;
 
+@Data
 @Builder
 @Entity
 @RequiredArgsConstructor

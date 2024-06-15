@@ -118,4 +118,8 @@ public class Call {
     public String getBudgetString() {
         return processBudget(budgetMin) + "-" + processBudget(budgetMax) + "M";
     }
+
+    public String getUrl() {
+        return urlType.getUrl(urlId);
+    }
 }

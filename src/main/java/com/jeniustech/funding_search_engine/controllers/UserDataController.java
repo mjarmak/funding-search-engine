@@ -14,12 +14,12 @@ import java.util.List;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/user")
+@RequestMapping()
 public class UserDataController {
 
     private final UserDataService userDataService;
 
-    @GetMapping("/data")
+    @GetMapping("user/data")
     public ResponseEntity<UserDataDTO> getUserData(
             @AuthenticationPrincipal Jwt jwt
             ) {
@@ -27,7 +27,7 @@ public class UserDataController {
         return ResponseEntity.ok(userDataService.getUserDataOrCreate(jwtModel));
     }
 
-    @GetMapping("/subscription/{subscriptionId}")
+    @GetMapping("/subscription/{subscriptionId}/users")
     public ResponseEntity<List<UserDataDTO>> getUsersBySubscriptionId(
             @PathVariable Long subscriptionId,
             @AuthenticationPrincipal Jwt jwt
@@ -43,7 +43,7 @@ public class UserDataController {
             @AuthenticationPrincipal Jwt jwt
             ) {
         JwtModel jwtModel = UserDataMapper.map(jwt);
-        return ResponseEntity.ok(userDataService.addUserToSubscription(subscriptionId, jwtModel, userDataDTO.getUserName()));
+        return ResponseEntity.ok(userDataService.addUser(subscriptionId, jwtModel, userDataDTO));
     }
 
     @DeleteMapping("/subscription/{subscriptionId}/user/{userId}")
@@ -57,15 +57,11 @@ public class UserDataController {
         return ResponseEntity.noContent().build();
     }
 
-    @PostMapping("/subscription/{subscriptionId}/user/create")
-    public ResponseEntity<UserDataDTO> createUserAndAddToSubscription(
-            @PathVariable Long subscriptionId,
-            @RequestBody UserDataDTO userDataDTO,
-            @AuthenticationPrincipal Jwt jwt
+    @GetMapping("/user/display")
+    public ResponseEntity<UserDataDTO> getUserDataByUsername(
+            @RequestParam(required = true) String username
             ) {
-        JwtModel jwtModel = UserDataMapper.map(jwt);
-        return ResponseEntity.ok(userDataService.createUserAndSubscription(subscriptionId, jwtModel, userDataDTO));
+        return ResponseEntity.ok(userDataService.getUserDataByUsername(username));
     }
-
 
 }
