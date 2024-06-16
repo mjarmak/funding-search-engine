@@ -2,15 +2,17 @@ package com.jeniustech.funding_search_engine.entities;
 
 import com.jeniustech.funding_search_engine.enums.SubscriptionJoinType;
 import jakarta.persistence.*;
-import lombok.Builder;
-import lombok.Data;
-import lombok.RequiredArgsConstructor;
+import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
+
+import java.sql.Timestamp;
 
 @Data
-@Table(name = "user_subscription_join")
 @Builder
 @Entity
-@RequiredArgsConstructor
+@NoArgsConstructor
+@AllArgsConstructor
+@Table(name = "user_subscription_join")
 public class UserSubscriptionJoin {
 
     @Id
@@ -27,6 +29,10 @@ public class UserSubscriptionJoin {
 
     @Enumerated(EnumType.ORDINAL)
     private SubscriptionJoinType type;
+
+    @CreationTimestamp
+    @Column(updatable = false)
+    private Timestamp createdAt;
 
     public boolean isAdmin() {
         return getType().equals(SubscriptionJoinType.ADMIN);

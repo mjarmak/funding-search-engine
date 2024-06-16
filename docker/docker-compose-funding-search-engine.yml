@@ -9,9 +9,22 @@ services:
     environment:
       - PORT=8080
       - FLYWAY_ENABLED=true
-      - DB_URL=jdbc:postgresql://77.37.87.184:5434/funding_prod
+      - DB_URL=jdbc:postgresql://45.133.178.241:5432/funding_prod
       - DB_USER=admin
-      - DB_PASSWORD=pwd
+      - DB_PASSWORD=nm[pv3[0%&#{!td745@#
       - DB_POOL_SIZE=50
-      - SOLR_URL=http://77.37.87.184:8983/solr
+      - SOLR_URL=http://45.133.178.241:8983/solr
       - SOLR_CORE=calls
+
+      - KEYCLOAK_CERTS_URI=https://auth.innovilyse.com/auth/realms/innovilyse/protocol/openid-connect/certs
+      - KEYCLOAK_URL=https://auth.innovilyse.com/auth
+      - KEYCLOAK_REALM=master
+      - KEYCLOAK_SERVICE_REALM=innovilyse
+      - KEYCLOAK_CLIENT_ID=admin-cli
+      - KEYCLOAK_USERNAME=admin
+      - KEYCLOAK_PASSWORD=Beqwo#@!8yrn%b89p0QW
+      - FACEBOOK_CLIENT_ID=707848977926943
+      - FACEBOOK_CLIENT_SECRET=d1c7575b85e636b0e2aee3c4526aa9fd
+      - GOOGLE_CLIENT_ID=242445727745-89ep6gf9vcts9v9bprbar2g9kc2dphbp.apps.googleusercontent.com
+      - GOOGLE_CLIENT_SECRET=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
+      - SPRING_PROFILES_ACTIVE=prod

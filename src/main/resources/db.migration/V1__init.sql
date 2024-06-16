@@ -7,7 +7,6 @@ CREATE TABLE calls (
     action_type varchar(255),
 
     description varchar(25000),
-    description_display varchar(255),
 
     mission_details varchar(25000),
     destination_details varchar(25000),
@@ -19,7 +18,7 @@ CREATE TABLE calls (
     budget_min numeric(12,2),
     budget_max numeric(12,2),
 
-    submissionProcedure smallint,
+    submission_procedure smallint,
 
     type_of_mga_description varchar(255),
 
@@ -56,9 +55,9 @@ CREATE TABLE payment (
     id bigserial PRIMARY KEY,
     subscription_id bigint NOT NULL,
     amount numeric(12,2) NOT NULL,
-    startDate timestamp NOT NULL,
-    endDate timestamp NOT NULL,
-    currency varchar(3) NOT NULL,
+    start_date timestamp NOT NULL,
+    end_date timestamp NOT NULL,
+    currency smallint NOT NULL,
     status smallint NOT NULL,
     created_at timestamp DEFAULT now(),
     updated_at timestamp DEFAULT now()
@@ -91,6 +90,7 @@ CREATE TABLE user_subscription_join (
     user_id bigint NOT NULL,
     subscription_id bigint NOT NULL,
     type smallint NOT NULL,
+    created_at timestamp DEFAULT now()
 );
 
 CREATE TABLE log_book (
@@ -100,4 +100,4 @@ CREATE TABLE log_book (
     created_at timestamp DEFAULT now()
 );
 CREATE INDEX log_book_user_id_idx ON log_book(user_id);
-CREATE INDEX log_book_action_type_idx ON log_book(action_type);
+CREATE INDEX log_book_type_idx ON log_book(type);

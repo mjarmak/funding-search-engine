@@ -10,30 +10,30 @@ services:
     volumes:
       - /var/data/db_keycloak/:/var/lib/postgresql/data
     environment:
-      - POSTGRES_DB=jenius_auth
-      - POSTGRES_USER=mjarmak
-      - POSTGRES_PASSWORD=Mj314159265!
+      - POSTGRES_DB=innovilyse_auth
+      - POSTGRES_USER=admin
+      - POSTGRES_PASSWORD=opmi4$^$&v29-04v90V43208#78N0NU
       - POSTGRES_MAX_CONNECTIONS=100
 
-  jenius_auth:
+  innovilyse_auth:
     image: jeniustech/keycloak:latest
-    container_name: jenius_auth
+    container_name: innovilyse_auth
     restart: always
     ports:
       - 8180:8080
     volumes:
-      - /etc/letsencrypt/archive/auth.iwaiter.be:/etc/ssl
+      - /etc/letsencrypt/archive/auth.innovilyse.com:/etc/ssl
       - /home/docker_files/keycloak/theme/custom:/opt/jboss/keycloak/themes/custom
     environment:
       - KEYCLOAK_USER=admin
-      - KEYCLOAK_PASSWORD=Mj314159265!
-      - KEYCLOAK_FRONTEND_URL=https://auth.iwaiter.be/auth
+      - KEYCLOAK_PASSWORD=Beqwo#@!8yrn%b89p0QW
+      - KEYCLOAK_FRONTEND_URL=https://auth.innovilyse.com/auth
 
       - DB_VENDOR=postgres
       - DB_ADDR=keycloak_db
-      - DB_DATABASE=jenius_auth
-      - DB_USER=mjarmak
-      - DB_PASSWORD=Mj314159265!
+      - DB_DATABASE=innovilyse_auth
+      - DB_USER=admin
+      - DB_PASSWORD=opmi4$^$&v29-04v90V43208#78N0NU
       - DB_SCHEMA=public
       - DB_MAX_POOL_SIZE=50
     depends_on:

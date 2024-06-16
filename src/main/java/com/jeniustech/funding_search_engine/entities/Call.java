@@ -1,6 +1,5 @@
 package com.jeniustech.funding_search_engine.entities;
 
-import com.jeniustech.funding_search_engine.enums.LongTextTypeEnum;
 import com.jeniustech.funding_search_engine.enums.SubmissionProcedureEnum;
 import com.jeniustech.funding_search_engine.enums.UrlTypeEnum;
 import jakarta.persistence.*;
@@ -15,8 +14,6 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.sql.Timestamp;
 import java.util.List;
-
-import static com.jeniustech.funding_search_engine.constants.Constants.displayDescriptionMaxLength;
 
 @Data
 @Builder
@@ -37,15 +34,14 @@ public class Call {
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "call")
     private List<LongText> longTexts;
 
-    @Column(name = "description_display")
-    private String displayDescription;
-
     private String actionType;
 
     @Enumerated(EnumType.ORDINAL)
     private SubmissionProcedureEnum submissionProcedure;
 
     private Timestamp endDate;
+
+    @Column(name = "end_date_2")
     private Timestamp endDate2;
 
     private Timestamp startDate;
@@ -61,6 +57,7 @@ public class Call {
     @Column(length = 150)
     private String urlId;
 
+    @Column(name = "type_of_mga_description", length = 255)
     private String typeOfMGADescription;
 
     @CreationTimestamp
@@ -73,31 +70,31 @@ public class Call {
     @Version
     private Integer version;
 
-    public String getDisplayDescription() {
-        if (displayDescription != null) {
-            return displayDescription;
-        }
-        String priorityDescription = this.longTexts.stream()
-                .filter(longText -> longText.getType().equals(LongTextTypeEnum.DESCRIPTION))
-                .findFirst()
-                .map(LongText::getText)
-                .orElse(
-                        this.longTexts.stream()
-                                .filter(longText -> longText.getType().equals(LongTextTypeEnum.FURTHER_INFORMATION))
-                                .findFirst()
-                                .map(LongText::getText)
-                                .orElse(
-                                        this.longTexts.stream()
-                                                .filter(longText -> longText.getType().equals(LongTextTypeEnum.BENEFICIARY_ADMINISTRATION))
-                                                .findFirst()
-                                                .map(LongText::getText)
-                                                .orElse("")
-                                )
-                );
-
-        displayDescription = priorityDescription.substring(0, Math.min(priorityDescription.length(), displayDescriptionMaxLength));
-        return displayDescription;
-    }
+//    public String getDisplayDescription() {
+//        if (displayDescription != null) {
+//            return displayDescription;
+//        }
+//        String priorityDescription = this.longTexts.stream()
+//                .filter(longText -> longText.getType().equals(LongTextTypeEnum.DESCRIPTION))
+//                .findFirst()
+//                .map(LongText::getText)
+//                .orElse(
+//                        this.longTexts.stream()
+//                                .filter(longText -> longText.getType().equals(LongTextTypeEnum.FURTHER_INFORMATION))
+//                                .findFirst()
+//                                .map(LongText::getText)
+//                                .orElse(
+//                                        this.longTexts.stream()
+//                                                .filter(longText -> longText.getType().equals(LongTextTypeEnum.BENEFICIARY_ADMINISTRATION))
+//                                                .findFirst()
+//                                                .map(LongText::getText)
+//                                                .orElse("")
+//                                )
+//                );
+//
+//        displayDescription = priorityDescription.substring(0, Math.min(priorityDescription.length(), displayDescriptionMaxLength));
+//        return displayDescription;
+//    }
 
     public String getLongTextsToString() {
         StringBuilder longTextsString = new StringBuilder();

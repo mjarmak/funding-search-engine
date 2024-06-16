@@ -11,7 +11,6 @@ public interface Constants {
     String ID = "id";
     String IDENTIFIER = "identifier";
     String TITLE = "title";
-    String DESCRIPTION_DISPLAY = "description_display";
     String LONG_TEXT = "long_text";
     String ACTION_TYPE = "action_type";
     String SUBMISSION_DEADLINE_DATE = "submission_deadline_date";

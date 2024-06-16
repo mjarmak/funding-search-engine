@@ -41,6 +41,8 @@ dependencies {
 	implementation 'org.eclipse.jetty:jetty-io:10.0.20'
 	implementation 'org.eclipse.jetty:jetty-http:10.0.20'
 
+	implementation 'org.apache.poi:poi:5.2.3'
+	implementation 'org.apache.poi:poi-ooxml:5.2.3'
 
 	implementation 'org.flywaydb:flyway-core'
 	implementation "org.flywaydb:flyway-database-postgresql"

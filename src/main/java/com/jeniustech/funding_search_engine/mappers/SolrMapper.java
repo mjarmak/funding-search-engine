@@ -19,7 +19,6 @@ public interface SolrMapper {
         document.addField(ID, call.getId());
         document.addField(IDENTIFIER, call.getIdentifier());
         document.addField(TITLE, call.getTitle());
-        document.addField(DESCRIPTION_DISPLAY, call.getDisplayDescription());
         document.addField(LONG_TEXT, call.getLongTextsToString());
         document.addField(ACTION_TYPE, call.getActionType());
         document.addField(SUBMISSION_DEADLINE_DATE, DateMapper.map(call.getEndDate()));
@@ -36,7 +35,6 @@ public interface SolrMapper {
                 .id((Long) solrDocument.getFieldValue(ID))
                 .identifier((String) solrDocument.getFieldValue(IDENTIFIER))
                 .title((String) solrDocument.getFieldValue(TITLE))
-                .displayDescription((String) solrDocument.getFieldValue(DESCRIPTION_DISPLAY))
                 .actionType((String) solrDocument.getFieldValue(ACTION_TYPE))
                 .endDate(DateMapper.map((Date) solrDocument.getFieldValue(SUBMISSION_DEADLINE_DATE)))
                 .startDate(DateMapper.map((Timestamp) solrDocument.getFieldValue(OPEN_DATE)))

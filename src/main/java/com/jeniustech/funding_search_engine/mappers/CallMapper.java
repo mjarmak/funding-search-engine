@@ -13,7 +13,6 @@ public interface CallMapper {
                 .id(call.getId())
                 .identifier(call.getIdentifier())
                 .title(call.getTitle())
-                .displayDescription(isSearch ? call.getDisplayDescription() : null)
                 .longTexts(isSearch ? null : call.getLongTexts().stream()
                         .collect(Collectors.toMap(LongText::getType, LongText::getText)))
                 .actionType(call.getActionType())

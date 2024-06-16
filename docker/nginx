@@ -1,9 +1,9 @@
 # ------------------------------------------
-# angular funding test
+# landing page
 # ------------------------------------------
 server {
     listen 80;
-    server_name app-funding.jarmak.tech;
+    server_name innovilyse.com www.innovilyse.com;
 
     # Redirect all HTTP traffic to HTTPS
     return 301 https://$host$request_uri;
@@ -11,24 +11,62 @@ server {
 
 server {
     listen 443 ssl;
-    server_name app-funding.jarmak.tech;
+    server_name innovilyse.com www.innovilyse.com;
 
-    ssl_certificate /etc/letsencrypt/live/app-funding.jarmak.tech/fullchain.pem;
-    ssl_certificate_key /etc/letsencrypt/live/app-funding.jarmak.tech/privkey.pem;
+    ssl_certificate /etc/letsencrypt/live/www.innovilyse.com/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/www.innovilyse.com/privkey.pem;
 
     location / {
-        root /var/app-funding/jarmak.tech;
+        root /var/www/innovilyse.com;
         index index.html;
-        try_files $uri $uri/ /inde.html;
+        try_files $uri $uri/ /index.html;
     }
 }
+
+
+
+
+
+
+
+# ------------------------------------------
+# keycloak
+# ------------------------------------------
+server {
+    listen 80;
+    server_name auth.innovilyse.com;
+
+    # Redirect all HTTP traffic to HTTPS
+    return 301 https://$host$request_uri;
+}
+
+server {
+    listen 443 ssl;
+    server_name auth.innovilyse.com;
+
+    ssl_certificate /etc/letsencrypt/live/auth.innovilyse.com/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/auth.innovilyse.com/privkey.pem;
+
+    location / {
+        proxy_pass http://45.133.178.241:8180;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+}
+
+
+
+
+
 
 # ------------------------------------------
 # backend
 # ------------------------------------------
 server {
     listen 80;
-    server_name api-funding.jarmak.tech;
+    server_name api.innovilyse.com;
 
     # Redirect all HTTP traffic to HTTPS
     return 301 https://$host$request_uri;
@@ -36,16 +74,46 @@ server {
 
 server {
     listen 443 ssl;
-    server_name api-funding.jarmak.tech;
+    server_name api.innovilyse.com;
 
-    ssl_certificate /etc/letsencrypt/live/api-funding.jarmak.tech/fullchain.pem;
-    ssl_certificate_key /etc/letsencrypt/live/api-funding.jarmak.tech/privkey.pem;
+    ssl_certificate /etc/letsencrypt/live/api.innovilyse.com/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/api.innovilyse.com/privkey.pem;
 
     location / {
-        proxy_pass http://77.37.87.184:8081;
+        proxy_pass http://45.133.178.241:8080;
         proxy_set_header Host $host;
         proxy_set_header X-Real-IP $remote_addr;
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
         proxy_set_header X-Forwarded-Proto $scheme;
+    }
+}
+
+
+
+
+
+
+# ------------------------------------------
+# angular funding test
+# ------------------------------------------
+server {
+    listen 80;
+    server_name app.innovilyse.com;
+
+    # Redirect all HTTP traffic to HTTPS
+    return 301 https://$host$request_uri;
+}
+
+server {
+    listen 443 ssl;
+    server_name app.innovilyse.com;
+
+    ssl_certificate /etc/letsencrypt/live/app.innovilyse.com/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/app.innovilyse.com/privkey.pem;
+
+    location / {
+        root /var/app/innovilyse.com;
+        index index.html;
+        try_files $uri $uri/ /inde.html;
     }
 }

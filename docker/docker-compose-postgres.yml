@@ -3,13 +3,13 @@ version: '3.8'
 services:
   postgres_funding:
     image: postgres
-    container_name: postgres_funding
+    container_name: postgres
     restart: always
     ports:
-      - "5434:5432"
+      - "5432:5432"
     environment:
       POSTGRES_USER: admin
-      POSTGRES_PASSWORD: pwd
+      POSTGRES_PASSWORD: nm[pv3[0%&#{!td745@#
       POSTGRES_DB: funding_prod
     volumes:
-      - /var/data/db_funding_search_engine:/var/lib/postgresql/data
+      - /var/data/db_main:/var/lib/postgresql/data

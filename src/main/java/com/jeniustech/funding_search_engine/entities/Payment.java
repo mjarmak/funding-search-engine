@@ -3,9 +3,7 @@ package com.jeniustech.funding_search_engine.entities;
 import com.jeniustech.funding_search_engine.enums.CurrencyEnum;
 import com.jeniustech.funding_search_engine.enums.PaymentStatusEnum;
 import jakarta.persistence.*;
-import lombok.Builder;
-import lombok.Data;
-import lombok.RequiredArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -15,7 +13,9 @@ import java.sql.Timestamp;
 @Data
 @Builder
 @Entity
-@RequiredArgsConstructor
+@NoArgsConstructor
+@AllArgsConstructor
+@Table(name = "payment")
 public class Payment {
 
     @Id
@@ -27,6 +27,8 @@ public class Payment {
     private UserSubscription subscription;
 
     private BigDecimal amount;
+
+    @Enumerated(EnumType.ORDINAL)
     private CurrencyEnum currency;
 
     private Timestamp startDate;

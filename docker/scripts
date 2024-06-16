@@ -6,9 +6,17 @@ docker push jeniustech/funding-search-engine:0.0.1
 
 sudo chown 8983:8983 /var/data/data_solr/
 
+docker compose -f docker-compose-portainer.yml up -d
+docker compose -f docker-compose-keycloak.yml up -d
 docker compose -f docker-compose-postgres.yml up -d
 docker compose -f docker-compose-solr.yml up -d
 docker compose -f docker-compose-funding-search-engine.yml up -d
 
-sudo certbot certonly --nginx -d app-funding.jarmak.tech
-sudo certbot certonly --nginx -d api-funding.jarmak.tech
+sudo apt install certbot python3-certbot-nginx -y
+
+sudo certbot certonly --nginx -d www.innovilyse.com
+sudo certbot certonly --nginx -d auth.innovilyse.com
+sudo certbot certonly --nginx -d app.innovilyse.com
+sudo certbot certonly --nginx -d api.innovilyse.com
+
+sudo ln -s /etc/nginx/sites-available/innovilyse.com.conf /etc/nginx/sites-enabled/

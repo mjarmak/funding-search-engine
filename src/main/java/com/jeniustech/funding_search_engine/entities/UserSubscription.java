@@ -4,9 +4,7 @@ import com.jeniustech.funding_search_engine.enums.PaymentStatusEnum;
 import com.jeniustech.funding_search_engine.enums.SubscriptionJoinType;
 import com.jeniustech.funding_search_engine.enums.SubscriptionTypeEnum;
 import jakarta.persistence.*;
-import lombok.Builder;
-import lombok.Data;
-import lombok.RequiredArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -16,10 +14,11 @@ import java.util.Comparator;
 import java.util.List;
 
 @Data
-@Table(name = "subscription")
 @Builder
 @Entity
-@RequiredArgsConstructor
+@NoArgsConstructor
+@AllArgsConstructor
+@Table(name = "subscription")
 public class UserSubscription {
 
     @Id

@@ -8,7 +8,6 @@
   <field name="id" type="tlong" indexed="true" stored="true" required="true" multiValued="false"/>
   <field name="identifier" type="text_en_splitting" indexed="true" stored="true" multiValued="false"/>
   <field name="title" type="text_en_splitting" indexed="true" stored="true" multiValued="false"/>
-  <field name="description_display" type="text_en_splitting" indexed="false" stored="true" multiValued="false"/>
   <field name="long_text" type="text_en_splitting" indexed="true" stored="false" multiValued="false"/>
   <field name="action_type" type="text_en_splitting" indexed="true" stored="true" multiValued="false"/>
   <field name="submission_deadline_date" type="tdate" indexed="true" stored="true" multiValued="false"/>

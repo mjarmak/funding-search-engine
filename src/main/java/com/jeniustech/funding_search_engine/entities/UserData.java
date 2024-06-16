@@ -3,9 +3,7 @@ package com.jeniustech.funding_search_engine.entities;
 import com.jeniustech.funding_search_engine.enums.SubscriptionTypeEnum;
 import com.jeniustech.funding_search_engine.exceptions.NoSubscriptionException;
 import jakarta.persistence.*;
-import lombok.Builder;
-import lombok.Data;
-import lombok.RequiredArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -15,7 +13,9 @@ import java.util.List;
 @Data
 @Builder
 @Entity
-@RequiredArgsConstructor
+@NoArgsConstructor
+@AllArgsConstructor
+@Table(name = "user_data")
 public class UserData {
 
     @Id
