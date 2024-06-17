@@ -13,7 +13,7 @@
         </#list>
     </#if>
     <title>${msg("loginTitle",(realm.displayName!''))}</title>
-    <link rel="icon" href="https://app.iwaiter.be/assets/icons/icon-128x128.png" />
+    <link rel="icon" href="https://app.innovilyse.com/assets/icons/icon-128x128.png" />
     <#if properties.styles?has_content>
         <#list properties.styles?split(' ') as style>
             <link href="${url.resourcesPath}/${style}" rel="stylesheet" />
@@ -33,9 +33,6 @@
 
 <body class="${properties.kcBodyClass!}">
   <div class="${properties.kcLoginClass!}">
- <!--   <div class="full-width header-image text-center-align">
-        <img src="https://app.iwaiter.be/assets/icons/icon-512x512.png" width="142" height="142">
-    </div>-->
       <div class="text-center-align app-title"><span class="app-title-welcome">Welcome To</span><br><span class="app-title-name">Innovilyse</span></div>
     <div class="${properties.kcFormCardClass!} <#if displayWide>${properties.kcFormCardAccountClass!}</#if>">
       <header class="${properties.kcFormHeaderClass!}">

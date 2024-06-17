@@ -10,9 +10,9 @@
   <field name="title" type="text_en_splitting" indexed="true" stored="true" multiValued="false"/>
   <field name="long_text" type="text_en_splitting" indexed="true" stored="false" multiValued="false"/>
   <field name="action_type" type="text_en_splitting" indexed="true" stored="true" multiValued="false"/>
-  <field name="submission_deadline_date" type="tdate" indexed="true" stored="true" multiValued="false"/>
-  <field name="submission_deadline_date2" type="tdate" indexed="true" stored="true" multiValued="false"/>
-  <field name="open_date" type="tdate" indexed="true" stored="true" multiValued="false"/>
+  <field name="end_date" type="tdate" indexed="true" stored="true" multiValued="false"/>
+  <field name="end_date_2" type="tdate" indexed="true" stored="true" multiValued="false"/>
+  <field name="start_date" type="tdate" indexed="true" stored="true" multiValued="false"/>
   <field name="budget_min" type="text_general" indexed="true" stored="true" multiValued="false"/>
   <field name="budget_max" type="text_general" indexed="true" stored="true" multiValued="false"/>
   <field name="project_number" type="tint" indexed="true" stored="true" multiValued="false"/>

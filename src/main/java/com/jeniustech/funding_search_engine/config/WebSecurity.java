@@ -47,7 +47,6 @@ public class WebSecurity {
         httpSecurity
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .authorizeHttpRequests(authorizeHttpRequests -> authorizeHttpRequests
-                        .requestMatchers(HttpMethod.DELETE, "/**").hasAnyRole("manager", "admin")
                         .requestMatchers(HttpMethod.GET, "/openapi").permitAll()
                         .requestMatchers(HttpMethod.GET, "/openapi/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/users/anyuser/test").permitAll()

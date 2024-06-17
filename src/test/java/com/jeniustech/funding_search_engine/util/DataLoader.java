@@ -6,13 +6,14 @@ import com.jeniustech.funding_search_engine.enums.LongTextTypeEnum;
 import com.jeniustech.funding_search_engine.enums.SubmissionProcedureEnum;
 import com.jeniustech.funding_search_engine.enums.UrlTypeEnum;
 import com.jeniustech.funding_search_engine.mappers.DateMapper;
+import com.jeniustech.funding_search_engine.mappers.SolrMapper;
 import com.jeniustech.funding_search_engine.repository.CallRepository;
 import com.jeniustech.funding_search_engine.services.SolrClientService;
+import com.opencsv.CSVReader;
+import com.opencsv.exceptions.CsvValidationException;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import com.opencsv.CSVReader;
-import com.opencsv.exceptions.CsvValidationException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,10 +21,10 @@ import org.springframework.transaction.annotation.Transactional;
 import java.io.FileReader;
 import java.io.IOException;
 import java.math.BigDecimal;
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Optional;
 
+import static com.jeniustech.funding_search_engine.util.StringUtil.isNotEmpty;
 import static org.junit.jupiter.api.Assertions.fail;
 
 @Transactional(rollbackFor = Exception.class)
@@ -124,16 +125,11 @@ public class DataLoader {
                     continue; // stop when identifier is empty
                 }
 
-//                if (actionType == null) {
-//                    System.out.println("Action type is null for row: " + row.getRowNum());
-//                    continue; // stop when action type is null
-//                }
-
                 Call call = Call.builder()
                         .identifier(row[identifierIndex])
                         .reference(row[referenceIndex])
                         .title(row[titleIndex])
-                        .actionType(row[actionTypeIndex])
+                        .actionType(valueOrDefault(row[actionTypeIndex], null))
                         .submissionProcedure(SubmissionProcedureEnum.of(row[submissionProcedureIndex]))
                         .endDate(DateMapper.mapToTimestamp(row[submissionDLIndex]))
                         .endDate2(DateMapper.mapToTimestamp(row[submissionDL2Index]))
@@ -141,7 +137,7 @@ public class DataLoader {
                         .budgetMin(new BigDecimal(row[budgetMinIndex]))
                         .budgetMax(new BigDecimal(row[budgetMaxIndex]))
                         .projectNumber(getProjectNumber(row[numberOfProjectsIndex]))
-                        .typeOfMGADescription(row[typeOfMGADescriptionIndex])
+                        .typeOfMGADescription(valueOrDefault(row[typeOfMGADescriptionIndex], null))
                         .build();
 
                 String reference = row[referenceIndex];
@@ -227,12 +223,12 @@ public class DataLoader {
                             existingCall.setTypeOfMGADescription(call.getTypeOfMGADescription());
                         }
 
-                        callRepository.save(existingCall);
-//                    solrClientService.add(SolrMapper.map(existingCall), 100_000);
+//                        callRepository.save(existingCall);
+                        solrClientService.add(SolrMapper.map(existingCall), 100_000);
                     } else {
                         System.out.println("Adding call: " + call.getIdentifier());
                         Call savedCall = callRepository.save(call);
-//                    solrClientService.add(SolrMapper.map(savedCall), 100_000);
+                        solrClientService.add(SolrMapper.map(savedCall), 100_000);
                     }
                 } catch (DataIntegrityViolationException e) {
                     e.printStackTrace();
@@ -246,43 +242,22 @@ public class DataLoader {
         }
     }
 
+    private String valueOrDefault(String value, Object defaultValue) {
+        if (isNotEmpty(value)) {
+            return value;
+        } else {
+            return (String) defaultValue;
+        }
+    }
+
     private static void addDescriptionIfPresent(String[] row, int descriptionIndex, Call call, LongTextTypeEnum description) {
         if (isNotEmpty(row[descriptionIndex])) {
             call.getLongTexts().add(LongText.builder().type(description).text(row[descriptionIndex]).build());
         }
     }
 
-    private static boolean isNotEmpty(String row) {
-        return row != null && !row.isEmpty() && !row.isBlank() && !row.equals("null");
-    }
-
-    private static boolean isNotEmpty(Short row) {
-        return row != null;
-    }
-
-    private static boolean isNotEmpty(BigDecimal row) {
-        return row != null;
-    }
-
-    private static boolean isNotEmpty(SubmissionProcedureEnum row) {
-        return row != null;
-    }
-
-    private static boolean isNotEmpty(UrlTypeEnum row) {
-        return row != null;
-    }
-
-    private static boolean isNotEmpty(LongTextTypeEnum row) {
-        return row != null;
-    }
-
-    private static boolean isNotEmpty(Timestamp row) {
-        return row != null;
-    }
-
-
     private static Short getProjectNumber(String row) {
-        if (row == null || row.isEmpty()) {
+        if (!isNotEmpty(row)) {
             return null;
         }
         return Short.parseShort(row);

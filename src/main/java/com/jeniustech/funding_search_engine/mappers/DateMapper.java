@@ -8,12 +8,20 @@ import java.util.Date;
 public interface DateMapper {
 
     DateTimeFormatter csvFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
+    DateTimeFormatter solrFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'");
 
     static LocalDateTime map(Timestamp timestamp) {
         if (timestamp == null) {
             return null;
         }
         return timestamp.toLocalDateTime();
+    }
+
+    static String mapToSolrString(Timestamp timestamp) {
+        if (timestamp == null) {
+            return null;
+        }
+        return timestamp.toLocalDateTime().format(solrFormatter);
     }
 
     static Timestamp map(LocalDateTime localDateTime) {

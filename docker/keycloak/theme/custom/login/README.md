@@ -1,4 +1,4 @@
-# iwaiter-keycloak-theme
+# innovilyse-keycloak-theme
 
 ## Development
 

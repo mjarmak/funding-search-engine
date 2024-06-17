@@ -2,6 +2,7 @@ package com.jeniustech.funding_search_engine.entities;
 
 import com.jeniustech.funding_search_engine.enums.SubmissionProcedureEnum;
 import com.jeniustech.funding_search_engine.enums.UrlTypeEnum;
+import com.jeniustech.funding_search_engine.util.StringUtil;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -81,50 +82,25 @@ public class Call {
         return "Call(id=" + this.getId() + ", identifier=" + this.getIdentifier() + ", title=" + this.getTitle() + ", startDate=" + this.getStartDate() + ", endDate=" + this.getEndDate() + ", endDate2=" + this.getEndDate2() + ", createdAt=" + this.getCreatedAt() + ", updatedAt=" + this.getUpdatedAt() + ", version=" + this.getVersion() + ")";
     }
 
-//    public String getDisplayDescription() {
-//        if (displayDescription != null) {
-//            return displayDescription;
-//        }
-//        String priorityDescription = this.longTexts.stream()
-//                .filter(longText -> longText.getType().equals(LongTextTypeEnum.DESCRIPTION))
-//                .findFirst()
-//                .map(LongText::getText)
-//                .orElse(
-//                        this.longTexts.stream()
-//                                .filter(longText -> longText.getType().equals(LongTextTypeEnum.FURTHER_INFORMATION))
-//                                .findFirst()
-//                                .map(LongText::getText)
-//                                .orElse(
-//                                        this.longTexts.stream()
-//                                                .filter(longText -> longText.getType().equals(LongTextTypeEnum.BENEFICIARY_ADMINISTRATION))
-//                                                .findFirst()
-//                                                .map(LongText::getText)
-//                                                .orElse("")
-//                                )
-//                );
-//
-//        displayDescription = priorityDescription.substring(0, Math.min(priorityDescription.length(), displayDescriptionMaxLength));
-//        return displayDescription;
-//    }
+    public String getBudgetMinString() {
+        return budgetMin.stripTrailingZeros().toPlainString();
+    }
+
+    public String getBudgetMaxString() {
+        return budgetMax.stripTrailingZeros().toPlainString();
+    }
 
     public String getLongTextsToString() {
         StringBuilder longTextsString = new StringBuilder();
         for (LongText longText : longTexts) {
             longTextsString.append(longText.getText()).append("\n");
         }
-        return longTextsString.toString();
-    }
-
-    // format to millions
-    public static String processBudget(BigDecimal budget) {
-        if (budget == null) {
+        String result = longTextsString.toString();
+        if (StringUtil.isNotEmpty(result)) {
+            return result;
+        } else {
             return null;
         }
-        return budget.divide(new BigDecimal(1000000), 2, RoundingMode.HALF_EVEN).toString();
-    }
-
-    public String getBudgetString() {
-        return processBudget(budgetMin) + "-" + processBudget(budgetMax) + "M";
     }
 
     public String getUrl() {
