@@ -14,7 +14,7 @@ import static com.jeniustech.funding_search_engine.constants.Constants.*;
 
 public interface SolrMapper {
 
-    default SolrInputDocument map(Call call) {
+    static SolrInputDocument map(Call call) {
         SolrInputDocument document = new SolrInputDocument();
         document.addField(ID, call.getId());
         document.addField(IDENTIFIER, call.getIdentifier());

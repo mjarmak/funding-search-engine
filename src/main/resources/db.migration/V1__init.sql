@@ -1,15 +1,13 @@
 CREATE TABLE calls (
     id bigserial PRIMARY KEY,
 
-    identifier varchar(64) NOT NULL UNIQUE,
-    title varchar(255) NOT NULL,
+    identifier varchar(64) NOT NULL,
+
+    reference varchar(150) NOT NULL,
+
+    title varchar(512) NOT NULL,
 
     action_type varchar(255),
-
-    description varchar(25000),
-
-    mission_details varchar(25000),
-    destination_details varchar(25000),
 
     start_date timestamp,
     end_date timestamp,
@@ -38,7 +36,7 @@ CREATE TABLE long_text (
     id bigserial PRIMARY KEY,
     call_id bigint NOT NULL,
     type smallint NOT NULL,
-    text varchar(25000) NOT NULL,
+    text TEXT NOT NULL,
     created_at timestamp DEFAULT now(),
     updated_at timestamp DEFAULT now()
 );

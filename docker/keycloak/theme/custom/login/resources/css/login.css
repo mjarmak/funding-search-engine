@@ -1,0 +1,409 @@
+:root {
+    --primary-color: #a4c8ffff;
+    --primary-color-hover: #91adde;
+    --dark-grey: #969696ff;
+    --grey: #d9d9d9ff;
+    --light-grey: #f6f6f6ff;
+    --input-height: 47px;
+    --padding-small: 10px;
+    --padding-large: 20px;
+    --padding-tiny: 5px;
+    --field-radius: 10px;
+    --red-status: #ff8c8c;
+    --green-status: #9bff9f;
+}
+.login-pf {
+    background: unset !important;
+}
+.login-pf body {
+    background-color: white;
+    background-repeat: repeat;
+    height: 100%;
+    font-family: sans-serif;
+    text-align: center;
+}
+#kc-error-message > .instruction, #kc-info-message > .instruction {
+    color: var(--dark-grey);
+    margin: unset;
+}
+.alert-error > .kc-feedback-text {
+    color: var(--red-status);
+}
+#input-error-email, #input-error-firstname, #input-error-password, #input-error-password-confirm, #input-error-lastname, #input-error-username {
+    color: var(--red-status);
+}
+.alert-error {
+    margin-bottom: var(--padding-small);
+}
+.header-image {
+    margin: 20px 0;
+}
+.form-control-container {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    row-gap: var(--padding-tiny);
+}
+.form-button {
+    width: 100%;
+}
+.form-group {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    align-items: flex-start;
+    row-gap: var(--padding-tiny);
+}
+.control-label {
+    color: var(--dark-grey);
+}
+.form-control {
+    border-radius: var(--field-radius);
+    height: var(--input-height);
+    width: 100%;
+    border: none;
+    padding: 0;
+    outline-color: var(--grey);
+}
+.form-group .col-md-12:last-child, .form-group .col-lg-12:last-child {
+    border-radius: var(--field-radius);
+    height: var(--input-height);
+    width: 100%;
+    border: none;
+    padding: 0;
+}
+.btn {
+    width: 100%;
+    color: white;
+    border: 0;
+    border-radius: var(--field-radius);
+    padding: var(--padding-small);
+    background-color: var(--primary-color);
+    height: var(--input-height);
+    font-size: 1rem;
+}
+.btn:hover {
+    cursor: pointer;
+    background-color: var(--primary-color-hover);
+}
+#kc-form-login, #kc-register-form, #kc-reset-password-form, #login-pf-settings {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    row-gap: var(--padding-small);
+}
+.kc-feedback-text {
+    padding: var(--padding-small);
+    background-color: white;
+    border-radius: var(--field-radius);
+    display: block;
+    color: var(--primary-color);
+    margin-bottom: var(--padding-large);
+}
+#kc-registration > span > a, #kc-form-options > div > span > a, .login-pf-forgot-password > span > a {
+    color: var(--primary-color);
+    text-decoration: none;
+}
+#kc-registration > span > a:hover, #kc-form-options > div > span > a:hover, .login-pf-forgot-password > span > a:hover {
+    color: var(--primary-color-hover);
+    text-decoration: underline;
+}
+.login-pf-header {
+    margin-bottom: var(--padding-small);
+    color: var(--dark-grey);
+}
+.text-center-align {
+    text-align: center;
+}
+
+.full-width {
+    width: 100%;
+}
+
+.app-title-welcome {
+    font-size:24px;
+
+}
+.app-title-name {
+    font-size:36px;
+    font-weight: 700;
+}
+.app-title {
+    margin: 40px 0;
+}
+
+error {
+    background-color: #ffffff;
+    border-color: #cc0000;
+    color: #333333;
+}
+
+#kc-locale ul {
+    display: none;
+    position: absolute;
+    background-color: #fff;
+    list-style: none;
+    right: 0;
+    top: 20px;
+    min-width: 100px;
+    padding: 2px 0;
+    border: solid 1px #bbb;
+}
+
+#kc-locale:hover ul {
+    display: block;
+    margin: 0;
+}
+
+#kc-locale ul li a {
+    display: block;
+    padding: 5px 14px;
+    color: #000 !important;
+    text-decoration: none;
+    line-height: 20px;
+}
+
+#kc-locale ul li a:hover {
+    color: #4d5258;
+    background-color: #d4edfa;
+}
+
+#kc-locale-dropdown a {
+    color: #4d5258;
+    background: 0 0;
+    padding: 0 15px 0 0;
+    font-weight: 300;
+}
+
+#kc-locale-dropdown a:hover {
+    text-decoration: none;
+}
+
+a#kc-current-locale-link {
+    display: block;
+    padding: 0 5px;
+}
+
+a#kc-current-locale-link::after {
+    content: "\2c5";
+    margin-left: 4px;
+}
+
+.login-pf .container {
+    padding-top: 40px;
+}
+
+.login-pf a:hover {
+    color: #0099d3;
+}
+
+#kc-header {
+    color: #000000;
+    overflow: visible;
+    white-space: nowrap;
+}
+
+#kc-header-wrapper {
+    font-size: 29px;
+    letter-spacing: 3px;
+    line-height: 1.2em;
+    padding: 62px 10px 20px;
+    white-space: normal;
+}
+
+#kc-content {
+    padding: var(--padding-small);
+    background-color: var(--light-grey);
+    border-radius: var(--field-radius);
+}
+
+#kc-info {
+    margin-top: 10px;
+    font-size: 13px;
+}
+
+#kc-info-wrapper {
+    font-size: 13px;
+}
+
+#kc-form-options span {
+    display: block;
+}
+
+#kc-form-options .checkbox {
+    margin-top: 0;
+    color: var(--dark-grey);
+}
+
+#kc-terms-text {
+    margin-bottom: 20px;
+}
+
+#kc-registration {
+    font-size: 1rem;
+}
+
+/* TOTP */
+
+ol#kc-totp-settings {
+    margin: 0;
+    padding-left: 20px;
+}
+
+ul#kc-totp-supported-apps {
+  margin-bottom: 10px;
+}
+
+#kc-totp-secret-qr-code {
+    max-width:150px;
+    max-height:150px;
+}
+
+#kc-totp-secret-key {
+    background-color: #fff;
+    color: #333333;
+    font-size: 16px;
+    padding: 10px 0;
+}
+
+/* OAuth */
+
+#kc-oauth h3 {
+    margin-top: 0;
+}
+
+#kc-oauth ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+#kc-oauth ul li {
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    font-size: 12px;
+    padding: 10px 0;
+}
+
+#kc-oauth ul li:first-of-type {
+    border-top: 0;
+}
+
+#kc-oauth .kc-role {
+    display: inline-block;
+    width: 50%;
+}
+
+/* Code */
+#kc-code textarea {
+    width: 100%;
+    height: 8em;
+}
+
+/* Social */
+
+#kc-social-providers ul {
+    padding: 0;
+    margin: var(--padding-small) 0 0;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    column-gap: var(--padding-small);
+}
+
+#kc-social-providers li {
+    display: block;
+    width: 50%;
+}
+
+.zocial,
+a.zocial  {
+    font-weight: normal;
+    font-size: 1rem;
+}
+.zocial:hover {
+    color: white !important;
+}
+
+.zocial.facebook,
+.zocial.github,
+.zocial.google,
+.zocial.microsoft,
+.zocial.stackoverflow,
+.zocial.linkedin,
+.zocial.twitter {
+    background-image: none;
+    border: 0;
+    box-shadow: none;
+    text-shadow: none;
+    display: block;
+    color: white;
+    border-radius: var(--field-radius);
+    text-decoration: none;
+}
+
+.zocial.google {
+    background-color: #dd4b39;
+}
+.zocial.google:hover {
+    background-color: #e74b37;
+}
+.zocial.facebook {
+    background-color: #3b5998;
+}
+.zocial.facebook:hover {
+    background-color: #2d4373;
+}
+
+/* Copy of zocial windows classes to be used for microsoft's social provider button */
+.zocial.microsoft:before{ content: "\f15d"; }
+.zocial.stackoverflow:before{ color: inherit; }
+
+.card-pf form.form-actions .btn {
+    float: right;
+    margin-left: 10px;
+}
+
+#kc-form-buttons {
+    align-items: center;
+}
+
+.login-pf-page {
+}
+
+.card-pf {
+  box-shadow: 0 25px 50px 0 rgba(0, 0, 0, .25) !important;
+  background: white;
+  margin: 0 auto;
+  padding: 10px;
+  max-width: 500px;
+  border-radius: 15px;
+}
+
+.login-pf-page .login-pf-signup {
+  font-size: 1rem;
+  color: var(--dark-grey);
+}
+#kc-content-wrapper .row {
+  margin-left: 0;
+  margin-right: 0;
+}
+
+.login-pf-page .login-pf-social-link {
+    margin-bottom: var(--padding-small);
+}
+.login-pf-page .login-pf-social-link a {
+    height: var(--input-height);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.login-pf-page.login-pf-page-accounts {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.login-pf-page .btn-primary {
+    margin-top: 0;
+}

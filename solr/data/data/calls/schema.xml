@@ -21,7 +21,7 @@
   <field name="text" type="text_en_splitting" indexed="true" stored="false" multiValued="true"/>
   <copyField source="identifier" dest="text"/>
   <copyField source="title" dest="text"/>
-  <copyField source="description" dest="text"/>
+  <copyField source="long_text" dest="text"/>
   <copyField source="action_type" dest="text"/>
 
 

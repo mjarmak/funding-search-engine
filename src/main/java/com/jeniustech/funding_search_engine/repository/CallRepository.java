@@ -11,6 +11,6 @@ import java.util.Optional;
 @Repository
 public interface CallRepository extends JpaRepository<Call, Long> {
 
-    @Query("SELECT c FROM Call c WHERE c.identifier = :identifier AND c.startDate = :startDate AND c.endDate = :endDate")
-    Optional<Call> findByIdentifierAndStartDateAndEndDate(String identifier, Timestamp startDate, Timestamp endDate);
+    @Query("SELECT c FROM Call c WHERE c.reference = :reference")
+    Optional<Call> findByReference(String reference);
 }

@@ -27,13 +27,20 @@ public class Call {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(length = 64, nullable = false)
     private String identifier;
+
+    @Column(length = 150, nullable = false)
+    private String reference;
+
+    @Column(length = 255, nullable = false)
     private String title;
 
     @Column(length = 25000)
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "call")
     private List<LongText> longTexts;
 
+    @Column(length = 255)
     private String actionType;
 
     @Enumerated(EnumType.ORDINAL)
@@ -69,6 +76,10 @@ public class Call {
 
     @Version
     private Integer version;
+
+    public String toString() {
+        return "Call(id=" + this.getId() + ", identifier=" + this.getIdentifier() + ", title=" + this.getTitle() + ", startDate=" + this.getStartDate() + ", endDate=" + this.getEndDate() + ", endDate2=" + this.getEndDate2() + ", createdAt=" + this.getCreatedAt() + ", updatedAt=" + this.getUpdatedAt() + ", version=" + this.getVersion() + ")";
+    }
 
 //    public String getDisplayDescription() {
 //        if (displayDescription != null) {
@@ -117,6 +128,6 @@ public class Call {
     }
 
     public String getUrl() {
-        return urlType.getUrl(urlId);
+        return urlType.getUrl(identifier, urlId);
     }
 }

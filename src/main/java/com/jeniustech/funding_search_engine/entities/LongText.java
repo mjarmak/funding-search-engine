@@ -31,7 +31,6 @@ public class LongText {
     @Enumerated(EnumType.ORDINAL)
     private LongTextTypeEnum type;
 
-    @Column(length = 25000)
     private String text;
 
     @CreationTimestamp

@@ -6,10 +6,8 @@ public enum LongTextTypeEnum {
     DESCRIPTION("description"),
     DESTINATION_DETAILS("destination_details"),
     MISSION_DETAILS("mission_details"),
-    CONDITIONS("conditions"),
     BENEFICIARY_ADMINISTRATION("beneficiary_administration"),
     DURATION("duration"),
-    SUPPORT_INFORMATION("support_information"),
     FURTHER_INFORMATION("further_information");
 
     String name;

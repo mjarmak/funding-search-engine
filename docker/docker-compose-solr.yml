@@ -3,10 +3,15 @@ services:
   solr:
     image: solr:9.6.0
     container_name: solr
+    user: "113:121"
     restart: always
     ports:
       - "8983:8983"
     volumes:
       - /var/data/data_solr:/var/solr
+    command:
+      - solr-precreate
+      - calls
 volumes:
   solr_data:
+    driver: local

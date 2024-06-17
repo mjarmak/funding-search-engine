@@ -4,10 +4,6 @@ import java.time.format.DateTimeFormatter;
 
 public interface Constants {
 
-    DateTimeFormatter csvFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
-
-    int displayDescriptionMaxLength = 255;
-
     String ID = "id";
     String IDENTIFIER = "identifier";
     String TITLE = "title";
