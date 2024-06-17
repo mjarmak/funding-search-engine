@@ -36,7 +36,7 @@
  <!--   <div class="full-width header-image text-center-align">
         <img src="https://app.iwaiter.be/assets/icons/icon-512x512.png" width="142" height="142">
     </div>-->
-      <div class="text-center-align app-title"><span class="app-title-welcome">Welcome To</span><br><span class="app-title-name">iWaiter</span></div>
+      <div class="text-center-align app-title"><span class="app-title-welcome">Welcome To</span><br><span class="app-title-name">Innovilyse</span></div>
     <div class="${properties.kcFormCardClass!} <#if displayWide>${properties.kcFormCardAccountClass!}</#if>">
       <header class="${properties.kcFormHeaderClass!}">
         <#if realm.internationalizationEnabled  && locale.supported?size gt 1>
