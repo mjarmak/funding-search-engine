@@ -22,6 +22,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import static com.jeniustech.funding_search_engine.util.StringUtil.isNotEmpty;
@@ -58,9 +59,17 @@ public class DataLoader {
     @Test
     void loadData() {
         String path = "C:/Projects/funding-search-engine/src/test/resources/data/";
-//        String csvFile = "output_query-open_1718653202242.csv";
-//        String csvFile = "output_query-upcoming_1718653130808.csv";
-        String csvFile = "output_query-closed_1718653220506.csv";
+        List<String> csvFiles = List.of(
+                "output_query-open_1718653202242.csv"
+//                "output_query-upcoming_1718653130808.csv"
+//                "output_query-closed_1718653220506.csv"
+        );
+        for (String csvFile : csvFiles) {
+            loadFile(path, csvFile);
+        }
+    }
+
+    private void loadFile(String path, String csvFile) {
         try (CSVReader reader = new CSVReader(new FileReader(path + csvFile))) {
 
             // get headers
@@ -223,7 +232,7 @@ public class DataLoader {
                             existingCall.setTypeOfMGADescription(call.getTypeOfMGADescription());
                         }
 
-//                        callRepository.save(existingCall);
+                        callRepository.save(existingCall);
                         solrClientService.add(SolrMapper.map(existingCall), 100_000);
                     } else {
                         System.out.println("Adding call: " + call.getIdentifier());
