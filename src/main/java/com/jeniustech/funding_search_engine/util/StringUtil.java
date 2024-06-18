@@ -36,4 +36,12 @@ public interface StringUtil {
         return row != null;
     }
 
+
+    static String valueOrDefault(String value, Object defaultValue) {
+        if (isNotEmpty(value)) {
+            return value;
+        } else {
+            return (String) defaultValue;
+        }
+    }
 }

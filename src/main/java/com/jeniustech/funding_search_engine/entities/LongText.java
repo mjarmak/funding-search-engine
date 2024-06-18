@@ -37,4 +37,8 @@ public class LongText {
     @Column(updatable = false)
     private Timestamp createdAt;
 
+    public String toString() {
+        return "LongText(id=" + this.getId() + ", type=" + this.getType() + ")";
+    }
+
 }

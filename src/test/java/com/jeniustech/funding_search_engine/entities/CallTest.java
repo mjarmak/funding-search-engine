@@ -1,6 +1,5 @@
 package com.jeniustech.funding_search_engine.entities;
 
-import com.jeniustech.funding_search_engine.entities.Call;
 import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;

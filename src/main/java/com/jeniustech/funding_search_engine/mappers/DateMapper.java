@@ -2,6 +2,9 @@ package com.jeniustech.funding_search_engine.mappers;
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
 
@@ -31,13 +34,6 @@ public interface DateMapper {
         return Timestamp.valueOf(localDateTime);
     }
 
-    static LocalDateTime map(Date date) {
-        if (date == null) {
-            return null;
-        }
-        return new Timestamp(date.getTime()).toLocalDateTime();
-    }
-
     static LocalDateTime map(String date) {
         if (date == null) {
             return null;
@@ -50,6 +46,15 @@ public interface DateMapper {
             return null;
         }
         return Timestamp.valueOf(LocalDateTime.parse(date, csvFormatter));
+    }
+
+    static LocalDateTime toUTC(Date date) {
+        if (date == null) {
+            return null;
+        }
+        OffsetDateTime offsetDateTime = date.toInstant().atOffset(ZoneOffset.UTC);
+        ZonedDateTime utcZonedDateTime = offsetDateTime.atZoneSameInstant(ZoneOffset.UTC);
+        return utcZonedDateTime.toLocalDateTime();
     }
 
 }

@@ -26,6 +26,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static com.jeniustech.funding_search_engine.util.StringUtil.isNotEmpty;
+import static com.jeniustech.funding_search_engine.util.StringUtil.valueOrDefault;
 import static org.junit.jupiter.api.Assertions.fail;
 
 @Transactional(rollbackFor = Exception.class)
@@ -180,17 +181,16 @@ public class DataLoader {
                         System.out.println("Updating call: " + call.getIdentifier());
                         Call existingCall = existingCallOptional.get();
                         for (LongText longText : call.getLongTexts()) {
-                            if (!existingCall.getLongTexts().contains(longText)) {
+                            if (existingCall.getLongTexts().stream().noneMatch(lt -> lt.getType().equals(longText.getType()))) {
                                 longText.setCall(existingCall);
                                 existingCall.getLongTexts().add(longText);
                             } else {
                                 LongText longTextToSave = existingCall.getLongTexts().stream()
-                                        .filter(lt -> lt.equals(longText))
+                                        .filter(lt -> lt.getType().equals(longText.getType()))
                                         .findFirst()
                                         .orElseThrow();
                                 if (
                                         isNotEmpty(longTextToSave.getText())) {
-//                                        longTextToSave.getText().length() < longText.getText().length()) {
                                     longTextToSave.setText(longText.getText());
                                 }
                             }
@@ -248,14 +248,6 @@ public class DataLoader {
         } catch (IOException | ArrayIndexOutOfBoundsException | CsvValidationException e) {
             e.printStackTrace();
             fail();
-        }
-    }
-
-    private String valueOrDefault(String value, Object defaultValue) {
-        if (isNotEmpty(value)) {
-            return value;
-        } else {
-            return (String) defaultValue;
         }
     }
 

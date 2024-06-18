@@ -14,7 +14,7 @@ public interface CallMapper {
                 .identifier(call.getIdentifier())
                 .title(call.getTitle())
                 .longTexts(isSearch ? null : call.getLongTexts().stream()
-                        .collect(Collectors.toMap(LongText::getType, LongText::getText)))
+                .collect(Collectors.toMap(LongText::getType, LongText::getText)))
                 .actionType(call.getActionType())
                 .endDate(DateMapper.map(call.getEndDate()))
                 .endDate2(isSearch ? null : DateMapper.map(call.getEndDate2()))

@@ -17,7 +17,7 @@ import java.util.List;
 
 @Configuration
 @EnableWebSecurity
-@EnableMethodSecurity(prePostEnabled = true)
+@EnableMethodSecurity
 public class WebSecurity {
 
     @Bean
@@ -26,8 +26,7 @@ public class WebSecurity {
         corsConfiguration.setAllowedOrigins(List.of(
                 "http://localhost:4200",
                 "http://192.168.208.1:4200",
-                "https://app.innovilyse.com",
-                "https://app-funding.jarmak.tech"
+                "https://app.innovilyse.com"
         ));
         corsConfiguration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE"));
         corsConfiguration.setAllowedHeaders(List.of("*"));

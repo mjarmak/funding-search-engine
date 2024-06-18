@@ -27,7 +27,7 @@ public class CallService {
     private final UserDataRepository userDataRepository;
 
     public CallDTO getCallDTOById(Long id) {
-        return CallMapper.map(getCallById(id), true);
+        return CallMapper.map(getCallById(id), false);
     }
 
     private Call getCallById(Long callId) {
@@ -60,7 +60,7 @@ public class CallService {
 
         return userCallJoinRepository.findFavoritesByUserId(userData.getId(), pageable).stream()
                 .map(UserCallJoin::getCallData)
-                .map(call -> CallMapper.map(call, false))
+                .map(call -> CallMapper.map(call, true))
                 .toList();
     }
 
