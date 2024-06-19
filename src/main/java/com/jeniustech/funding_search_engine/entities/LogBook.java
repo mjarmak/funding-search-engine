@@ -28,6 +28,8 @@ public class LogBook {
     @Enumerated(EnumType.ORDINAL)
     private LogTypeEnum type;
 
+    private String logText;
+
     @CreationTimestamp
     @Column(updatable = false)
     private Timestamp createdAt;

@@ -1,6 +1,7 @@
 package com.jeniustech.funding_search_engine.controllers;
 
 import com.jeniustech.funding_search_engine.dto.CallDTO;
+import com.jeniustech.funding_search_engine.dto.SearchDTO;
 import com.jeniustech.funding_search_engine.mappers.UserDataMapper;
 import com.jeniustech.funding_search_engine.models.JwtModel;
 import com.jeniustech.funding_search_engine.services.CallService;
@@ -9,8 +10,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -42,7 +41,7 @@ public class CallController {
     }
 
     @GetMapping("/call/favorites")
-    public ResponseEntity<List<CallDTO>> getFavoriteCalls(
+    public ResponseEntity<SearchDTO<CallDTO>> getFavoriteCalls(
             @RequestParam(required = true, defaultValue = "0") int pageNumber,
             @RequestParam(required = true, defaultValue = "20") int pageSize,
             @AuthenticationPrincipal Jwt jwt

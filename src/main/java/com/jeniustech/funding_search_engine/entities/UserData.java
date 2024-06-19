@@ -42,6 +42,10 @@ public class UserData {
     @UpdateTimestamp
     private Timestamp updatedAt;
 
+    public String toString() {
+        return "UserData(id=" + this.getId() + ", username=" + this.getUserName() + ", email=" + this.getEmail() + ")";
+    }
+
     public List<UserSubscription> getUserSubscriptions() {
         return userSubscriptionJoins.stream().map(UserSubscriptionJoin::getSubscription).toList();
     }

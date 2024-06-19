@@ -10,10 +10,15 @@ import java.util.Optional;
 
 public interface UserCallJoinRepository extends JpaRepository<UserCallJoin, Long> {
 
-    @Query("SELECT ucj FROM UserCallJoin ucj WHERE ucj.callData.id = ?1 AND ucj.userData.id = ?2 AND ucj.type = 1")
+    @Query("SELECT ucj FROM UserCallJoin ucj WHERE ucj.callData.id = :callId AND ucj.userData.id = :userId AND ucj.type = 0")
     Optional<UserCallJoin> findFavoriteByCallAndUserId(Long callId, Long userId);
 
-    @Query("SELECT ucj FROM UserCallJoin ucj WHERE ucj.userData.id = ?1 AND ucj.type = 1")
+    @Query("SELECT ucj FROM UserCallJoin ucj WHERE ucj.userData.id = :userId AND ucj.type = 0")
     List<UserCallJoin> findFavoritesByUserId(Long userId, Pageable pageable);
 
+    @Query("SELECT ucj.callData.id FROM UserCallJoin ucj WHERE ucj.userData.id = :userId AND ucj.id IN :ids AND ucj.type = 0")
+    List<Long> findFavoriteByCallIds(Long userId, List<Long> ids);
+
+    @Query("SELECT COUNT(ucj) FROM UserCallJoin ucj WHERE ucj.userData.id = :userId AND ucj.type = 0")
+    Long countFavoritesByUserId(Long userId);
 }
