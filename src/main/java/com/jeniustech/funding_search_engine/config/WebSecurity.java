@@ -50,7 +50,7 @@ public class WebSecurity {
                         .requestMatchers(HttpMethod.GET, "/openapi/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/users/anyuser/test").permitAll()
 
-                        .requestMatchers(HttpMethod.GET, "/search/**").permitAll()
+//                        .requestMatchers(HttpMethod.GET, "/search/**").permitAll()
 
                         .requestMatchers("/error").permitAll()
 

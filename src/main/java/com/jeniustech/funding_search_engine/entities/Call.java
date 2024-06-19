@@ -2,6 +2,8 @@ package com.jeniustech.funding_search_engine.entities;
 
 import com.jeniustech.funding_search_engine.enums.SubmissionProcedureEnum;
 import com.jeniustech.funding_search_engine.enums.UrlTypeEnum;
+import com.jeniustech.funding_search_engine.mappers.DateMapper;
+import com.jeniustech.funding_search_engine.mappers.NumberMapper;
 import com.jeniustech.funding_search_engine.util.StringUtil;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -12,7 +14,6 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.sql.Timestamp;
 import java.util.List;
 
@@ -82,6 +83,25 @@ public class Call {
         return "Call(id=" + this.getId() + ", identifier=" + this.getIdentifier() + ", title=" + this.getTitle() + ", startDate=" + this.getStartDate() + ", endDate=" + this.getEndDate() + ", endDate2=" + this.getEndDate2() + ", createdAt=" + this.getCreatedAt() + ", updatedAt=" + this.getUpdatedAt() + ", version=" + this.getVersion() + ")";
     }
 
+    public String getBudgetRangeString() {
+        if (budgetMin == null && budgetMax == null) {
+            return "N/A";
+        } else if (budgetMin == null) {
+            return "<" + NumberMapper.formatNumberWithCommas(budgetMax);
+        } else if (budgetMax == null) {
+            return ">" + NumberMapper.formatNumberWithCommas(budgetMin);
+        }
+        return NumberMapper.formatNumberWithCommas(budgetMin) + " - " + NumberMapper.formatNumberWithCommas(budgetMax);
+    }
+
+    public String getBudgetMinDisplayString() {
+        return NumberMapper.shortenNumber(budgetMin, 1);
+    }
+
+    public String  getBudgetMaxDisplayString() {
+        return NumberMapper.shortenNumber(budgetMax, 1);
+    }
+
     public String getBudgetMinString() {
         return budgetMin.stripTrailingZeros().toPlainString();
     }
@@ -105,5 +125,17 @@ public class Call {
 
     public String getUrl() {
         return urlType.getUrl(identifier, urlId);
+    }
+
+    public String getEndDate2Display() {
+        return DateMapper.formatToDisplay(endDate2);
+    }
+
+    public String getStartDateDisplay() {
+        return DateMapper.formatToDisplay(startDate);
+    }
+
+    public String getEndDateDisplay() {
+        return DateMapper.formatToDisplay(endDate);
     }
 }

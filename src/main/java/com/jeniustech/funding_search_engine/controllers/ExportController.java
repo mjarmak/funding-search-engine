@@ -24,7 +24,7 @@ public class ExportController {
     public ResponseEntity<InputStreamResource> downloadExcel(
             @RequestBody List<Long> callIds
     ) throws IOException {
-        ByteArrayInputStream in = exportService.generateExcel();
+        ByteArrayInputStream in = exportService.generateExcel(callIds);
 
         HttpHeaders headers = new HttpHeaders();
         headers.add("Content-Disposition", "attachment; filename=data.xlsx");

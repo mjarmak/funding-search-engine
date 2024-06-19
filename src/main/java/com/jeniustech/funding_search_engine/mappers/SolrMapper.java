@@ -59,8 +59,8 @@ public interface SolrMapper {
                 .endDate(getDateInUTC(solrDocument, END_DATE))
                 .endDate2(getDateInUTC(solrDocument, END_DATE_2))
                 .startDate(getDateInUTC(solrDocument, START_DATE))
-                .budgetMin(valueOrDefault((String) solrDocument.getFieldValue(BUDGET_MIN), null))
-                .budgetMax(valueOrDefault((String) solrDocument.getFieldValue(BUDGET_MAX), null))
+                .budgetMin(NumberMapper.shortenNumber(valueOrDefault((String) solrDocument.getFieldValue(BUDGET_MIN), null)))
+                .budgetMax(NumberMapper.shortenNumber(valueOrDefault((String) solrDocument.getFieldValue(BUDGET_MAX), null)))
                 .projectNumber(getProjectNumber(solrDocument))
                 .build(
         );

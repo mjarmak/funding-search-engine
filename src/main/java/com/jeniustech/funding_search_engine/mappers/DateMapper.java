@@ -12,6 +12,7 @@ public interface DateMapper {
 
     DateTimeFormatter csvFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
     DateTimeFormatter solrFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'");
+    DateTimeFormatter displayFormatter = DateTimeFormatter.ofPattern("yyyy-MMM-dd HH:mm:ss");
 
     static LocalDateTime map(Timestamp timestamp) {
         if (timestamp == null) {
@@ -55,6 +56,13 @@ public interface DateMapper {
         OffsetDateTime offsetDateTime = date.toInstant().atOffset(ZoneOffset.UTC);
         ZonedDateTime utcZonedDateTime = offsetDateTime.atZoneSameInstant(ZoneOffset.UTC);
         return utcZonedDateTime.toLocalDateTime();
+    }
+
+    static String formatToDisplay(Timestamp timestamp) {
+        if (timestamp == null) {
+            return null;
+        }
+        return timestamp.toLocalDateTime().format(displayFormatter);
     }
 
 }
