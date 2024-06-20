@@ -10,7 +10,7 @@ import lombok.Value;
 public class UserDataDTO {
     Long id;
     String subjectId;
-    String userName;
+    String username;
     String email;
     String password;
     String firstName;

@@ -46,7 +46,7 @@ public interface UserDataMapper {
         userRepresentation.setFirstName(userInfoDTO.getFirstName());
         userRepresentation.setLastName(userInfoDTO.getLastName());
         userRepresentation.setEmail(userInfoDTO.getEmail());
-        userRepresentation.setUsername(userInfoDTO.getUserName());
+        userRepresentation.setUsername(userInfoDTO.getUsername());
         userRepresentation.setCredentials(Collections.singletonList(credential));
         userRepresentation.setEnabled(true);
         return userRepresentation;
@@ -62,7 +62,7 @@ public interface UserDataMapper {
                 .firstName(userRepresentation.getFirstName())
                 .lastName(userRepresentation.getLastName())
                 .email(userRepresentation.getEmail())
-                .userName(userRepresentation.getUsername())
+                .username(userRepresentation.getUsername())
                 .build();
     }
 
@@ -76,7 +76,7 @@ public interface UserDataMapper {
                 .email(userData.getEmail())
                 .firstName(userData.getFirstName())
                 .lastName(userData.getLastName())
-                .userName(userData.getUserName())
+                .username(userData.getUserName())
                 .subscription(withSubData ? SubscriptionMapper.map(userData.getMainActiveSubscription()) : null)
                 .isAdmin(withSubData ? userData.isAdmin() : null)
                 .build();
@@ -89,7 +89,7 @@ public interface UserDataMapper {
         return UserDataDTO.builder()
                 .firstName(userData.getFirstName())
                 .lastName(userData.getLastName())
-                .userName(userData.getUserName())
+                .username(userData.getUserName())
                 .build();
     }
 

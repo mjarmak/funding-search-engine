@@ -11,6 +11,7 @@ import com.jeniustech.funding_search_engine.enums.SubscriptionJoinType;
 import com.jeniustech.funding_search_engine.enums.SubscriptionTypeEnum;
 import com.jeniustech.funding_search_engine.exceptions.MapperException;
 import com.jeniustech.funding_search_engine.exceptions.NotFoundItemException;
+import com.jeniustech.funding_search_engine.exceptions.TrialSubscriptionException;
 import com.jeniustech.funding_search_engine.mappers.DateMapper;
 import com.jeniustech.funding_search_engine.mappers.UserDataMapper;
 import com.jeniustech.funding_search_engine.models.JwtModel;
@@ -46,9 +47,7 @@ public class UserDataService {
     @Value("${keycloak.service.realm}")
     private String serviceRealm;
 
-    private void validateUserIsAdmin(JwtModel jwtModel, UserSubscription subscription) throws ForbiddenException {
-        UserData adminUserData = userDataRepository.findBySubjectId(jwtModel.getUserId())
-                .orElseThrow(() -> new NotFoundItemException("User not found"));
+    private void validateUserIsAdmin(UserData adminUserData, UserSubscription subscription) throws ForbiddenException {
 
         if (!subscription.isAdmin(adminUserData)) {
             throw new ForbiddenException("User is not admin of subscription");
@@ -58,7 +57,9 @@ public class UserDataService {
     public List<UserDataDTO> getUsersBySubscriptionId(Long subscriptionId, JwtModel jwtModel) {
         UserSubscription subscription = subscriptionRepository.findById(subscriptionId).orElseThrow(() -> new NotFoundItemException("Subscription not found"));
 
-        validateUserIsAdmin(jwtModel, subscription);
+        UserData adminUserData = userDataRepository.findBySubjectId(jwtModel.getUserId())
+                .orElseThrow(() -> new NotFoundItemException("User not found"));
+        validateUserIsAdmin(adminUserData, subscription);
 
         return subscription.getUserSubscriptionJoins().stream()
                 .filter(userSubscriptionJoin -> userSubscriptionJoin.getType() == SubscriptionJoinType.USER)
@@ -69,9 +70,13 @@ public class UserDataService {
     public UserDataDTO addUser(Long subscriptionId, JwtModel jwtModel, UserDataDTO userDataDTO) {
         UserSubscription subscription = subscriptionRepository.findById(subscriptionId).orElseThrow(() -> new NotFoundItemException("Subscription not found"));
 
-        validateUserIsAdmin(jwtModel, subscription);
+        validateSubscriptionIsNotTrial(subscription, "Cannot add user to trial subscription");
 
-            Optional<UserData> userDataOptional = userDataRepository.findByUserName(userDataDTO.getUserName());
+        UserData adminUserData = userDataRepository.findBySubjectId(jwtModel.getUserId())
+                .orElseThrow(() -> new NotFoundItemException("User not found"));
+        validateUserIsAdmin(adminUserData, subscription);
+
+            Optional<UserData> userDataOptional = userDataRepository.findByUserName(userDataDTO.getUsername());
 
             if (userDataOptional.isPresent()) {
                 return addExistingUserToSubscription(subscription, userDataOptional.get());
@@ -109,7 +114,7 @@ public class UserDataService {
         try (Response response = keycloak.realm(serviceRealm).users().create(userRepresentation)) {
             if (response.getStatus() == 201) {
 
-                UserRepresentation newUser = keycloak.realm(serviceRealm).users().search(userDataDTO.getUserName())
+                UserRepresentation newUser = keycloak.realm(serviceRealm).users().search(userDataDTO.getUsername())
                         .stream().findFirst().orElseThrow(NotFoundItemException::new);
 
                 UserData userData = UserDataMapper.map(newUser);
@@ -120,6 +125,9 @@ public class UserDataService {
                         .subscription(subscription)
                         .build();
 
+                subscription.getUserSubscriptionJoins().add(userSubscriptionJoin);
+
+                userDataRepository.save(userData);
                 userSubscriptionJoinRepository.save(userSubscriptionJoin);
 
                 return UserDataMapper.mapToDTO(userData.getId(), userRepresentation);
@@ -137,7 +145,7 @@ public class UserDataService {
                 userDataDTO.getEmail() == null || userDataDTO.getEmail().isBlank() ||
                         userDataDTO.getFirstName() == null || userDataDTO.getFirstName().isBlank() ||
                         userDataDTO.getLastName() == null || userDataDTO.getLastName().isBlank() ||
-                        userDataDTO.getUserName() == null || userDataDTO.getUserName().isBlank() ||
+                        userDataDTO.getUsername() == null || userDataDTO.getUsername().isBlank() ||
                         userDataDTO.getPassword() == null || userDataDTO.getPassword().isBlank()
         ) {
             throw new MapperException("User data is incomplete");
@@ -210,7 +218,9 @@ public class UserDataService {
     public void removeUserFromSubscription(Long subscriptionId, Long userId, JwtModel jwtModel) {
         UserSubscription subscription = subscriptionRepository.findById(subscriptionId).orElseThrow(() -> new NotFoundItemException("Subscription not found"));
 
-        validateUserIsAdmin(jwtModel, subscription);
+        UserData adminUserData = userDataRepository.findBySubjectId(jwtModel.getUserId())
+                .orElseThrow(() -> new NotFoundItemException("User not found"));
+        validateUserIsAdmin(adminUserData, subscription);
 
         UserSubscriptionJoin userSubscriptionJoin = subscription.getUserSubscriptionJoins().stream()
                 .filter(join -> join.getUserData().getId().equals(userId))
@@ -219,6 +229,12 @@ public class UserDataService {
         subscription.getUserSubscriptionJoins().remove(userSubscriptionJoin);
         subscriptionRepository.save(subscription);
         userSubscriptionJoinRepository.delete(userSubscriptionJoin);
+    }
+
+    private void validateSubscriptionIsNotTrial(UserSubscription subscription, String message) {
+        if (subscription.getType().equals(SubscriptionTypeEnum.TRIAL)) {
+            throw new TrialSubscriptionException(message);
+        }
     }
 
     public UserDataDTO getUserDataByUsername(String username) {

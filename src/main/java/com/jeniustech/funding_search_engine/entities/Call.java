@@ -90,6 +90,8 @@ public class Call {
             return "<" + NumberMapper.formatNumberWithCommas(budgetMax);
         } else if (budgetMax == null) {
             return ">" + NumberMapper.formatNumberWithCommas(budgetMin);
+        } else if (budgetMin.compareTo(budgetMax) == 0) {
+            return NumberMapper.formatNumberWithCommas(budgetMin);
         }
         return NumberMapper.formatNumberWithCommas(budgetMin) + " - " + NumberMapper.formatNumberWithCommas(budgetMax);
     }
