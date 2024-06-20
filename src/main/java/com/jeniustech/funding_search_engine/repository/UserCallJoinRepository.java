@@ -16,7 +16,7 @@ public interface UserCallJoinRepository extends JpaRepository<UserCallJoin, Long
     @Query("SELECT ucj FROM UserCallJoin ucj WHERE ucj.userData.id = :userId AND ucj.type = 0")
     List<UserCallJoin> findFavoritesByUserId(Long userId, Pageable pageable);
 
-    @Query("SELECT ucj.callData.id FROM UserCallJoin ucj WHERE ucj.userData.id = :userId AND ucj.id IN :ids AND ucj.type = 0")
+    @Query("SELECT ucj.callData.id FROM UserCallJoin ucj WHERE ucj.userData.id = :userId AND ucj.callData.id IN :ids AND ucj.type = 0")
     List<Long> findFavoriteByCallIds(Long userId, List<Long> ids);
 
     @Query("SELECT COUNT(ucj) FROM UserCallJoin ucj WHERE ucj.userData.id = :userId AND ucj.type = 0")
