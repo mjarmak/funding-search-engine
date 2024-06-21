@@ -12,4 +12,5 @@ import java.util.List;
 public class SearchDTO <T> {
     List<T> results;
     Long totalResults;
+    Long technicalTotalResults;
 }

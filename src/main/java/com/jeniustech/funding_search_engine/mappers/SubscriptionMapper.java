@@ -10,8 +10,7 @@ public interface SubscriptionMapper {
                 .startDate(subscription.getStartDate())
                 .endDate(subscription.getEndDate())
                 .type(subscription.getType())
-                .isPaid(subscription.isPaid())
-                .isActive(subscription.isActive())
+                .paid(subscription.isPaid())
                 .build();
     }
 }

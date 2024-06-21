@@ -61,9 +61,9 @@ public class DataLoader {
     void loadData() {
         String path = "C:/Projects/funding-search-engine/src/test/resources/data/";
         List<String> csvFiles = List.of(
-                "output_query-open_1718653202242.csv"
-//                "output_query-upcoming_1718653130808.csv"
-//                "output_query-closed_1718653220506.csv"
+//                "output_query-open_1718653202242.csv"
+                "output_query-upcoming_1718653130808.csv",
+                "output_query-closed_1718653220506.csv"
         );
         for (String csvFile : csvFiles) {
             loadFile(path, csvFile);

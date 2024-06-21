@@ -11,7 +11,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
-import static com.jeniustech.funding_search_engine.constants.Constants.*;
+import static com.jeniustech.funding_search_engine.constants.SolrColumns.*;
 import static com.jeniustech.funding_search_engine.util.StringUtil.valueOrDefault;
 
 public interface SolrMapper {

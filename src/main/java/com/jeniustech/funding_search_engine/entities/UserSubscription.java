@@ -70,10 +70,6 @@ public class UserSubscription {
         );
     }
 
-    public boolean isActive() {
-        return isPaid() || isTrial();
-    }
-
     public Payment getLatestPayment() {
         if (payments == null || payments.isEmpty()) {
             return null;

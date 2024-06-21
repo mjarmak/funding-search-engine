@@ -77,7 +77,7 @@ public interface UserDataMapper {
                 .firstName(userData.getFirstName())
                 .lastName(userData.getLastName())
                 .username(userData.getUserName())
-                .subscription(withSubData ? SubscriptionMapper.map(userData.getMainActiveSubscription()) : null)
+                .subscription(withSubData ? SubscriptionMapper.map(userData.getMainSubscription()) : null)
                 .isAdmin(withSubData ? userData.isAdmin() : null)
                 .build();
     }

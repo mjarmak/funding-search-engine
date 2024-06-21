@@ -62,7 +62,7 @@ server {
 
 
 # ------------------------------------------
-# backend
+# Backend
 # ------------------------------------------
 server {
     listen 80;
@@ -94,7 +94,7 @@ server {
 
 
 # ------------------------------------------
-# angular funding test
+# Frontend
 # ------------------------------------------
 server {
     listen 80;
@@ -112,8 +112,8 @@ server {
     ssl_certificate_key /etc/letsencrypt/live/app.innovilyse.com/privkey.pem;
 
     location / {
-        root /var/app/innovilyse.com;
+        root /var/app/innovilyse.com/browser;
         index index.html;
-        try_files $uri $uri/ /inde.html;
+        try_files $uri $uri/ /index.html;
     }
 }

@@ -22,9 +22,6 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-import static com.jeniustech.funding_search_engine.constants.Constants.START_DATE;
-import static com.jeniustech.funding_search_engine.constants.Constants.END_DATE;
-
 @Service
 public class SolrClientService {
 
@@ -60,6 +57,14 @@ public class SolrClientService {
 
     public SearchDTO<CallDTO> search(String query, int pageNumber, int pageSize, JwtModel jwtModel) {
         UserData userData = this.userDataRepository.findBySubjectId(jwtModel.getUserId()).orElseThrow(() -> new SearchException("User not found"));
+
+        ValidatorService.validateUserSearch(userData);
+
+        if (userData.getMainActiveSubscription().isTrial()) {
+            pageNumber = 0;
+            pageSize = 5;
+        }
+
         logService.addLog(userData, LogTypeEnum.SEARCH, query);
         try {
             final SolrQuery solrQuery = new SolrQuery(
@@ -69,9 +74,10 @@ public class SolrClientService {
             );
             solrQuery.setSort("score", SolrQuery.ORDER.desc);
             // open
-            solrQuery.setSort("if(ms(NOW,"+ START_DATE +") > 0, 1, 0)", SolrQuery.ORDER.asc);
+            solrQuery.setSort("q=*:*&sort=if(ms(NOW,start_date) > 0, 1, if(ms(NOW,end_date) < 0, 3, 2))", SolrQuery.ORDER.desc);
+            solrQuery.setSort("start_date", SolrQuery.ORDER.desc);
             // upcoming
-            solrQuery.setSort("sum(abs(ms(NOW,"+ START_DATE + ")),abs(ms(NOW," + END_DATE + ")))", SolrQuery.ORDER.asc);
+//            solrQuery.setSort("sum(abs(ms(NOW,"+ START_DATE + ")),abs(ms(NOW," + END_DATE + ")))", SolrQuery.ORDER.asc);
 
             QueryResponse response = this.solrClient.query(solrQuery);
             List<CallDTO> results = SolrMapper.map(response.getResults());
@@ -85,9 +91,17 @@ public class SolrClientService {
                 }
             }
 
+            long technicalTotalResults = response.getResults().getNumFound();
+            long totalResults = technicalTotalResults;
+
+            if (userData.getMainActiveSubscription().isTrial()) {
+                totalResults = Math.min(technicalTotalResults, 5);
+            }
+
             return SearchDTO.<CallDTO>builder()
                     .results(results)
-                    .totalResults(response.getResults().getNumFound())
+                    .totalResults(totalResults)
+                    .technicalTotalResults(response.getResults().getNumFound())
                     .build();
         } catch (Exception e) {
             e.printStackTrace();

@@ -7,7 +7,7 @@ public enum UrlTypeEnum {
 
     public String getUrl(String identifier, String urlId) {
         return switch (this) {
-            case TOPIC_DETAILS -> "https://ec.europa.eu/info/funding-tenders/opportunities/portal/screen/opportunities/topic-details/" + identifier;
+            case TOPIC_DETAILS -> "https://ec.europa.eu/info/funding-tenders/opportunities/portal/screen/opportunities/topic-details/" + identifier.toLowerCase();
             case PROSPECT -> "https://ec.europa.eu/info/funding-tenders/opportunities/portal/screen/opportunities/prospect-details/" + urlId;
             case COMPETITIVE_CALL -> "https://ec.europa.eu/info/funding-tenders/opportunities/portal/screen/opportunities/competitive-calls-cs/" + urlId;
             default -> null;

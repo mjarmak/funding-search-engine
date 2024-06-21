@@ -9,6 +9,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import java.sql.Timestamp;
 import java.util.List;
+import java.util.Optional;
 
 @Data
 @Builder
@@ -50,21 +51,49 @@ public class UserData {
         return userSubscriptionJoins.stream().map(UserSubscriptionJoin::getSubscription).toList();
     }
 
-    public UserSubscription getMainActiveSubscription() {
-        return getUserSubscriptions().stream().filter(
-            userSubscription -> !userSubscription.getType().equals(SubscriptionTypeEnum.TRIAL) && userSubscription.isPaid()
-        )
-                .findFirst().orElse(
-            getUserSubscriptions().stream()
-                .filter(userSubscription -> userSubscription.getType().equals(SubscriptionTypeEnum.TRIAL) && userSubscription.isPaid())
-                    .findFirst().orElseThrow(
-                        () -> new NoSubscriptionException("No main subscription found for user with id: " + id)
-                    )
-        );
+    public boolean hasActiveSubscription() {
+        return getUserSubscriptions().stream().anyMatch(UserSubscription::isPaid);
     }
 
+    public UserSubscription getMainActiveSubscription() {
+        Optional<UserSubscription> nonTrial = getUserSubscriptions().stream().filter(
+                        userSubscription -> !userSubscription.getType().equals(SubscriptionTypeEnum.TRIAL) && userSubscription.isPaid()
+                )
+                .findFirst();
+        if (nonTrial.isPresent()) {
+            return nonTrial.get();
+        }
+        Optional<UserSubscription> trial = getUserSubscriptions().stream()
+                .filter(userSubscription -> userSubscription.getType().equals(SubscriptionTypeEnum.TRIAL) && userSubscription.isPaid())
+                .findFirst();
+
+        if (trial.isPresent()) {
+            return trial.get();
+        } else {
+            throw new NoSubscriptionException("No active subscription found");
+        }
+    }
+
+    public UserSubscription getMainSubscription() {
+        Optional<UserSubscription> nonTrial = getUserSubscriptions().stream().filter(
+                        userSubscription -> !userSubscription.getType().equals(SubscriptionTypeEnum.TRIAL))
+                .findFirst();
+        if (nonTrial.isPresent()) {
+            return nonTrial.get();
+        }
+        Optional<UserSubscription> trial = getUserSubscriptions().stream()
+                .filter(userSubscription -> userSubscription.getType().equals(SubscriptionTypeEnum.TRIAL))
+                .findFirst();
+        if (trial.isPresent()) {
+            return trial.get();
+        } else {
+            throw new NoSubscriptionException("No active subscription found");
+        }
+    }
+
+
     public boolean isAdmin() {
-        return getMainActiveSubscription().isAdmin(this);
+        return getMainSubscription().isAdmin(this);
     }
 
 }

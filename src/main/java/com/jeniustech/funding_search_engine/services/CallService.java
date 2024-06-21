@@ -42,6 +42,9 @@ public class CallService {
 
     public void favoriteCall(Long callId, String subjectId) {
         UserData userData = userDataRepository.findBySubjectId(subjectId).orElseThrow(() -> new CallNotFoundException("User not found"));
+
+        ValidatorService.validateUserFavorite(userData.getMainActiveSubscription(), userCallJoinRepository.countFavoritesByUserId(userData.getId()));
+
         Call call = getCallById(callId);
         if (isFavorite(call.getId(), userData.getId())) {
             return;

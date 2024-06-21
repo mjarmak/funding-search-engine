@@ -15,7 +15,7 @@ public class SubscriptionDTO {
     SubscriptionTypeEnum type;
     LocalDateTime startDate;
     LocalDateTime endDate;
-    boolean isPaid;
-    boolean isActive;
+
+    boolean paid;
 
 }

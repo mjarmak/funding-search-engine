@@ -32,9 +32,9 @@ public class ExportService {
             Row headerRow = sheet.createRow(0);
             headerRow.createCell(0).setCellValue("Call Identifier");
             headerRow.createCell(1).setCellValue("Topic");
-            headerRow.createCell(2).setCellValue("Open Date");
-            headerRow.createCell(3).setCellValue("Submission Deadline 1");
-            headerRow.createCell(4).setCellValue("Submission Deadline 2");
+            headerRow.createCell(2).setCellValue("Open Date (UTC)");
+            headerRow.createCell(3).setCellValue("Submission Deadline 1 (UTC)");
+            headerRow.createCell(4).setCellValue("Submission Deadline 2 (UTC)");
             headerRow.createCell(5).setCellValue("Action Type");
             headerRow.createCell(6).setCellValue("Budget (EUR)");
             headerRow.createCell(7).setCellValue("Type Of MGA");

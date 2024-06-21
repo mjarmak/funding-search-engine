@@ -1,8 +1,8 @@
 Run in order:
 
-docker build -t funding-search-engine:0.0.1 .
-docker tag funding-search-engine:0.0.1 jeniustech/funding-search-engine:0.0.1
-docker push jeniustech/funding-search-engine:0.0.1
+docker build -t funding-search-engine:0.0.2 .
+docker tag funding-search-engine:0.0.2 jeniustech/funding-search-engine:0.0.2
+docker push jeniustech/funding-search-engine:0.0.2
 
 sudo adduser --system --group --no-create-home solr
 sudo chown -R solr:solr /var/data/data_solr
@@ -13,6 +13,10 @@ copy uid and gid to docker-compose-solr.yml
 
 sudo chown 8983:8983 /var/data/data_solr/
 sudo chmod -R 755 /var/data/data_solr/**
+
+sudo ufw ssh enable
+sudo ufw allow '5432'
+sudo ufw allow '8983'
 
 docker compose -f docker-compose-portainer.yml up -d
 docker compose -f docker-compose-keycloak.yml up -d
