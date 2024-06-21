@@ -64,4 +64,12 @@ public class UserDataController {
         return ResponseEntity.ok(userDataService.getUserDataByUsername(username));
     }
 
+    @GetMapping("search/history")
+    public ResponseEntity<List<String>> getSearchHistory(
+            @AuthenticationPrincipal Jwt jwt
+            ) {
+        JwtModel jwtModel = UserDataMapper.map(jwt);
+        return ResponseEntity.ok(userDataService.getSearchHistory(jwtModel.getUserId()));
+    }
+
 }

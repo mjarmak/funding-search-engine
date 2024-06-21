@@ -4,6 +4,7 @@ import com.jeniustech.funding_search_engine.entities.Call;
 import com.jeniustech.funding_search_engine.entities.UserData;
 import com.jeniustech.funding_search_engine.exceptions.CallNotFoundException;
 import com.jeniustech.funding_search_engine.exceptions.SubscriptionPlanException;
+import com.jeniustech.funding_search_engine.exceptions.UserNotFoundException;
 import com.jeniustech.funding_search_engine.repository.CallRepository;
 import com.jeniustech.funding_search_engine.repository.UserDataRepository;
 import com.jeniustech.funding_search_engine.util.StringUtil;
@@ -31,7 +32,7 @@ public class ExportService {
 
     public ByteArrayInputStream generateExcel(List<Long> callIds, String subjectId) throws IOException {
 
-        UserData userData = userDataRepository.findBySubjectId(subjectId).orElseThrow(() -> new CallNotFoundException("User not found"));
+        UserData userData = userDataRepository.findBySubjectId(subjectId).orElseThrow(() -> new UserNotFoundException("User not found"));
         ValidatorService.validateUserExcelExport(userData, logService.getCountByUserIdAndType(userData.getId(), EXPORT_EXCEL));
 
         List<Call> calls = callRepository.findAllById(callIds);

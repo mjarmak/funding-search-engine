@@ -5,6 +5,7 @@ import com.jeniustech.funding_search_engine.dto.SearchDTO;
 import com.jeniustech.funding_search_engine.mappers.UserDataMapper;
 import com.jeniustech.funding_search_engine.models.JwtModel;
 import com.jeniustech.funding_search_engine.services.SolrClientService;
+import jakarta.validation.constraints.Size;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -21,7 +22,7 @@ public class SearchController {
 
     @GetMapping("/search")
     public ResponseEntity<SearchDTO<CallDTO>> search(
-            @RequestParam String query,
+            @RequestParam @Size(min = 2, max = 255) String query,
             @RequestParam(required = true, defaultValue = "0") int pageNumber,
             @RequestParam(required = true, defaultValue = "20") int pageSize,
             @AuthenticationPrincipal Jwt jwt

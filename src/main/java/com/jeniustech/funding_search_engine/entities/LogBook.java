@@ -2,13 +2,12 @@ package com.jeniustech.funding_search_engine.entities;
 
 import com.jeniustech.funding_search_engine.enums.LogTypeEnum;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.sql.Timestamp;
 
+@Data
 @Builder
 @Entity
 @NoArgsConstructor

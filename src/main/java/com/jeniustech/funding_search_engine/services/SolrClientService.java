@@ -6,6 +6,7 @@ import com.jeniustech.funding_search_engine.entities.UserData;
 import com.jeniustech.funding_search_engine.enums.LogTypeEnum;
 import com.jeniustech.funding_search_engine.exceptions.DocumentSaveException;
 import com.jeniustech.funding_search_engine.exceptions.SearchException;
+import com.jeniustech.funding_search_engine.exceptions.UserNotFoundException;
 import com.jeniustech.funding_search_engine.mappers.SolrMapper;
 import com.jeniustech.funding_search_engine.models.JwtModel;
 import com.jeniustech.funding_search_engine.repository.UserDataRepository;
@@ -56,7 +57,7 @@ public class SolrClientService {
     }
 
     public SearchDTO<CallDTO> search(String query, int pageNumber, int pageSize, JwtModel jwtModel) {
-        UserData userData = this.userDataRepository.findBySubjectId(jwtModel.getUserId()).orElseThrow(() -> new SearchException("User not found"));
+        UserData userData = this.userDataRepository.findBySubjectId(jwtModel.getUserId()).orElseThrow(() -> new UserNotFoundException("User not found"));
 
         ValidatorService.validateUserSearch(userData);
 

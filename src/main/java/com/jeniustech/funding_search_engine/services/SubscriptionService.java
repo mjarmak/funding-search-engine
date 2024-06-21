@@ -4,7 +4,7 @@ import com.jeniustech.funding_search_engine.entities.UserData;
 import com.jeniustech.funding_search_engine.entities.UserSubscription;
 import com.jeniustech.funding_search_engine.enums.SubscriptionTypeEnum;
 import com.jeniustech.funding_search_engine.exceptions.NotAllowedActionException;
-import com.jeniustech.funding_search_engine.exceptions.NotFoundItemException;
+import com.jeniustech.funding_search_engine.exceptions.UserNotFoundException;
 import com.jeniustech.funding_search_engine.repository.UserDataRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -17,7 +17,7 @@ public class SubscriptionService {
 
     public void validateSubscription(String userId, SubscriptionTypeEnum type) {
         UserData userData = userDataRepository.findBySubjectId(userId)
-                .orElseThrow(() -> new NotFoundItemException("User not found"));
+                .orElseThrow(() -> new UserNotFoundException("User not found"));
         UserSubscription subscription = userData.getMainSubscription();
         if (subscription.getType().equals(type)) {
             throw new NotAllowedActionException("User already has this subscription");

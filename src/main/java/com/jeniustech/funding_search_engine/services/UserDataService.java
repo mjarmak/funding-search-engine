@@ -1,17 +1,12 @@
 package com.jeniustech.funding_search_engine.services;
 
 import com.jeniustech.funding_search_engine.dto.UserDataDTO;
-import com.jeniustech.funding_search_engine.entities.Payment;
-import com.jeniustech.funding_search_engine.entities.UserData;
-import com.jeniustech.funding_search_engine.entities.UserSubscription;
-import com.jeniustech.funding_search_engine.entities.UserSubscriptionJoin;
-import com.jeniustech.funding_search_engine.enums.CurrencyEnum;
-import com.jeniustech.funding_search_engine.enums.PaymentStatusEnum;
-import com.jeniustech.funding_search_engine.enums.SubscriptionJoinType;
-import com.jeniustech.funding_search_engine.enums.SubscriptionTypeEnum;
+import com.jeniustech.funding_search_engine.entities.*;
+import com.jeniustech.funding_search_engine.enums.*;
 import com.jeniustech.funding_search_engine.exceptions.MapperException;
 import com.jeniustech.funding_search_engine.exceptions.NotFoundItemException;
 import com.jeniustech.funding_search_engine.exceptions.TrialSubscriptionException;
+import com.jeniustech.funding_search_engine.exceptions.UserNotFoundException;
 import com.jeniustech.funding_search_engine.mappers.DateMapper;
 import com.jeniustech.funding_search_engine.mappers.UserDataMapper;
 import com.jeniustech.funding_search_engine.models.JwtModel;
@@ -43,6 +38,7 @@ public class UserDataService {
     private final SubscriptionRepository subscriptionRepository;
     private final UserSubscriptionJoinRepository userSubscriptionJoinRepository;
     private final PaymentRepository paymentRepository;
+    private final LogService logService;
 
     @Value("${keycloak.service.realm}")
     private String serviceRealm;
@@ -58,7 +54,7 @@ public class UserDataService {
         UserSubscription subscription = subscriptionRepository.findById(subscriptionId).orElseThrow(() -> new NotFoundItemException("Subscription not found"));
 
         UserData adminUserData = userDataRepository.findBySubjectId(jwtModel.getUserId())
-                .orElseThrow(() -> new NotFoundItemException("User not found"));
+                .orElseThrow(() -> new UserNotFoundException("User not found"));
         validateUserIsAdmin(adminUserData, subscription);
 
         return subscription.getUserSubscriptionJoins().stream()
@@ -73,7 +69,7 @@ public class UserDataService {
         validateSubscriptionIsNotTrial(subscription, "Cannot add user to trial subscription");
 
         UserData adminUserData = userDataRepository.findBySubjectId(jwtModel.getUserId())
-                .orElseThrow(() -> new NotFoundItemException("User not found"));
+                .orElseThrow(() -> new UserNotFoundException("User not found"));
         validateUserIsAdmin(adminUserData, subscription);
 
             Optional<UserData> userDataOptional = userDataRepository.findByUserName(userDataDTO.getUsername());
@@ -222,12 +218,12 @@ public class UserDataService {
         UserSubscription subscription = subscriptionRepository.findById(subscriptionId).orElseThrow(() -> new NotFoundItemException("Subscription not found"));
 
         UserData adminUserData = userDataRepository.findBySubjectId(jwtModel.getUserId())
-                .orElseThrow(() -> new NotFoundItemException("User not found"));
+                .orElseThrow(() -> new UserNotFoundException("User not found"));
         validateUserIsAdmin(adminUserData, subscription);
 
         UserSubscriptionJoin userSubscriptionJoin = subscription.getUserSubscriptionJoins().stream()
                 .filter(join -> join.getUserData().getId().equals(userId))
-                .findFirst().orElseThrow(() -> new NotFoundItemException("User not found in subscription"));
+                .findFirst().orElseThrow(() -> new UserNotFoundException("User not found in subscription"));
 
         subscription.getUserSubscriptionJoins().remove(userSubscriptionJoin);
         subscriptionRepository.save(subscription);
@@ -241,7 +237,14 @@ public class UserDataService {
     }
 
     public UserDataDTO getUserDataByUsername(String username) {
-        UserData userData = userDataRepository.findByUserName(username).orElseThrow(() -> new NotFoundItemException("User not found"));
+        UserData userData = userDataRepository.findByUserName(username).orElseThrow(() -> new UserNotFoundException("User not found"));
         return UserDataMapper.mapToDisplayDTO(userData);
+    }
+
+    public List<String> getSearchHistory(String userId) {
+        UserData userData = userDataRepository.findBySubjectId(userId).orElseThrow(() -> new UserNotFoundException("User not found"));
+        return logService.getLogsByUserIdAndType(userData.getId(), LogTypeEnum.SEARCH, 20).stream().sorted(
+                (o1, o2) -> o2.getCreatedAt().compareTo(o1.getCreatedAt())
+        ).map(LogBook::getLogText).toList();
     }
 }

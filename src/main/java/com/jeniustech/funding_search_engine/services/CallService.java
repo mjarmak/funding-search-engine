@@ -7,6 +7,7 @@ import com.jeniustech.funding_search_engine.entities.UserCallJoin;
 import com.jeniustech.funding_search_engine.entities.UserData;
 import com.jeniustech.funding_search_engine.enums.UserCallJoinTypeEnum;
 import com.jeniustech.funding_search_engine.exceptions.CallNotFoundException;
+import com.jeniustech.funding_search_engine.exceptions.UserNotFoundException;
 import com.jeniustech.funding_search_engine.mappers.CallMapper;
 import com.jeniustech.funding_search_engine.repository.CallRepository;
 import com.jeniustech.funding_search_engine.repository.UserCallJoinRepository;
@@ -41,7 +42,7 @@ public class CallService {
     }
 
     public void favoriteCall(Long callId, String subjectId) {
-        UserData userData = userDataRepository.findBySubjectId(subjectId).orElseThrow(() -> new CallNotFoundException("User not found"));
+        UserData userData = userDataRepository.findBySubjectId(subjectId).orElseThrow(() -> new UserNotFoundException("User not found"));
 
         ValidatorService.validateUserFavorite(userData.getMainActiveSubscription(), userCallJoinRepository.countFavoritesByUserId(userData.getId()));
 
@@ -58,7 +59,7 @@ public class CallService {
     }
 
     public void unFavoriteCall(Long callId, String subjectId) {
-        UserData userData = userDataRepository.findBySubjectId(subjectId).orElseThrow(() -> new CallNotFoundException("User not found"));
+        UserData userData = userDataRepository.findBySubjectId(subjectId).orElseThrow(() -> new UserNotFoundException("User not found"));
         Call call = getCallById(callId);
         Optional<UserCallJoin> userCallJoin = userCallJoinRepository.findFavoriteByCallAndUserId(call.getId(), userData.getId());
         if (userCallJoin.isEmpty()) {
@@ -68,7 +69,7 @@ public class CallService {
     }
 
     public SearchDTO<CallDTO> getFavoritesByUserId(String subjectId, int pageNumber, int pageSize) {
-        UserData userData = userDataRepository.findBySubjectId(subjectId).orElseThrow(() -> new CallNotFoundException("User not found"));
+        UserData userData = userDataRepository.findBySubjectId(subjectId).orElseThrow(() -> new UserNotFoundException("User not found"));
 
         Pageable pageable = PageRequest.of(pageNumber, pageSize, Sort.sort(UserCallJoin.class).by(UserCallJoin::getId).descending());
 
