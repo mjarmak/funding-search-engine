@@ -21,4 +21,7 @@ public class LogService {
                 .build());
     }
 
+    public Long getCountByUserIdAndType(Long id, LogTypeEnum logTypeEnum) {
+        return logBookRepository.countByUserDataIdAndType(id, logTypeEnum);
+    }
 }

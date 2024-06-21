@@ -87,7 +87,7 @@ public class UserDataService {
 
     private UserDataDTO addExistingUserToSubscription(UserSubscription subscription, UserData userData) {
 
-        if (!userData.getMainActiveSubscription().getType().equals(SubscriptionTypeEnum.TRIAL)) {
+        if (!userData.getMainActiveSubscription().isTrial()) {
             throw new ForbiddenException("User already has a subscription");
         }
 
@@ -235,7 +235,7 @@ public class UserDataService {
     }
 
     private void validateSubscriptionIsNotTrial(UserSubscription subscription, String message) {
-        if (subscription.getType().equals(SubscriptionTypeEnum.TRIAL)) {
+        if (subscription.isTrial()) {
             throw new TrialSubscriptionException(message);
         }
     }

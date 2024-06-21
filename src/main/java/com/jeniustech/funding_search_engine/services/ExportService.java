@@ -1,7 +1,11 @@
 package com.jeniustech.funding_search_engine.services;
 
 import com.jeniustech.funding_search_engine.entities.Call;
+import com.jeniustech.funding_search_engine.entities.UserData;
+import com.jeniustech.funding_search_engine.exceptions.CallNotFoundException;
+import com.jeniustech.funding_search_engine.exceptions.SubscriptionPlanException;
 import com.jeniustech.funding_search_engine.repository.CallRepository;
+import com.jeniustech.funding_search_engine.repository.UserDataRepository;
 import com.jeniustech.funding_search_engine.util.StringUtil;
 import lombok.RequiredArgsConstructor;
 import org.apache.poi.ss.usermodel.Row;
@@ -15,15 +19,24 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.List;
 
+import static com.jeniustech.funding_search_engine.enums.LogTypeEnum.EXPORT_EXCEL;
+
 @Service
 @RequiredArgsConstructor
 public class ExportService {
 
     private final CallRepository callRepository;
+    private final UserDataRepository userDataRepository;
+    private final LogService logService;
 
-    public ByteArrayInputStream generateExcel(List<Long> callIds) throws IOException {
+    public ByteArrayInputStream generateExcel(List<Long> callIds, String subjectId) throws IOException {
+
+        UserData userData = userDataRepository.findBySubjectId(subjectId).orElseThrow(() -> new CallNotFoundException("User not found"));
+        ValidatorService.validateUserExcelExport(userData, logService.getCountByUserIdAndType(userData.getId(), EXPORT_EXCEL));
 
         List<Call> calls = callRepository.findAllById(callIds);
+
+        logService.addLog(userData, EXPORT_EXCEL, String.valueOf(calls.size()));
 
         try (Workbook workbook = new XSSFWorkbook(); ByteArrayOutputStream out = new ByteArrayOutputStream()) {
             Sheet sheet = workbook.createSheet("Data");
