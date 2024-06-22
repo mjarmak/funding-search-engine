@@ -50,6 +50,7 @@ public class UserDataService {
         }
     }
 
+    @Transactional
     public List<UserDataDTO> getUsersBySubscriptionId(Long subscriptionId, JwtModel jwtModel) {
         UserSubscription subscription = subscriptionRepository.findById(subscriptionId).orElseThrow(() -> new NotFoundItemException("Subscription not found"));
 
@@ -63,27 +64,41 @@ public class UserDataService {
                 .toList();
     }
 
+    @Transactional
     public UserDataDTO addUser(Long subscriptionId, JwtModel jwtModel, UserDataDTO userDataDTO) {
         UserSubscription subscription = subscriptionRepository.findById(subscriptionId).orElseThrow(() -> new NotFoundItemException("Subscription not found"));
 
-        validateSubscriptionIsNotTrial(subscription, "Cannot add user to trial subscription");
+        validateAddUserByAdmin(jwtModel, subscription);
+
+        Optional<UserData> userDataOptional = userDataRepository.findByUserName(userDataDTO.getUsername());
+
+        if (userDataOptional.isPresent()) {
+            return addExistingUserToSubscription(subscription, userDataOptional.get());
+        } else {
+            return createUserAndAddToSubscription(subscription, userDataDTO);
+        }
+    }
+
+    private void validateAddUserByAdmin(JwtModel jwtModel, UserSubscription subscription) {
+        validateSubscriptionIsNotTrial(subscription, "Cannot add user to trial subscription plan");
+
+        validateSubscriptionIsNotIndividual(subscription, "Cannot add user to individual subscription plan");
 
         UserData adminUserData = userDataRepository.findBySubjectId(jwtModel.getUserId())
                 .orElseThrow(() -> new UserNotFoundException("User not found"));
         validateUserIsAdmin(adminUserData, subscription);
 
-            Optional<UserData> userDataOptional = userDataRepository.findByUserName(userDataDTO.getUsername());
-
-            if (userDataOptional.isPresent()) {
-                return addExistingUserToSubscription(subscription, userDataOptional.get());
-            } else {
-                return createUserAndAddToSubscription(subscription, userDataDTO);
-            }
+        if (subscription.getType().equals(SubscriptionTypeEnum.EU_OFFICE) && subscription.getUserSubscriptionJoins().size() >= 5) {
+            throw new ForbiddenException("Cannot have more than 5 users in total, please upgrade your subscription plan");
+        }
     }
 
     private UserDataDTO addExistingUserToSubscription(UserSubscription subscription, UserData userData) {
 
-        if (!userData.getMainActiveSubscription().isTrial()) {
+        UserSubscription mainSubscription = userData.getMainSubscription();
+        if (mainSubscription.equals(subscription)) {
+            throw new ForbiddenException("User already part of organization's subscription plan");
+        } else if (!mainSubscription.isTrial() && mainSubscription.isPaid()) {
             throw new ForbiddenException("User already has a subscription");
         }
 
@@ -108,10 +123,10 @@ public class UserDataService {
         UserRepresentation userRepresentation = UserDataMapper.map(userDataDTO);
 
         try (Response response = keycloak.realm(serviceRealm).users().create(userRepresentation)) {
-            if (response.getStatus() == 201) {
+            if (response.getStatus() == 201 || response.getStatus() == 409) {
 
                 UserRepresentation newUser = keycloak.realm(serviceRealm).users().search(userDataDTO.getUsername())
-                        .stream().findFirst().orElseThrow(NotFoundItemException::new);
+                        .stream().findFirst().orElseThrow(() -> new UserNotFoundException("User not found"));
 
                 UserData userData = UserDataMapper.map(newUser);
 
@@ -126,6 +141,8 @@ public class UserDataService {
                 userDataRepository.save(userData);
                 userSubscriptionJoinRepository.save(userSubscriptionJoin);
 
+                addTrialSubscription(userData);
+
                 return UserDataMapper.mapToDTO(userData.getId(), userRepresentation);
 
             } else {
@@ -134,6 +151,38 @@ public class UserDataService {
         } catch (Exception e) {
             throw new InternalError("Error creating user, " + e.getMessage());
         }
+    }
+
+    private void addTrialSubscription(UserData userData) {
+        LocalDateTime startDate = getStartDate();
+        LocalDateTime endDate = getEndDate(startDate);
+        Payment payment = Payment.builder()
+                .amount(BigDecimal.ZERO)
+                .currency(CurrencyEnum.EUR)
+                .startDate(DateMapper.map(startDate))
+                .endDate(DateMapper.map(endDate))
+                .status(PaymentStatusEnum.PAID)
+                .build();
+        UserSubscription subscription = UserSubscription.builder()
+                .type(SubscriptionTypeEnum.TRIAL)
+                .payments(List.of(payment))
+                .build();
+        payment.setSubscription(subscription);
+
+        UserSubscriptionJoin userSubscriptionJoin = UserSubscriptionJoin.builder()
+                .type(SubscriptionJoinType.ADMIN)
+                .subscription(subscription)
+                .build();
+        subscription.setUserSubscriptionJoins(List.of(userSubscriptionJoin));
+
+        userData.getUserSubscriptionJoins().add(userSubscriptionJoin);
+
+        userSubscriptionJoin.setUserData(userData);
+        subscription.setAdminUser(userData);
+
+        subscriptionRepository.save(subscription);
+        userSubscriptionJoinRepository.save(userSubscriptionJoin);
+        paymentRepository.save(payment);
     }
 
     private void validateUserToCreate(UserDataDTO userDataDTO) {
@@ -148,6 +197,7 @@ public class UserDataService {
         }
     }
 
+    @Transactional
     public UserDataDTO getUserDataOrCreate(JwtModel jwtDTO) {
         Optional<UserData> userSettingsOptional = userDataRepository.findBySubjectId(jwtDTO.getUserId());
         if (userSettingsOptional.isPresent()) {
@@ -174,46 +224,29 @@ public class UserDataService {
             }
             return UserDataMapper.mapToDTO(userSettings, true);
         } else {
-            LocalDateTime startDate = LocalDateTime.now();
-            startDate = startDate.withHour(0).withMinute(0).withSecond(0).withNano(0);
-
-            LocalDateTime endDate = startDate.plusMonths(1);
-            endDate = endDate.withHour(23).withMinute(59).withSecond(59).withNano(999999999);
-
-            Payment payment = Payment.builder()
-                    .amount(BigDecimal.ZERO)
-                    .currency(CurrencyEnum.EUR)
-                    .startDate(DateMapper.map(startDate))
-                    .endDate(DateMapper.map(endDate))
-                    .status(PaymentStatusEnum.PAID)
-                    .build();
-            UserSubscription subscription = UserSubscription.builder()
-                    .type(SubscriptionTypeEnum.TRIAL)
-                    .payments(List.of(payment))
-                    .build();
-            payment.setSubscription(subscription);
-
-            UserSubscriptionJoin userSubscriptionJoin = UserSubscriptionJoin.builder()
-                    .type(SubscriptionJoinType.ADMIN)
-                    .subscription(subscription)
-                    .build();
-            subscription.setUserSubscriptionJoins(List.of(userSubscriptionJoin));
-
             UserData userData = UserDataMapper.map(jwtDTO);
-            userData.setUserSubscriptionJoins(List.of(userSubscriptionJoin));
-
-            userSubscriptionJoin.setUserData(userData);
-            subscription.setAdminUser(userData);
 
             userDataRepository.save(userData);
-            subscriptionRepository.save(subscription);
-            userSubscriptionJoinRepository.save(userSubscriptionJoin);
-            paymentRepository.save(payment);
+
+            addTrialSubscription(userData);
 
             return UserDataMapper.mapToDTO(userData, true);
         }
     }
 
+    private static LocalDateTime getEndDate(LocalDateTime startDate) {
+        LocalDateTime endDate = startDate.plusMonths(1).plusDays(1);
+        endDate = endDate.withHour(0).withMinute(0).withSecond(0).withNano(0);
+        return endDate;
+    }
+
+    private static LocalDateTime getStartDate() {
+        LocalDateTime startDate = LocalDateTime.now();
+        startDate = startDate.withHour(0).withMinute(0).withSecond(0).withNano(0);
+        return startDate;
+    }
+
+    @Transactional
     public void removeUserFromSubscription(Long subscriptionId, Long userId, JwtModel jwtModel) {
         UserSubscription subscription = subscriptionRepository.findById(subscriptionId).orElseThrow(() -> new NotFoundItemException("Subscription not found"));
 
@@ -236,11 +269,19 @@ public class UserDataService {
         }
     }
 
+    private void validateSubscriptionIsNotIndividual(UserSubscription subscription, String message) {
+        if (subscription.isIndividual()) {
+            throw new TrialSubscriptionException(message);
+        }
+    }
+
+    @Transactional(readOnly = true)
     public UserDataDTO getUserDataByUsername(String username) {
         UserData userData = userDataRepository.findByUserName(username).orElseThrow(() -> new UserNotFoundException("User not found"));
         return UserDataMapper.mapToDisplayDTO(userData);
     }
 
+    @Transactional(readOnly = true)
     public List<String> getSearchHistory(String userId) {
         UserData userData = userDataRepository.findBySubjectId(userId).orElseThrow(() -> new UserNotFoundException("User not found"));
         return logService.getLogsByUserIdAndType(userData.getId(), LogTypeEnum.SEARCH, 20).stream().sorted(

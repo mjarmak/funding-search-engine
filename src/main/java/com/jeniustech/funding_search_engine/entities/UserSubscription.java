@@ -60,14 +60,8 @@ public class UserSubscription {
         return type.equals(SubscriptionTypeEnum.TRIAL);
     }
 
-    public boolean isExpired() {
-        if (payments == null || payments.isEmpty()) {
-            return true;
-        }
-        return payments.stream().noneMatch(payment ->
-                payment.getStatus().equals(PaymentStatusEnum.PAID) &&
-                        payment.getEndDate().after(new Timestamp(System.currentTimeMillis()))
-        );
+    public boolean isIndividual() {
+        return type.equals(SubscriptionTypeEnum.INDIVIDUAL);
     }
 
     public Payment getLatestPayment() {

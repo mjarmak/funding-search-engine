@@ -8,6 +8,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -33,8 +34,9 @@ public class UserData {
 
     private String userName;
 
+    @Builder.Default
     @OneToMany(mappedBy = "userData")
-    private List<UserSubscriptionJoin> userSubscriptionJoins;
+    private List<UserSubscriptionJoin> userSubscriptionJoins = new ArrayList<>();
 
     @CreationTimestamp
     @Column(updatable = false)
@@ -87,7 +89,7 @@ public class UserData {
         if (trial.isPresent()) {
             return trial.get();
         } else {
-            throw new NoSubscriptionException("No active subscription found");
+            throw new NoSubscriptionException("No subscription found");
         }
     }
 
