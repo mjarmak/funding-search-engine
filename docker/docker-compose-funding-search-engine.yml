@@ -1,7 +1,7 @@
 version: '3'
 services:
   funding_search_engine:
-    image: jeniustech/funding-search-engine:0.0.2
+    image: jeniustech/funding-search-engine:0.0.3
     container_name: funding_search_engine
     restart: always
     ports:
@@ -28,3 +28,6 @@ services:
       - GOOGLE_CLIENT_ID=242445727745-89ep6gf9vcts9v9bprbar2g9kc2dphbp.apps.googleusercontent.com
       - GOOGLE_CLIENT_SECRET=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
       - SPRING_PROFILES_ACTIVE=prod
+
+      - STRIPE_API_KEY=sk_test_51PUU4UL9MMMwitwgjRvYpFKvbSg7udQJqnvUtMmkNCdUY3gdyu8I9VzIsywzgnPPiPFgd4CJ37byoGzEGTBmZR8T00Mr70QbB3
+      - STRIPE_WEBHOOK_SECRET=whsec_idc011mZ5f6L468DPgYf5uYShhJ80jtq

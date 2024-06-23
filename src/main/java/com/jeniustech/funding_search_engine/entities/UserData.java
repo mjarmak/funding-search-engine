@@ -54,19 +54,19 @@ public class UserData {
     }
 
     public boolean hasActiveSubscription() {
-        return getUserSubscriptions().stream().anyMatch(UserSubscription::isPaid);
+        return getUserSubscriptions().stream().anyMatch(UserSubscription::isActive);
     }
 
     public UserSubscription getMainActiveSubscription() {
         Optional<UserSubscription> nonTrial = getUserSubscriptions().stream().filter(
-                        userSubscription -> !userSubscription.getType().equals(SubscriptionTypeEnum.TRIAL) && userSubscription.isPaid()
+                        userSubscription -> !userSubscription.getType().equals(SubscriptionTypeEnum.TRIAL) && userSubscription.isActive()
                 )
                 .findFirst();
         if (nonTrial.isPresent()) {
             return nonTrial.get();
         }
         Optional<UserSubscription> trial = getUserSubscriptions().stream()
-                .filter(userSubscription -> userSubscription.getType().equals(SubscriptionTypeEnum.TRIAL) && userSubscription.isPaid())
+                .filter(userSubscription -> userSubscription.getType().equals(SubscriptionTypeEnum.TRIAL) && userSubscription.isActive())
                 .findFirst();
 
         if (trial.isPresent()) {

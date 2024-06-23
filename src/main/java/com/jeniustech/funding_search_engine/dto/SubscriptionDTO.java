@@ -13,9 +13,7 @@ import java.time.LocalDateTime;
 public class SubscriptionDTO {
     Long id;
     SubscriptionTypeEnum type;
-    LocalDateTime startDate;
+    LocalDateTime trialEndDate;
     LocalDateTime endDate;
-
-    boolean paid;
-
+    boolean active;
 }

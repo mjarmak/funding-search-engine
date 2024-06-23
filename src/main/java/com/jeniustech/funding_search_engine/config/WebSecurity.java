@@ -53,6 +53,7 @@ public class WebSecurity {
 //                        .requestMatchers(HttpMethod.GET, "/search/**").permitAll()
 
                         .requestMatchers("/error").permitAll()
+                        .requestMatchers("/webhook").permitAll()
 
                         .anyRequest().authenticated())
                 .csrf(AbstractHttpConfigurer::disable)

@@ -1,7 +1,10 @@
 package com.jeniustech.funding_search_engine.services;
 
 import com.jeniustech.funding_search_engine.dto.UserDataDTO;
-import com.jeniustech.funding_search_engine.entities.*;
+import com.jeniustech.funding_search_engine.entities.LogBook;
+import com.jeniustech.funding_search_engine.entities.UserData;
+import com.jeniustech.funding_search_engine.entities.UserSubscription;
+import com.jeniustech.funding_search_engine.entities.UserSubscriptionJoin;
 import com.jeniustech.funding_search_engine.enums.*;
 import com.jeniustech.funding_search_engine.exceptions.MapperException;
 import com.jeniustech.funding_search_engine.exceptions.NotFoundItemException;
@@ -10,7 +13,6 @@ import com.jeniustech.funding_search_engine.exceptions.UserNotFoundException;
 import com.jeniustech.funding_search_engine.mappers.DateMapper;
 import com.jeniustech.funding_search_engine.mappers.UserDataMapper;
 import com.jeniustech.funding_search_engine.models.JwtModel;
-import com.jeniustech.funding_search_engine.repository.PaymentRepository;
 import com.jeniustech.funding_search_engine.repository.SubscriptionRepository;
 import com.jeniustech.funding_search_engine.repository.UserDataRepository;
 import com.jeniustech.funding_search_engine.repository.UserSubscriptionJoinRepository;
@@ -23,7 +25,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.ws.rs.ForbiddenException;
 import javax.ws.rs.core.Response;
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -37,18 +38,10 @@ public class UserDataService {
     private final UserDataRepository userDataRepository;
     private final SubscriptionRepository subscriptionRepository;
     private final UserSubscriptionJoinRepository userSubscriptionJoinRepository;
-    private final PaymentRepository paymentRepository;
     private final LogService logService;
 
     @Value("${keycloak.service.realm}")
     private String serviceRealm;
-
-    private void validateUserIsAdmin(UserData adminUserData, UserSubscription subscription) throws ForbiddenException {
-
-        if (!subscription.isAdmin(adminUserData)) {
-            throw new ForbiddenException("User is not admin of subscription");
-        }
-    }
 
     @Transactional
     public List<UserDataDTO> getUsersBySubscriptionId(Long subscriptionId, JwtModel jwtModel) {
@@ -56,7 +49,7 @@ public class UserDataService {
 
         UserData adminUserData = userDataRepository.findBySubjectId(jwtModel.getUserId())
                 .orElseThrow(() -> new UserNotFoundException("User not found"));
-        validateUserIsAdmin(adminUserData, subscription);
+        ValidatorService.validateUserIsAdmin(adminUserData, subscription);
 
         return subscription.getUserSubscriptionJoins().stream()
                 .filter(userSubscriptionJoin -> userSubscriptionJoin.getType() == SubscriptionJoinType.USER)
@@ -80,15 +73,20 @@ public class UserDataService {
     }
 
     private void validateAddUserByAdmin(JwtModel jwtModel, UserSubscription subscription) {
+        if (!subscription.isActive()) {
+            throw new ForbiddenException("Subscription is not active");
+        }
+
         validateSubscriptionIsNotTrial(subscription, "Cannot add user to trial subscription plan");
 
         validateSubscriptionIsNotIndividual(subscription, "Cannot add user to individual subscription plan");
 
         UserData adminUserData = userDataRepository.findBySubjectId(jwtModel.getUserId())
                 .orElseThrow(() -> new UserNotFoundException("User not found"));
-        validateUserIsAdmin(adminUserData, subscription);
 
-        if (subscription.getType().equals(SubscriptionTypeEnum.EU_OFFICE) && subscription.getUserSubscriptionJoins().size() >= 5) {
+        ValidatorService.validateUserIsAdmin(adminUserData, subscription);
+
+        if (subscription.getType().getParent().equals(SubscriptionTypeParentEnum.EU_OFFICE) && subscription.getUserSubscriptionJoins().size() >= 5) {
             throw new ForbiddenException("Cannot have more than 5 users in total, please upgrade your subscription plan");
         }
     }
@@ -98,7 +96,7 @@ public class UserDataService {
         UserSubscription mainSubscription = userData.getMainSubscription();
         if (mainSubscription.equals(subscription)) {
             throw new ForbiddenException("User already part of organization's subscription plan");
-        } else if (!mainSubscription.isTrial() && mainSubscription.isPaid()) {
+        } else if (!mainSubscription.isTrial() && mainSubscription.isActive()) {
             throw new ForbiddenException("User already has a subscription");
         }
 
@@ -154,20 +152,12 @@ public class UserDataService {
     }
 
     private void addTrialSubscription(UserData userData) {
-        LocalDateTime startDate = getStartDate();
-        LocalDateTime endDate = getEndDate(startDate);
-        Payment payment = Payment.builder()
-                .amount(BigDecimal.ZERO)
-                .currency(CurrencyEnum.EUR)
-                .startDate(DateMapper.map(startDate))
-                .endDate(DateMapper.map(endDate))
-                .status(PaymentStatusEnum.PAID)
-                .build();
+        LocalDateTime endDate = getEndDate();
         UserSubscription subscription = UserSubscription.builder()
                 .type(SubscriptionTypeEnum.TRIAL)
-                .payments(List.of(payment))
+                .status(SubscriptionStatusEnum.ACTIVE)
+                .trialEndDate(DateMapper.map(endDate))
                 .build();
-        payment.setSubscription(subscription);
 
         UserSubscriptionJoin userSubscriptionJoin = UserSubscriptionJoin.builder()
                 .type(SubscriptionJoinType.ADMIN)
@@ -182,7 +172,6 @@ public class UserDataService {
 
         subscriptionRepository.save(subscription);
         userSubscriptionJoinRepository.save(userSubscriptionJoin);
-        paymentRepository.save(payment);
     }
 
     private void validateUserToCreate(UserDataDTO userDataDTO) {
@@ -201,28 +190,28 @@ public class UserDataService {
     public UserDataDTO getUserDataOrCreate(JwtModel jwtDTO) {
         Optional<UserData> userSettingsOptional = userDataRepository.findBySubjectId(jwtDTO.getUserId());
         if (userSettingsOptional.isPresent()) {
-            UserData userSettings = userSettingsOptional.get();
+            UserData userData = userSettingsOptional.get();
             boolean updated = false;
-            if (userSettings.getEmail() == null || !userSettings.getEmail().equals(jwtDTO.getEmail())) {
-                userSettings.setEmail(jwtDTO.getEmail());
+            if (userData.getEmail() == null || !userData.getEmail().equals(jwtDTO.getEmail())) {
+                userData.setEmail(jwtDTO.getEmail());
                 updated = true;
             }
-            if (userSettings.getFirstName() == null || !userSettings.getFirstName().equals(jwtDTO.getFirstName())) {
-                userSettings.setFirstName(jwtDTO.getFirstName());
+            if (userData.getFirstName() == null || !userData.getFirstName().equals(jwtDTO.getFirstName())) {
+                userData.setFirstName(jwtDTO.getFirstName());
                 updated = true;
             }
-            if (userSettings.getLastName() == null || !userSettings.getLastName().equals(jwtDTO.getLastName())) {
-                userSettings.setLastName(jwtDTO.getLastName());
+            if (userData.getLastName() == null || !userData.getLastName().equals(jwtDTO.getLastName())) {
+                userData.setLastName(jwtDTO.getLastName());
                 updated = true;
             }
-            if (userSettings.getUserName() == null || !userSettings.getUserName().equals(jwtDTO.getUserName())) {
-                userSettings.setUserName(jwtDTO.getUserName());
+            if (userData.getUserName() == null || !userData.getUserName().equals(jwtDTO.getUserName())) {
+                userData.setUserName(jwtDTO.getUserName());
                 updated = true;
             }
             if (updated) {
-                userDataRepository.save(userSettings);
+                userDataRepository.save(userData);
             }
-            return UserDataMapper.mapToDTO(userSettings, true);
+            return UserDataMapper.mapToDTO(userData, true);
         } else {
             UserData userData = UserDataMapper.map(jwtDTO);
 
@@ -234,16 +223,10 @@ public class UserDataService {
         }
     }
 
-    private static LocalDateTime getEndDate(LocalDateTime startDate) {
-        LocalDateTime endDate = startDate.plusMonths(1).plusDays(1);
+    private static LocalDateTime getEndDate() {
+        LocalDateTime endDate = LocalDateTime.now().plusMonths(1).plusDays(1);
         endDate = endDate.withHour(0).withMinute(0).withSecond(0).withNano(0);
         return endDate;
-    }
-
-    private static LocalDateTime getStartDate() {
-        LocalDateTime startDate = LocalDateTime.now();
-        startDate = startDate.withHour(0).withMinute(0).withSecond(0).withNano(0);
-        return startDate;
     }
 
     @Transactional
@@ -252,7 +235,7 @@ public class UserDataService {
 
         UserData adminUserData = userDataRepository.findBySubjectId(jwtModel.getUserId())
                 .orElseThrow(() -> new UserNotFoundException("User not found"));
-        validateUserIsAdmin(adminUserData, subscription);
+        ValidatorService.validateUserIsAdmin(adminUserData, subscription);
 
         UserSubscriptionJoin userSubscriptionJoin = subscription.getUserSubscriptionJoins().stream()
                 .filter(join -> join.getUserData().getId().equals(userId))

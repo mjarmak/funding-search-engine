@@ -7,10 +7,10 @@ public interface SubscriptionMapper {
     static SubscriptionDTO map(UserSubscription subscription) {
         return SubscriptionDTO.builder()
                 .id(subscription.getId())
-                .startDate(subscription.getStartDate())
-                .endDate(subscription.getEndDate())
+                .trialEndDate(DateMapper.map(subscription.getTrialEndDate()))
+                .endDate(DateMapper.map(subscription.getEndDate()))
                 .type(subscription.getType())
-                .paid(subscription.isPaid())
+                .active(subscription.isActive())
                 .build();
     }
 }

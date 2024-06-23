@@ -1,8 +1,7 @@
 package com.jeniustech.funding_search_engine.entities;
 
-import com.jeniustech.funding_search_engine.enums.PaymentStatusEnum;
-import com.jeniustech.funding_search_engine.enums.SubscriptionJoinType;
-import com.jeniustech.funding_search_engine.enums.SubscriptionTypeEnum;
+import com.jeniustech.funding_search_engine.enums.*;
+import com.jeniustech.funding_search_engine.mappers.DateMapper;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -10,7 +9,6 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
-import java.util.Comparator;
 import java.util.List;
 
 @Data
@@ -33,11 +31,23 @@ public class UserSubscription {
     @Enumerated(EnumType.ORDINAL)
     private SubscriptionTypeEnum type = SubscriptionTypeEnum.TRIAL;
 
-    @OneToMany(mappedBy = "subscription")
-    private List<Payment> payments;
+    @Enumerated(EnumType.ORDINAL)
+    private SubscriptionTypeEnum nextType;
+
+    private Timestamp trialEndDate;
+    private Timestamp endDate;
 
     @OneToMany(mappedBy = "subscription")
     private List<UserSubscriptionJoin> userSubscriptionJoins;
+
+    @Column(length = 255)
+    private String checkoutSessionId;
+
+    @Column(length = 50)
+    private String stripeId;
+
+    @Column(nullable = false)
+    private SubscriptionStatusEnum status;
 
     @CreationTimestamp
     @Column(updatable = false)
@@ -46,45 +56,22 @@ public class UserSubscription {
     @UpdateTimestamp
     private Timestamp updatedAt;
 
-    public boolean isPaid() {
-        if (payments == null || payments.isEmpty()) {
-            return false;
-        }
-        return payments.stream().anyMatch(payment ->
-                payment.getStatus().equals(PaymentStatusEnum.PAID) &&
-                        payment.getEndDate().after(new Timestamp(System.currentTimeMillis()))
-        );
+    public boolean isActive() {
+            if (trialEndDate != null && trialEndDate.after(new Timestamp(System.currentTimeMillis()))) {
+                return true;
+            } else if (status == null) {
+                return false;
+            } else {
+                return status.equals(SubscriptionStatusEnum.ACTIVE);
+            }
     }
 
     public boolean isTrial() {
-        return type.equals(SubscriptionTypeEnum.TRIAL);
+        return type.getParent().equals(SubscriptionTypeParentEnum.TRIAL);
     }
 
     public boolean isIndividual() {
-        return type.equals(SubscriptionTypeEnum.INDIVIDUAL);
-    }
-
-    public Payment getLatestPayment() {
-        if (payments == null || payments.isEmpty()) {
-            return null;
-        }
-        return payments.stream().max(Comparator.comparing(Payment::getStartDate)).get();
-    }
-
-    public LocalDateTime getStartDate() {
-        Payment latestPayment = getLatestPayment();
-        if (latestPayment == null) {
-            return null;
-        }
-        return latestPayment.getStartDate().toLocalDateTime();
-    }
-
-    public LocalDateTime getEndDate() {
-        Payment latestPayment = getLatestPayment();
-        if (latestPayment == null) {
-            return null;
-        }
-        return latestPayment.getEndDate().toLocalDateTime();
+        return type.getParent().equals(SubscriptionTypeParentEnum.INDIVIDUAL);
     }
 
     public boolean isAdmin(UserData userData) {
@@ -92,5 +79,33 @@ public class UserSubscription {
                 userSubscriptionJoin -> userSubscriptionJoin.getUserData().equals(userData) &&
                         userSubscriptionJoin.getType().equals(SubscriptionJoinType.ADMIN)
         );
+    }
+
+    public void setEndDateFromNow(SubscriptionPeriodEnum period) {
+        if (period == null) {
+            endDate = null;
+            return;
+        }
+        switch (period) {
+            case MONTHLY -> endDate = DateMapper.map(
+                    LocalDateTime.now()
+                            .plusMonths(1)
+                            .plusDays(1)
+                            .withHour(0)
+                            .withMinute(0)
+                            .withSecond(0)
+                            .withNano(0)
+            );
+            case YEARLY -> endDate = DateMapper.map(
+                    LocalDateTime.now()
+                            .plusYears(1)
+                            .plusDays(1)
+                            .withHour(0)
+                            .withMinute(0)
+                            .withSecond(0)
+                            .withNano(0)
+            );
+        }
+
     }
 }
