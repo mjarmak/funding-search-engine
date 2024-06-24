@@ -6,26 +6,33 @@ import com.jeniustech.funding_search_engine.entities.UserData;
 import com.jeniustech.funding_search_engine.entities.UserSubscription;
 import com.jeniustech.funding_search_engine.enums.SubscriptionStatusEnum;
 import com.jeniustech.funding_search_engine.enums.SubscriptionTypeEnum;
-import com.jeniustech.funding_search_engine.exceptions.*;
+import com.jeniustech.funding_search_engine.exceptions.NotFoundItemException;
+import com.jeniustech.funding_search_engine.exceptions.StripeRequestException;
+import com.jeniustech.funding_search_engine.exceptions.StripeWebhookException;
+import com.jeniustech.funding_search_engine.exceptions.UserNotFoundException;
 import com.jeniustech.funding_search_engine.models.JwtModel;
 import com.jeniustech.funding_search_engine.repository.SubscriptionRepository;
 import com.jeniustech.funding_search_engine.repository.UserDataRepository;
 import com.stripe.Stripe;
+import com.stripe.exception.SignatureVerificationException;
 import com.stripe.exception.StripeException;
-import com.stripe.model.Subscription;
-import org.springframework.stereotype.Service;
-import org.springframework.beans.factory.annotation.Value;
-
-import com.stripe.net.ApiResource;
 import com.stripe.model.Event;
 import com.stripe.model.EventDataObjectDeserializer;
-import com.stripe.exception.SignatureVerificationException;
-import com.stripe.net.Webhook;
 import com.stripe.model.StripeObject;
+import com.stripe.model.Subscription;
 import com.stripe.model.checkout.Session;
+import com.stripe.net.ApiResource;
+import com.stripe.net.Webhook;
+import com.stripe.param.SubscriptionCancelParams;
 import com.stripe.param.checkout.SessionCreateParams;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
+
+@Slf4j
 @Service
 public class StripeService {
 
@@ -123,8 +130,12 @@ public class StripeService {
                 UserSubscription subscription = subscriptionRepository.findByCheckoutSessionId(session.getId()).orElseThrow(() -> new NotFoundItemException("Subscription not found"));
 
                 if (subscription.getStripeId() != null) {
-                    // TODO cancel existing subscription
-                    // TODO refund existing subscription
+                    try {
+                        Subscription stripeSubscription = Subscription.retrieve(subscription.getStripeId());
+                        stripeSubscription.cancel(SubscriptionCancelParams.builder().setInvoiceNow(true).build());
+                    } catch (StripeException e) {
+                        log.error("Error retrieving subscription: " + e.getMessage());
+                    }
                 }
 
                 subscription.setStatus(SubscriptionStatusEnum.ACTIVE);
@@ -139,17 +150,25 @@ public class StripeService {
             }
             case  "customer.subscription.resumed" -> {
                 Subscription stripeSubscription = (Subscription) stripeObject;
-                UserSubscription subscription = subscriptionRepository.findByStripeId(stripeSubscription.getId()).orElseThrow(() -> new NotFoundItemException("Subscription not found"));
-                subscription.setStatus(SubscriptionStatusEnum.ACTIVE);
-                subscriptionRepository.save(subscription);
+                Optional<UserSubscription> subscription = subscriptionRepository.findByStripeId(stripeSubscription.getId());
+                if (subscription.isEmpty()) {
+                    log.warn("Subscription not found: " + stripeSubscription.getId());
+                    return;
+                }
+                subscription.get().setStatus(SubscriptionStatusEnum.ACTIVE);
+                subscriptionRepository.save(subscription.get());
             }
             case "customer.subscription.deleted", "customer.subscription.paused" -> {
                 Subscription stripeSubscription = (Subscription) stripeObject;
-                UserSubscription subscription = subscriptionRepository.findByStripeId(stripeSubscription.getId()).orElseThrow(() -> new NotFoundItemException("Subscription not found"));
-                subscription.setStatus(SubscriptionStatusEnum.INACTIVE);
-                subscriptionRepository.save(subscription);
+                Optional<UserSubscription> subscription = subscriptionRepository.findByStripeId(stripeSubscription.getId());
+                if (subscription.isEmpty()) {
+                    log.warn("Subscription not found: " + stripeSubscription.getId());
+                    return;
+                }
+                subscription.get().setStatus(SubscriptionStatusEnum.INACTIVE);
+                subscriptionRepository.save(subscription.get());
             }
-            default -> System.out.println("Unhandled event type: " + event.getType());
+            default -> log.warn("Unhandled event type: " + event.getType());
         }
     }
 
