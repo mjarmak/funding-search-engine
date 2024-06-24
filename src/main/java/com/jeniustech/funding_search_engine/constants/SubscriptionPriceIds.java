@@ -1,4 +1,4 @@
-package com.jeniustech.funding_search_engine.enums;
+package com.jeniustech.funding_search_engine.constants;
 
 public interface SubscriptionPriceIds {
 

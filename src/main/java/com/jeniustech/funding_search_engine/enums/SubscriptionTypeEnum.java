@@ -1,6 +1,6 @@
 package com.jeniustech.funding_search_engine.enums;
 
-import static com.jeniustech.funding_search_engine.enums.SubscriptionPriceIds.*;
+import static com.jeniustech.funding_search_engine.constants.SubscriptionPriceIds.*;
 
 public enum SubscriptionTypeEnum {
     TRIAL(0, SubscriptionTypeParentEnum.TRIAL),

@@ -1,8 +1,8 @@
 version: '3'
 services:
-  funding_search_engine:
-    image: jeniustech/funding-search-engine:0.0.4
-    container_name: funding_search_engine
+  funding_search_engine_test:
+    image: jeniustech/funding-search-engine:0.0.4-test
+    container_name: funding_search_engine_test
     restart: always
     ports:
       - "8080:8080"
