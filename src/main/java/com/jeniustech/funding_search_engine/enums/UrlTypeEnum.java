@@ -6,7 +6,11 @@ public enum UrlTypeEnum {
     COMPETITIVE_CALL;
 
     public String getUrl(String identifier, String urlId) {
-        return switch (this) {
+        return getUrl(this, identifier, urlId);
+    }
+
+    public static String getUrl(UrlTypeEnum type, String identifier, String urlId) {
+        return switch (type) {
             case TOPIC_DETAILS -> "https://ec.europa.eu/info/funding-tenders/opportunities/portal/screen/opportunities/topic-details/" + identifier.toLowerCase();
             case PROSPECT -> "https://ec.europa.eu/info/funding-tenders/opportunities/portal/screen/opportunities/prospect-details/" + urlId;
             case COMPETITIVE_CALL -> "https://ec.europa.eu/info/funding-tenders/opportunities/portal/screen/opportunities/competitive-calls-cs/" + urlId;
@@ -17,7 +21,7 @@ public enum UrlTypeEnum {
     public static UrlTypeEnum getType(String reference) {
         if (reference.contains("COMPETITIVE_CALL")) {
             return COMPETITIVE_CALL;
-        } else if (reference.contains("PROSPECTSEN")) {
+        } else if (reference.contains("PROSPECTS")) {
             return PROSPECT;
         } else {
             return TOPIC_DETAILS;

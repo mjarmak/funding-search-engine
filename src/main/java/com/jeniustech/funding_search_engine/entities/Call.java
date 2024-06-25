@@ -126,6 +126,10 @@ public class Call {
     }
 
     public String getUrl() {
+        if (reference != null && urlId == null) {
+            var type = UrlTypeEnum.getType(reference);
+            return UrlTypeEnum.getUrl(type, identifier, reference);
+        }
         return urlType.getUrl(identifier, urlId);
     }
 

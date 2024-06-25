@@ -27,6 +27,7 @@ public class LogBook {
     @Enumerated(EnumType.ORDINAL)
     private LogTypeEnum type;
 
+    @Column(length = 255)
     private String logText;
 
     @CreationTimestamp

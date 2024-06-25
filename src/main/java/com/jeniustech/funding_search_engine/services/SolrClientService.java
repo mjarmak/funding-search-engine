@@ -73,12 +73,10 @@ public class SolrClientService {
                     CommonParams.START, String.valueOf(pageNumber * pageSize),
                     CommonParams.ROWS, String.valueOf(pageSize)
             );
+            solrQuery.add("defType", "dismax");
+            solrQuery.add("bf", "recip(ms(NOW,end_date),3.16e-11,10,1)");
+            solrQuery.add("q.op", "OR");
             solrQuery.setSort("score", SolrQuery.ORDER.desc);
-            // open
-            solrQuery.setSort("q=*:*&sort=if(ms(NOW,start_date) > 0, 1, if(ms(NOW,end_date) < 0, 3, 2))", SolrQuery.ORDER.desc);
-            solrQuery.setSort("start_date", SolrQuery.ORDER.desc);
-            // upcoming
-//            solrQuery.setSort("sum(abs(ms(NOW,"+ START_DATE + ")),abs(ms(NOW," + END_DATE + ")))", SolrQuery.ORDER.asc);
 
             QueryResponse response = this.solrClient.query(solrQuery);
             List<CallDTO> results = SolrMapper.map(response.getResults());
