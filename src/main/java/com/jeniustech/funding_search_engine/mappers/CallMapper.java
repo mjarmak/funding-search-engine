@@ -3,8 +3,10 @@ package com.jeniustech.funding_search_engine.mappers;
 import com.jeniustech.funding_search_engine.dto.CallDTO;
 import com.jeniustech.funding_search_engine.dto.LongTextDTO;
 import com.jeniustech.funding_search_engine.entities.Call;
+import com.jeniustech.funding_search_engine.entities.LongText;
+import com.jeniustech.funding_search_engine.util.DetailFormatter;
 
-import java.util.stream.Collectors;
+import java.util.List;
 
 public interface CallMapper {
 
@@ -13,13 +15,7 @@ public interface CallMapper {
                 .id(call.getId())
                 .identifier(call.getIdentifier())
                 .title(call.getTitle())
-                .longTexts(isSearch ? null : call.getLongTexts().stream()
-                        .map(longText -> LongTextDTO.builder()
-                                .type(longText.getType())
-                                .text(longText.getText())
-                                .build())
-
-                        .collect(Collectors.toList()))
+                .longTexts(isSearch ? null : map(call.getLongTexts()))
                 .actionType(call.getActionType())
                 .endDate(DateMapper.map(call.getEndDate()))
                 .endDate2(isSearch ? null : DateMapper.map(call.getEndDate2()))
@@ -27,11 +23,20 @@ public interface CallMapper {
                 .budgetMin(call.getBudgetMinDisplayString())
                 .budgetMax(call.getBudgetMaxDisplayString())
                 .projectNumber(call.getProjectNumber())
-//                .urlId(call.getUrlId())
-//                .urlType(call.getUrlType())
                 .url(isSearch ? null : call.getUrl())
                 .typeOfMGADescription(isSearch ? null : call.getTypeOfMGADescription())
                 .favorite(isFavorite)
+                .build();
+    }
+
+    private static List<LongTextDTO> map(List<LongText> longTexts) {
+        return longTexts.stream().map(CallMapper::map).toList();
+    }
+
+    private static LongTextDTO map(LongText longText) {
+        return LongTextDTO.builder()
+                .type(longText.getType())
+                .text(DetailFormatter.format(longText.getText()))
                 .build();
     }
 
