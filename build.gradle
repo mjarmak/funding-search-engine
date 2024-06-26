@@ -47,6 +47,8 @@ dependencies {
 
 	implementation 'com.stripe:stripe-java:25.13.0'
 
+	implementation 'com.itextpdf:itext7-core:7.1.13'
+
 	compileOnly 'org.projectlombok:lombok'
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
 	annotationProcessor 'org.projectlombok:lombok'

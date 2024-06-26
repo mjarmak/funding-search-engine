@@ -48,7 +48,13 @@ public class ValidatorService {
 
     public static void validateUserExcelExport(UserData userData, Long exportCount) {
         if (userData.getMainActiveSubscription().isTrial() && exportCount >= 10) {
-            throw new SubscriptionPlanException("Trial user has reached the limit of Excel 10 exports");
+            throw new SubscriptionPlanException("Trial user has reached the limit of 10 Excel exports");
+        }
+    }
+
+    public static void validateUserPDFExport(UserData userData, Long exportCount) {
+        if (userData.getMainActiveSubscription().isTrial() && exportCount >= 10) {
+            throw new SubscriptionPlanException("Trial user has reached the limit of 10 PDF exports");
         }
     }
 }

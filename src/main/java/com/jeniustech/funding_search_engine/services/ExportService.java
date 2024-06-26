@@ -2,8 +2,6 @@ package com.jeniustech.funding_search_engine.services;
 
 import com.jeniustech.funding_search_engine.entities.Call;
 import com.jeniustech.funding_search_engine.entities.UserData;
-import com.jeniustech.funding_search_engine.exceptions.CallNotFoundException;
-import com.jeniustech.funding_search_engine.exceptions.SubscriptionPlanException;
 import com.jeniustech.funding_search_engine.exceptions.UserNotFoundException;
 import com.jeniustech.funding_search_engine.repository.CallRepository;
 import com.jeniustech.funding_search_engine.repository.UserDataRepository;
@@ -37,8 +35,6 @@ public class ExportService {
 
         List<Call> calls = callRepository.findAllById(callIds);
 
-        logService.addLog(userData, EXPORT_EXCEL, String.valueOf(calls.size()));
-
         try (Workbook workbook = new XSSFWorkbook(); ByteArrayOutputStream out = new ByteArrayOutputStream()) {
             Sheet sheet = workbook.createSheet("Data");
 
@@ -68,6 +64,9 @@ public class ExportService {
             }
 
             workbook.write(out);
+
+            logService.addLog(userData, EXPORT_EXCEL, String.valueOf(calls.size()));
+
             return new ByteArrayInputStream(out.toByteArray());
         }
     }

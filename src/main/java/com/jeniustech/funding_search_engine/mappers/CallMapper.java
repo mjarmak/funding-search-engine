@@ -36,7 +36,7 @@ public interface CallMapper {
     private static LongTextDTO map(LongText longText) {
         return LongTextDTO.builder()
                 .type(longText.getType())
-                .text(DetailFormatter.format(longText.getText()))
+                .text(DetailFormatter.format(longText.getText(), DetailFormatter.FormatTypeEnum.HTML))
                 .build();
     }
 

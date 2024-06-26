@@ -12,7 +12,7 @@ public interface DateMapper {
 
     DateTimeFormatter csvFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
     DateTimeFormatter solrFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'");
-    DateTimeFormatter displayFormatter = DateTimeFormatter.ofPattern("yyyy-MMM-dd HH:mm:ss");
+    DateTimeFormatter displayFormatter = DateTimeFormatter.ofPattern("dd MMM yyyy HH:mm");
 
     static LocalDateTime map(Timestamp timestamp) {
         if (timestamp == null) {

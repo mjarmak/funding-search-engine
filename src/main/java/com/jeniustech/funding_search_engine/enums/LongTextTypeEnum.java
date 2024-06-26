@@ -3,21 +3,27 @@ package com.jeniustech.funding_search_engine.enums;
 import com.jeniustech.funding_search_engine.exceptions.MapperException;
 
 public enum LongTextTypeEnum {
-    DESCRIPTION("description"),
-    DESTINATION_DETAILS("destination_details"),
-    MISSION_DETAILS("mission_details"),
-    BENEFICIARY_ADMINISTRATION("beneficiary_administration"),
-    DURATION("duration"),
-    FURTHER_INFORMATION("further_information");
+    DESCRIPTION("description", "Description"),
+    DESTINATION_DETAILS("destination_details", "Destination Details"),
+    MISSION_DETAILS("mission_details", "Mission Details"),
+    BENEFICIARY_ADMINISTRATION("beneficiary_administration", "Beneficiary Administration"),
+    DURATION("duration", "Duration"),
+    FURTHER_INFORMATION("further_information", "Further Information");
 
-    String name;
+    final String name;
+    final String displayName;
 
-    LongTextTypeEnum(String name) {
-        this.name = this.name();
+    LongTextTypeEnum(String name, String displayName) {
+        this.name = name;
+        this.displayName = displayName;
     }
 
     public String getName() {
         return name;
+    }
+
+    public String getDisplayName() {
+        return displayName;
     }
 
     public LongTextTypeEnum of(String name) {
