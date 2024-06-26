@@ -45,11 +45,12 @@ public class ExportController {
     @GetMapping("calls/{callId}/pdf")
     public ResponseEntity<InputStreamResource> generatePdf(
             @PathVariable Long callId,
-            @AuthenticationPrincipal Jwt jwt
+            @AuthenticationPrincipal Jwt jwt,
+            @RequestParam String imageUrl
     ) {
         JwtModel jwtModel = UserDataMapper.map(jwt);
 
-        ByteArrayInputStream bis = reportService.generatePdf(callId, jwtModel.getUserId());
+        ByteArrayInputStream bis = reportService.generatePdf(callId, jwtModel.getUserId(), imageUrl);
 
         HttpHeaders headers = new HttpHeaders();
         headers.add("Content-Disposition", "inline; filename=data.pdf");

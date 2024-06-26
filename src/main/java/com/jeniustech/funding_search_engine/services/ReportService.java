@@ -24,8 +24,8 @@ import com.jeniustech.funding_search_engine.exceptions.UserNotFoundException;
 import com.jeniustech.funding_search_engine.repository.CallRepository;
 import com.jeniustech.funding_search_engine.repository.UserDataRepository;
 import com.jeniustech.funding_search_engine.util.DetailFormatter;
+import com.jeniustech.funding_search_engine.util.StringUtil;
 import lombok.RequiredArgsConstructor;
-import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
 
 import java.io.ByteArrayInputStream;
@@ -43,7 +43,7 @@ public class ReportService {
     private final LogService logService;
     static final int paddingSmall = 10;
 
-    public ByteArrayInputStream generatePdf(Long callId, String subjectId) {
+    public ByteArrayInputStream generatePdf(Long callId, String subjectId, String path) {
 
         UserData userData = userDataRepository.findBySubjectId(subjectId).orElseThrow(() -> new UserNotFoundException("User not found"));
         ValidatorService.validateUserPDFExport(userData, logService.getCountByUserIdAndType(userData.getId(), EXPORT_PDF));
@@ -57,7 +57,7 @@ public class ReportService {
             PdfDocument pdfDoc = new PdfDocument(writer);
             Document document = new Document(pdfDoc);
 
-            addHeader(document);
+            addHeader(document, path);
 
             document.add(getTitle("Call Identifier"));
             Rectangle rect = new Rectangle(0, 0, 523, 10);
@@ -69,7 +69,7 @@ public class ReportService {
 
 
             addInfoField(document, call.getTitle(), "Topic");
-            addInfoField(document, call.getProjectNumber().toString(), "Number of Projects");
+            addInfoField(document, call.getProjectNumber(), "Number of Projects");
             addInfoField(document, call.getActionType(), "Action Type");
             addInfoField(document, call.getBudgetRangeString() + " EUR", "Budget");
 
@@ -129,9 +129,7 @@ public class ReportService {
         document.add(new LineSeparator(new SolidLine(width)));
     }
 
-    private static void addHeader(Document document) throws IOException {
-        ClassPathResource resource = new ClassPathResource("img/logo-floating-512x512.png");
-
+    private static void addHeader(Document document, String path) throws IOException {
         String largeText = "Innovilyse";
         Paragraph paragraph = new Paragraph(largeText)
                 .setFontSize(50)
@@ -139,7 +137,7 @@ public class ReportService {
                 .setTextAlignment(TextAlignment.LEFT);
 
         // Load image from resources
-        Image img = new Image(ImageDataFactory.create(resource.getFile().getPath()))
+        Image img = new Image(ImageDataFactory.create(path))
                 .setWidth(50)
                 .setHeight(50);
 
@@ -158,8 +156,15 @@ public class ReportService {
         addVerticalSpace(document); // Vertical space of 20 points
     }
 
-    private static void addInfoField(Document document, String value, String sectionTitle) {
+    private static void addInfoField(Document document, Number value, String sectionTitle) {
         if (value != null) {
+            document.add(getTitle(sectionTitle));
+            document.add(new Paragraph(value.toString()));
+        }
+    }
+
+    private static void addInfoField(Document document, String value, String sectionTitle) {
+        if (StringUtil.isNotEmpty(value)) {
             document.add(getTitle(sectionTitle));
             document.add(new Paragraph(value));
         }

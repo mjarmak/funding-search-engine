@@ -1,8 +1,9 @@
 Run in order:
+docker build -t funding-search-engine:0.0.6 .
+docker tag funding-search-engine:0.0.6 jeniustech/funding-search-engine:0.0.6
+docker push jeniustech/funding-search-engine:0.0.6
 
-docker build -t funding-search-engine:0.0.5 .
-docker tag funding-search-engine:0.0.5 jeniustech/funding-search-engine:0.0.5
-docker push jeniustech/funding-search-engine:0.0.5
+docker pull jeniustech/funding-search-engine:0.0.6
 
 sudo adduser --system --group --no-create-home solr
 sudo chown -R solr:solr /var/data/data_solr
