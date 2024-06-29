@@ -26,6 +26,7 @@ public class CallDTO {
     private String budgetMin;
     private String budgetMax;
     private Short projectNumber;
+    private float score;
     private String url;
 
     private String typeOfMGADescription;

@@ -13,5 +13,6 @@ public interface SolrColumns {
     String BUDGET_MIN = "budget_min";
     String BUDGET_MAX = "budget_max";
     String PROJECT_NUMBER = "project_number";
+    String SCORE = "score";
 
 }

@@ -62,6 +62,7 @@ public interface SolrMapper {
                 .budgetMin(NumberMapper.shortenNumber(valueOrDefault((String) solrDocument.getFieldValue(BUDGET_MIN), null)))
                 .budgetMax(NumberMapper.shortenNumber(valueOrDefault((String) solrDocument.getFieldValue(BUDGET_MAX), null)))
                 .projectNumber(getProjectNumber(solrDocument))
+                .score((Float) solrDocument.getFieldValue(SCORE))
                 .build(
         );
     }

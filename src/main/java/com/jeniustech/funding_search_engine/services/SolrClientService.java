@@ -32,13 +32,21 @@ public class SolrClientService {
     private final LogService logService;
     private final CallService callService;
 
+    int upcomingBoost;
+    int openBoost;
+
     public SolrClientService(
             @Value("${spring.data.solr.host}") String url,
             @Value("${spring.data.solr.core}") String core,
+            @Value("${solr.upcomingBoost}") int upcomingBoost,
+            @Value("${solr.openBoost}") int openBoost,
+
             UserDataRepository userDataRepository, LogService logService, CallService callService) {
         this.userDataRepository = userDataRepository;
         this.logService = logService;
         this.callService = callService;
+        this.upcomingBoost = upcomingBoost;
+        this.openBoost = openBoost;
         this.solrClient = new Http2SolrClient
                 .Builder(url + "/" + core)
                 .withConnectionTimeout(10, TimeUnit.SECONDS)
@@ -73,8 +81,11 @@ public class SolrClientService {
                     CommonParams.START, String.valueOf(pageNumber * pageSize),
                     CommonParams.ROWS, String.valueOf(pageSize)
             );
+            solrQuery.addField("*");
+            solrQuery.addField("score");
             solrQuery.add("defType", "dismax");
-            solrQuery.add("bf", "recip(ms(NOW,end_date),3.16e-11,10,1)");
+            solrQuery.add("bq", "start_date:[NOW TO *]^" + upcomingBoost);
+            solrQuery.add("bq", "end_date:[NOW TO *]^" + openBoost);
             solrQuery.add("q.op", "OR");
             solrQuery.setSort("score", SolrQuery.ORDER.desc);
 
