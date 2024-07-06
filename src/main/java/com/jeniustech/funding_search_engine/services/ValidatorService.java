@@ -57,4 +57,10 @@ public class ValidatorService {
             throw new SubscriptionPlanException("Trial user has reached the limit of 10 PDF exports");
         }
     }
+
+    public static void validateUserSearchPartners(UserData userData) {
+        if (!userData.hasActiveSubscription()) {
+            throw new SubscriptionPlanException("User has no active subscription, please renew or contact customer service");
+        }
+    }
 }

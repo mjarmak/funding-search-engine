@@ -14,7 +14,6 @@ services:
       - DB_PASSWORD=nm[pv3[0%&#{!td745@#
       - DB_POOL_SIZE=50
       - SOLR_URL=http://45.133.178.241:8983/solr
-      - SOLR_CORE=calls
 
       - KEYCLOAK_CERTS_URI=https://auth.innovilyse.com/auth/realms/innovilyse/protocol/openid-connect/certs
       - KEYCLOAK_URL=https://auth.innovilyse.com/auth

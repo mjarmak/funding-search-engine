@@ -23,9 +23,13 @@ public class LongText {
     private Long id;
 
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "call_id")
     private Call call;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "project_id")
+    private Project project;
 
 
     @Enumerated(EnumType.ORDINAL)

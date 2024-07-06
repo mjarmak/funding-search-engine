@@ -1,21 +1,26 @@
 package com.jeniustech.funding_search_engine.controllers;
 
 import com.jeniustech.funding_search_engine.dto.CallDTO;
+import com.jeniustech.funding_search_engine.dto.PartnerDTO;
 import com.jeniustech.funding_search_engine.dto.SearchDTO;
 import com.jeniustech.funding_search_engine.mappers.UserDataMapper;
 import com.jeniustech.funding_search_engine.models.JwtModel;
 import com.jeniustech.funding_search_engine.services.CallService;
+import com.jeniustech.funding_search_engine.services.PartnerService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequiredArgsConstructor
 public class CallController {
 
     private final CallService callService;
+    private final PartnerService partnerService;
 
     @GetMapping("/call/{id}")
     public ResponseEntity<CallDTO> getCallById(@PathVariable Long id) {
@@ -48,6 +53,15 @@ public class CallController {
     ) {
         JwtModel jwtModel = UserDataMapper.map(jwt);
         return ResponseEntity.ok(callService.getFavoritesByUserId(jwtModel.getUserId(), pageNumber, pageSize));
+    }
+
+    @GetMapping("/call/{id}/suggest/partner")
+    public ResponseEntity<List<PartnerDTO>> getSuggestedPartners(
+            @PathVariable Long id,
+            @AuthenticationPrincipal Jwt jwt
+    ) {
+        JwtModel jwtModel = UserDataMapper.map(jwt);
+        return ResponseEntity.ok(partnerService.getSuggestedPartners(id, jwtModel));
     }
 
 }

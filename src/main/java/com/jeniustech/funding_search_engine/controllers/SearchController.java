@@ -4,7 +4,7 @@ import com.jeniustech.funding_search_engine.dto.CallDTO;
 import com.jeniustech.funding_search_engine.dto.SearchDTO;
 import com.jeniustech.funding_search_engine.mappers.UserDataMapper;
 import com.jeniustech.funding_search_engine.models.JwtModel;
-import com.jeniustech.funding_search_engine.services.SolrClientService;
+import com.jeniustech.funding_search_engine.services.solr.CallSolrClientService;
 import jakarta.validation.constraints.Size;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class SearchController {
 
-    private final SolrClientService solrClientService;
+    private final CallSolrClientService callSolrClientService;
 
     @GetMapping("/search")
     public ResponseEntity<SearchDTO<CallDTO>> search(
@@ -28,7 +28,7 @@ public class SearchController {
             @AuthenticationPrincipal Jwt jwt
     ) {
         JwtModel jwtModel = UserDataMapper.map(jwt);
-        return ResponseEntity.ok(solrClientService.search(
+        return ResponseEntity.ok(callSolrClientService.search(
                 query,
                 pageNumber,
                 pageSize,

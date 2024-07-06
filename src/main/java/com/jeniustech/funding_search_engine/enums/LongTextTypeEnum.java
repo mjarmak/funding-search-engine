@@ -8,18 +8,19 @@ public enum LongTextTypeEnum {
     MISSION_DETAILS("mission_details", "Mission Details"),
     BENEFICIARY_ADMINISTRATION("beneficiary_administration", "Beneficiary Administration"),
     DURATION("duration", "Duration"),
-    FURTHER_INFORMATION("further_information", "Further Information");
+    FURTHER_INFORMATION("further_information", "Further Information"),
+    PROJECT_OBJECTIVE("project_objective", "Project Objective");
 
-    final String name;
+    final String csvName;
     final String displayName;
 
-    LongTextTypeEnum(String name, String displayName) {
-        this.name = name;
+    LongTextTypeEnum(String csvName, String displayName) {
+        this.csvName = csvName;
         this.displayName = displayName;
     }
 
-    public String getName() {
-        return name;
+    public String getCsvName() {
+        return csvName;
     }
 
     public String getDisplayName() {
@@ -28,7 +29,7 @@ public enum LongTextTypeEnum {
 
     public LongTextTypeEnum of(String name) {
         for (LongTextTypeEnum longTextTypeEnum : LongTextTypeEnum.values()) {
-            if (longTextTypeEnum.getName().equals(name)) {
+            if (longTextTypeEnum.getCsvName().equals(name)) {
                 return longTextTypeEnum;
             }
         }

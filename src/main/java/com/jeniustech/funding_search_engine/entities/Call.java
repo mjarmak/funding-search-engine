@@ -1,5 +1,6 @@
 package com.jeniustech.funding_search_engine.entities;
 
+import com.jeniustech.funding_search_engine.enums.LongTextTypeEnum;
 import com.jeniustech.funding_search_engine.enums.SubmissionProcedureEnum;
 import com.jeniustech.funding_search_engine.enums.UrlTypeEnum;
 import com.jeniustech.funding_search_engine.mappers.DateMapper;
@@ -38,7 +39,6 @@ public class Call {
     @Column(length = 255, nullable = false)
     private String title;
 
-    @Column(length = 25000)
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "call")
     private List<LongText> longTexts;
 
@@ -68,6 +68,9 @@ public class Call {
 
     @Column(name = "type_of_mga_description", length = 255)
     private String typeOfMGADescription;
+
+    @OneToMany
+    private List<Project> projects;
 
     @CreationTimestamp
     @Column(updatable = false)
@@ -123,6 +126,13 @@ public class Call {
         } else {
             return null;
         }
+    }
+
+    public String getDescription() {
+        if (longTexts != null) {
+            return longTexts.stream().filter(longText -> longText.getType() == LongTextTypeEnum.DESCRIPTION).findFirst().map(LongText::getText).orElse(null);
+        }
+        return null;
     }
 
     public String getUrl() {

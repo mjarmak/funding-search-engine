@@ -1,8 +1,7 @@
 package com.jeniustech.funding_search_engine.util;
 
-import com.jeniustech.funding_search_engine.enums.LongTextTypeEnum;
-import com.jeniustech.funding_search_engine.enums.SubmissionProcedureEnum;
-import com.jeniustech.funding_search_engine.enums.UrlTypeEnum;
+import com.jeniustech.funding_search_engine.entities.Call;
+import com.jeniustech.funding_search_engine.enums.*;
 
 import java.math.BigDecimal;
 import java.sql.Timestamp;
@@ -12,12 +11,24 @@ public interface StringUtil {
         return row != null && !row.isEmpty() && !row.isBlank() && !row.equals("null");
     }
 
+    static boolean isNotEmpty(Long row) {
+        return row != null;
+    }
+
+    static boolean isNotEmpty(CountryEnum row) {
+        return row != null;
+    }
+
+    static boolean isNotEmpty(Call row) {
+        return row != null;
+    }
+
     static boolean isNotEmpty(Short row) {
         return row != null;
     }
 
     static boolean isNotEmpty(BigDecimal row) {
-        return row != null;
+        return row != null && row.compareTo(BigDecimal.ZERO) != 0;
     }
 
     static boolean isNotEmpty(SubmissionProcedureEnum row) {
@@ -28,11 +39,27 @@ public interface StringUtil {
         return row != null;
     }
 
+    static boolean isNotEmpty(BooleanEnum row) {
+        return row != null;
+    }
+
+    static boolean isNotEmpty(OrganisationTypeEnum row) {
+        return row != null;
+    }
+
+    static boolean isNotEmpty(ProjectStatusEnum row) {
+        return row != null;
+    }
+
     static boolean isNotEmpty(LongTextTypeEnum row) {
         return row != null;
     }
 
     static boolean isNotEmpty(Timestamp row) {
+        return row != null;
+    }
+
+    static boolean isNotEmpty(FundingSchemeEnum row) {
         return row != null;
     }
 
