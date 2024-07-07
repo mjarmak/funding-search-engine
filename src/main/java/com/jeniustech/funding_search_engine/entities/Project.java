@@ -8,9 +8,12 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import java.math.BigDecimal;
 import java.sql.Timestamp;
+import java.time.LocalDate;
 import java.util.List;
 
 @Data
@@ -24,20 +27,24 @@ public class Project {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     private Long referenceId;
     private String rcn;
 
     private String acronym;
     private String title;
 
+    @Column(name = "funding_organisation")
     private BigDecimal fundingOrganisation;
+
+    @Column(name = "funding_eu")
     private BigDecimal fundingEU;
 
     private ProjectStatusEnum status;
 
-    private Timestamp signDate;
-    private Timestamp startDate;
-    private Timestamp endDate;
+    private LocalDate signDate;
+    private LocalDate startDate;
+    private LocalDate endDate;
 
     @ManyToOne(fetch = FetchType.LAZY)
     private Call call;
@@ -49,8 +56,22 @@ public class Project {
     @Enumerated(EnumType.ORDINAL)
     private FundingSchemeEnum fundingScheme;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "project")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "project", fetch = FetchType.LAZY)
     private List<LongText> longTexts;
+
+    @CreationTimestamp
+    @Column(updatable = false)
+    private Timestamp createdAt;
+
+    @UpdateTimestamp
+    private Timestamp updatedAt;
+
+    @Version
+    private Integer version;
+
+    public String toString() {
+        return "Project(id=" + this.getId() + ", title=" + this.getTitle() + ")";
+    }
 
     public String getLongTextsToString() {
         StringBuilder longTextsString = new StringBuilder();
@@ -63,6 +84,14 @@ public class Project {
         } else {
             return null;
         }
+    }
+
+    public String getFundingEUString() {
+        return fundingEU.stripTrailingZeros().toPlainString();
+    }
+
+    public String getFundingOrganisationString() {
+        return fundingOrganisation.stripTrailingZeros().toPlainString();
     }
 
 }

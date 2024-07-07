@@ -45,6 +45,17 @@ public class ProjectSolrClientService implements ISolrClientService<ProjectDTO> 
         }
     }
 
+    public UpdateResponse add(List<SolrInputDocument> document, int duration) throws DocumentSaveException {
+        try {
+            final UpdateResponse updateResponse = this.solrClient.add(document, duration);
+            this.solrClient.commit();
+            return updateResponse;
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new DocumentSaveException("Failed to save document", e);
+        }
+    }
+
     public SearchDTO<ProjectDTO> search(String query, int pageNumber, int pageSize, JwtModel jwtModel) throws SearchException {
         try {
             final SolrQuery solrQuery = new SolrQuery(

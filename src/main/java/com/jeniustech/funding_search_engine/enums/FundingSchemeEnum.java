@@ -1,5 +1,7 @@
 package com.jeniustech.funding_search_engine.enums;
 
+import com.jeniustech.funding_search_engine.exceptions.EnumException;
+
 public enum FundingSchemeEnum {
     HORIZON_AG("HORIZON-AG"),
     HORIZON_CSA("HORIZON-CSA"),
@@ -37,11 +39,11 @@ public enum FundingSchemeEnum {
     HORIZON_PCP("HORIZON-PCP"),
     HORIZON_TMA_MSCA_DN_ID("HORIZON-TMA-MSCA-DN-ID"),
     ERC_SYG("ERC-SYG"),
-    EURATOM_IA(""),
-    EURATOM_RIA("EURATOM-IA"),
-    MSCA_SE("EURATOM-RIA"),
-    EURATOM_COFUND("MSCA-SE"),
-    MSCA_DN("EURATOM-COFUND");
+    EURATOM_IA("EURATOM-IA"),
+    EURATOM_RIA("EURATOM-RIA"),
+    MSCA_SE("MSCA-SE"),
+    EURATOM_COFUND("EURATOM-COFUND"),
+    MSCA_DN("MSCA-DN");
 
     private final String name;
 
@@ -55,7 +57,7 @@ public enum FundingSchemeEnum {
                 return fundingSchemeEnum;
             }
         }
-        return null;
+        throw new EnumException("FundingSchemeEnum not found for name: " + name);
     }
 
 }

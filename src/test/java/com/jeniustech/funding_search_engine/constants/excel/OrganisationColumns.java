@@ -16,7 +16,7 @@ public interface OrganisationColumns {
     String GEO_LOCATION = "geolocation";
     String ORGANIZATION_URL = "organizationURL";
     String CONTACT_FORM = "contactForm";
-    String CONTENTUPDATEDATE = "contentUpdateDate";
+    String CONTENT_UPDATE_DATE = "contentUpdateDate";
     String RCN = "rcn";
     String ORDER = "order";
     String ROLE = "role";

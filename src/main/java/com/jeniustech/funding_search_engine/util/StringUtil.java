@@ -5,6 +5,7 @@ import com.jeniustech.funding_search_engine.enums.*;
 
 import java.math.BigDecimal;
 import java.sql.Timestamp;
+import java.time.LocalDate;
 
 public interface StringUtil {
     static boolean isNotEmpty(String row) {
@@ -12,6 +13,10 @@ public interface StringUtil {
     }
 
     static boolean isNotEmpty(Long row) {
+        return row != null;
+    }
+
+    static boolean isNotEmpty(LocalDate row) {
         return row != null;
     }
 

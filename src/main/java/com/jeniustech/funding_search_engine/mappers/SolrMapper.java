@@ -94,6 +94,15 @@ public interface SolrMapper {
                 );
     }
 
+    static List<SolrInputDocument> mapToSolrDocument(List<Project> projects) {
+        if (projects == null) {
+            return null;
+        }
+        return projects.stream()
+                .map(SolrMapper::mapToSolrDocument)
+                .toList();
+    }
+
     static SolrInputDocument mapToSolrDocument(Project project) {
         SolrInputDocument document = new SolrInputDocument();
         document.addField(ProjectColumns.ID, project.getId());
@@ -111,13 +120,15 @@ public interface SolrMapper {
         }
         if (project.getCall() != null) {
             document.addField(ProjectColumns.CALL_ID, project.getCall().getId());
-            document.addField(ProjectColumns.CALL_IDENTIFIER, project.getCall().getIdentifier());
+            if (StringUtil.isNotEmpty(project.getCall().getIdentifier())) {
+                document.addField(ProjectColumns.CALL_IDENTIFIER, project.getCall().getIdentifier());
+            }
         }
         if (StringUtil.isNotEmpty(project.getFundingEU())) {
-            document.addField(ProjectColumns.FUNDING_EU, project.getFundingEU());
+            document.addField(ProjectColumns.FUNDING_EU, project.getFundingEUString());
         }
         if (StringUtil.isNotEmpty(project.getLongTextsToString())) {
-            document.addField(ProjectColumns.LONG_TEXT, project.getFundingOrganisation());
+            document.addField(ProjectColumns.LONG_TEXT, project.getLongTextsToString());
         }
         return document;
     }

@@ -7,8 +7,10 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
-import java.math.BigDecimal;
+import java.sql.Timestamp;
 import java.util.List;
 
 @Data
@@ -28,13 +30,12 @@ public class Organisation {
     private String name;
     private String shortName;
 
-    private BigDecimal fundingOrganisation;
-    private BigDecimal fundingEU;
-
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinColumn(name = "address_id")
     private Address address;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinColumn(name = "location_coordinates_id")
     private LocationCoordinates locationCoordinates;
 
     private String vatNumber;
@@ -49,4 +50,19 @@ public class Organisation {
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "organisation", fetch = FetchType.LAZY)
     private List<OrganisationProjectJoin> organisationProjectJoins;
+
+    @CreationTimestamp
+    @Column(updatable = false)
+    private Timestamp createdAt;
+
+    @UpdateTimestamp
+    private Timestamp updatedAt;
+
+    @Version
+    private Integer version;
+
+    public String toString() {
+        return "Organisation(id=" + this.getId() + ", name=" + this.getName() + ")";
+    }
+
 }

@@ -6,6 +6,10 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
+
+import java.math.BigDecimal;
+import java.sql.Timestamp;
 
 @Data
 @Builder
@@ -27,5 +31,15 @@ public class OrganisationProjectJoin {
 
     @Enumerated(EnumType.ORDINAL)
     private OrganisationProjectJoinTypeEnum type;
+
+    @Column(name = "funding_organisation")
+    private BigDecimal fundingOrganisation;
+
+    @Column(name = "funding_eu")
+    private BigDecimal fundingEU;
+
+    @CreationTimestamp
+    @Column(updatable = false)
+    private Timestamp createdAt;
 
 }

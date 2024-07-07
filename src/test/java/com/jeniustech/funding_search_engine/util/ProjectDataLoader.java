@@ -12,26 +12,31 @@ import com.jeniustech.funding_search_engine.mappers.DateMapper;
 import com.jeniustech.funding_search_engine.mappers.SolrMapper;
 import com.jeniustech.funding_search_engine.repository.CallRepository;
 import com.jeniustech.funding_search_engine.repository.ProjectRepository;
-import com.jeniustech.funding_search_engine.services.solr.CallSolrClientService;
+import com.jeniustech.funding_search_engine.services.solr.ProjectSolrClientService;
+import jakarta.annotation.Nullable;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.test.annotation.Rollback;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.math.BigDecimal;
-import java.sql.Timestamp;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 import static com.jeniustech.funding_search_engine.util.StringUtil.isNotEmpty;
-import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.fail;
 
+@Transactional(rollbackFor = Exception.class)
+@Rollback(false)
 @SpringBootTest
 public class ProjectDataLoader {
 
@@ -40,11 +45,30 @@ public class ProjectDataLoader {
     @Autowired
     ProjectRepository projectRepository;
     @Autowired
-    CallSolrClientService callSolrClientService;
+    ProjectSolrClientService projectSolrClientService;
 
-    //    @Test
+    public static final int BATCH_SIZE = 1000;
+
+    int ID_INDEX = -1;
+    int ACRONYM_INDEX = -1;
+    int STATUS_INDEX = -1;
+    int TITLE_INDEX = -1;
+    int START_DATE_INDEX = -1;
+    int END_DATE_INDEX = -1;
+    int TOTAL_COST_INDEX = -1;
+    int EC_MAX_CONTRIBUTION_INDEX = -1;
+    int LEGAL_BASIS_INDEX = -1;
+    int CALL_IDENTIFIER_INDEX = -1;
+    int EC_SIGNATURE_DATE_INDEX = -1;
+    int MASTER_CALL_INDEX = -1;
+    int FUNDING_SCHEME_INDEX = -1;
+    int NATURE_INDEX = -1;
+    int OBJECTIVE_INDEX = -1;
+    int RCN_INDEX = -1;
+
+    @Test
     void loadData() {
-        String excelFilePath = "data/MasterExcelSheet.xlsx";
+        String excelFilePath = "data/projects/project.xlsx";
 
         try (FileInputStream fis = new FileInputStream(new ClassPathResource(excelFilePath).getFile());
              Workbook workbook = new XSSFWorkbook(fis)) {
@@ -52,26 +76,9 @@ public class ProjectDataLoader {
             Sheet sheet = workbook.getSheetAt(0); // Get the first sheet
 
             // get headers
-            int ID_INDEX = 0;
-            int ACRONYM_INDEX = 0;
-            int STATUS_INDEX = 0;
-            int TITLE_INDEX = 0;
-            int START_DATE_INDEX = 0;
-            int END_DATE_INDEX = 0;
-            int TOTAL_COST_INDEX = 0;
-            int EC_MAX_CONTRIBUTION_INDEX = 0;
-            int LEGAL_BASIS_INDEX = 0;
-            int CALL_IDENTIFIER_INDEX = 0;
-            int EC_SIGNATURE_DATE_INDEX = 0;
-            int MASTER_CALL_INDEX = 0;
-            int FUNDING_SCHEME_INDEX = 0;
-            int NATURE_INDEX = 0;
-            int OBJECTIVE_INDEX = 0;
-            int RCN_INDEX = 0;
-
             var headers = sheet.getRow(0);
             for (Cell cell : headers) {
-                switch (cell.getStringCellValue().toLowerCase().replace(" ", "_")) {
+                switch (cell.getStringCellValue()) {
                     case ProjectColumns.ID -> ID_INDEX = cell.getColumnIndex();
                     case ProjectColumns.ACRONYM -> ACRONYM_INDEX = cell.getColumnIndex();
                     case ProjectColumns.STATUS -> STATUS_INDEX = cell.getColumnIndex();
@@ -109,111 +116,29 @@ public class ProjectDataLoader {
                             NATURE_INDEX,
                             OBJECTIVE_INDEX,
                             RCN_INDEX
-                    ).contains(0)
+                    ).contains(-1)
             ) {
                 System.out.println("Header not found");
                 fail();
             }
 
+            // save in batches of 1000
+            List<Project> projects = new ArrayList<>();
             for (Row row : sheet) {
                 System.out.println("Row: " + row.getRowNum());
-                if (row.getRowNum() == 0) {
-                    continue; // skip headers
+                Project project = getProject(row);
+                if (project != null) {
+                    projects.add(project);
+                    if (projects.size() == BATCH_SIZE) {
+                        System.out.println("Saving batch of " + projects.size() + " projects");
+                        save(projects);
+                        projects.clear();
+                    }
+                } else if (!projects.isEmpty()) {
+                    System.out.println("Saving batch of " + projects.size() + " projects");
+                    save(projects);
+                    projects.clear();
                 }
-
-                Project project = Project.builder()
-                        .referenceId((long) row.getCell(ID_INDEX).getNumericCellValue())
-                        .rcn(row.getCell(RCN_INDEX).getStringCellValue())
-                        .acronym(row.getCell(ACRONYM_INDEX).getStringCellValue())
-                        .title(row.getCell(TITLE_INDEX).getStringCellValue())
-                        .fundingOrganisation(getFundingOrganisation(TOTAL_COST_INDEX, EC_MAX_CONTRIBUTION_INDEX, row))
-                        .fundingEU(new BigDecimal(getBudget(EC_MAX_CONTRIBUTION_INDEX, row)))
-                        .status(ProjectStatusEnum.valueOf(row.getCell(STATUS_INDEX).getStringCellValue()))
-                        .signDate(getDate(EC_SIGNATURE_DATE_INDEX, row))
-                        .startDate(getDate(START_DATE_INDEX, row))
-                        .endDate(getDate(END_DATE_INDEX, row))
-                        .masterCallIdentifier(row.getCell(MASTER_CALL_INDEX).getStringCellValue())
-                        .legalBasis(row.getCell(LEGAL_BASIS_INDEX).getStringCellValue())
-                        .fundingScheme(FundingSchemeEnum.valueOfName(row.getCell(FUNDING_SCHEME_INDEX).getStringCellValue()))
-                        .build();
-
-                // set call
-                String callIdentifier = row.getCell(CALL_IDENTIFIER_INDEX).getStringCellValue();
-                setMainCall(project, callIdentifier);
-
-                // set long text
-                project.setLongTexts(new ArrayList<>());
-                addDescriptionIfPresent(row, OBJECTIVE_INDEX, project, LongTextTypeEnum.PROJECT_OBJECTIVE);
-
-                Optional<Project> existingProjectOptional = projectRepository.findByReferenceId(project.getReferenceId());
-                if (existingProjectOptional.isPresent()) {
-                    Project existingProject = existingProjectOptional.get();
-
-                    for (LongText longText : project.getLongTexts()) {
-                        if (existingProject.getLongTexts().stream().noneMatch(lt -> lt.getType().equals(longText.getType()))) {
-                            longText.setProject(existingProject);
-                            existingProject.getLongTexts().add(longText);
-                        } else {
-                            LongText longTextToSave = existingProject.getLongTexts().stream()
-                                    .filter(lt -> lt.getType().equals(longText.getType()))
-                                    .findFirst()
-                                    .orElseThrow();
-                            if (
-                                    isNotEmpty(longTextToSave.getText())) {
-                                longTextToSave.setText(longText.getText());
-                            }
-                        }
-                    }
-                    if (isNotEmpty(existingProject.getReferenceId())) {
-                        existingProject.setReferenceId(project.getReferenceId());
-                    }
-                    if (isNotEmpty(existingProject.getRcn())) {
-                        existingProject.setRcn(project.getRcn());
-                    }
-                    if (isNotEmpty(existingProject.getAcronym())) {
-                        existingProject.setAcronym(project.getAcronym());
-                    }
-                    if (isNotEmpty(existingProject.getTitle())) {
-                        existingProject.setTitle(existingProject.getTitle());
-                    }
-                    if (isNotEmpty(existingProject.getFundingOrganisation())) {
-                        existingProject.setFundingOrganisation(project.getFundingOrganisation());
-                    }
-                    if (isNotEmpty(existingProject.getFundingEU())) {
-                        existingProject.setFundingEU(project.getFundingEU());
-                    }
-                    if (isNotEmpty(existingProject.getStatus())) {
-                        existingProject.setStatus(project.getStatus());
-                    }
-                    if (isNotEmpty(existingProject.getSignDate())) {
-                        existingProject.setSignDate(project.getSignDate());
-                    }
-                    if (isNotEmpty(existingProject.getStartDate())) {
-                        existingProject.setStartDate(project.getStartDate());
-                    }
-                    if (isNotEmpty(existingProject.getEndDate())) {
-                        existingProject.setEndDate(project.getEndDate());
-                    }
-                    if (isNotEmpty(existingProject.getCall())) {
-                        existingProject.setCall(project.getCall());
-                    }
-                    if (isNotEmpty(existingProject.getMasterCallIdentifier())) {
-                        existingProject.setMasterCallIdentifier(project.getMasterCallIdentifier());
-                    }
-                    if (isNotEmpty(existingProject.getLegalBasis())) {
-                        existingProject.setLegalBasis(project.getLegalBasis());
-                    }
-                    if (isNotEmpty(existingProject.getFundingScheme())) {
-                        existingProject.setFundingScheme(project.getFundingScheme());
-                    }
-
-                    projectRepository.save(existingProject);
-                    callSolrClientService.add(SolrMapper.mapToSolrDocument(existingProject), 100_000);
-                } else {
-                    Project savedProject = projectRepository.save(project);
-                    callSolrClientService.add(SolrMapper.mapToSolrDocument(savedProject), 100_000);
-                }
-
             }
         } catch (IOException | DataIntegrityViolationException e) {
             e.printStackTrace();
@@ -221,20 +146,131 @@ public class ProjectDataLoader {
         }
     }
 
-    private void setMainCall(Project project, String callIdentifier) {
-        Call existingCall = getMainCall(callIdentifier);
-        project.setCall(existingCall);
+    private Project getProject(Row row) {
+        if (row.getRowNum() == 0) {
+            return null; // skip headers
+        } else if (row.getCell(ID_INDEX) == null) {
+            return null; // skip empty rows
+        }
+
+        Project project = Project.builder()
+                .referenceId(Long.parseLong(row.getCell(ID_INDEX).getStringCellValue()))
+                .rcn(row.getCell(RCN_INDEX).getStringCellValue())
+                .acronym(row.getCell(ACRONYM_INDEX).getStringCellValue())
+                .title(row.getCell(TITLE_INDEX).getStringCellValue())
+                .fundingOrganisation(getFundingOrganisation(TOTAL_COST_INDEX, EC_MAX_CONTRIBUTION_INDEX, row))
+                .fundingEU(getFundingEU(row, EC_MAX_CONTRIBUTION_INDEX))
+                .status(ProjectStatusEnum.valueOf(row.getCell(STATUS_INDEX).getStringCellValue()))
+                .signDate(getDate(EC_SIGNATURE_DATE_INDEX, row))
+                .startDate(getDate(START_DATE_INDEX, row))
+                .endDate(getDate(END_DATE_INDEX, row))
+                .masterCallIdentifier(row.getCell(MASTER_CALL_INDEX).getStringCellValue())
+                .legalBasis(row.getCell(LEGAL_BASIS_INDEX).getStringCellValue())
+                .fundingScheme(FundingSchemeEnum.valueOfName(row.getCell(FUNDING_SCHEME_INDEX).getStringCellValue()))
+                .build();
+
+        // set call
+        String callIdentifier = row.getCell(CALL_IDENTIFIER_INDEX).getStringCellValue();
+        setMainCall(project, callIdentifier);
+
+        // set long text
+        project.setLongTexts(new ArrayList<>());
+        addDescriptionIfPresent(row, OBJECTIVE_INDEX, project, LongTextTypeEnum.PROJECT_OBJECTIVE);
+
+        Optional<Project> existingProjectOptional = projectRepository.findByReferenceId(project.getReferenceId());
+        if (existingProjectOptional.isPresent()) {
+            Project existingProject = existingProjectOptional.get();
+
+            for (LongText longText : project.getLongTexts()) {
+                if (existingProject.getLongTexts().stream().noneMatch(lt -> lt.getType().equals(longText.getType()))) {
+                    longText.setProject(existingProject);
+                    existingProject.getLongTexts().add(longText);
+                } else {
+                    LongText longTextToSave = existingProject.getLongTexts().stream()
+                            .filter(lt -> lt.getType().equals(longText.getType()))
+                            .findFirst()
+                            .orElseThrow();
+                    if (
+                            isNotEmpty(longTextToSave.getText())) {
+                        longTextToSave.setText(longText.getText());
+                    }
+                }
+            }
+            if (isNotEmpty(existingProject.getReferenceId())) {
+                existingProject.setReferenceId(project.getReferenceId());
+            }
+            if (isNotEmpty(existingProject.getRcn())) {
+                existingProject.setRcn(project.getRcn());
+            }
+            if (isNotEmpty(existingProject.getAcronym())) {
+                existingProject.setAcronym(project.getAcronym());
+            }
+            if (isNotEmpty(existingProject.getTitle())) {
+                existingProject.setTitle(existingProject.getTitle());
+            }
+            if (isNotEmpty(existingProject.getFundingOrganisation())) {
+                existingProject.setFundingOrganisation(project.getFundingOrganisation());
+            }
+            if (isNotEmpty(existingProject.getFundingEU())) {
+                existingProject.setFundingEU(project.getFundingEU());
+            }
+            if (isNotEmpty(existingProject.getStatus())) {
+                existingProject.setStatus(project.getStatus());
+            }
+            if (isNotEmpty(existingProject.getSignDate())) {
+                existingProject.setSignDate(project.getSignDate());
+            }
+            if (isNotEmpty(existingProject.getStartDate())) {
+                existingProject.setStartDate(project.getStartDate());
+            }
+            if (isNotEmpty(existingProject.getEndDate())) {
+                existingProject.setEndDate(project.getEndDate());
+            }
+            if (isNotEmpty(existingProject.getCall())) {
+                existingProject.setCall(project.getCall());
+            }
+            if (isNotEmpty(existingProject.getMasterCallIdentifier())) {
+                existingProject.setMasterCallIdentifier(project.getMasterCallIdentifier());
+            }
+            if (isNotEmpty(existingProject.getLegalBasis())) {
+                existingProject.setLegalBasis(project.getLegalBasis());
+            }
+            if (isNotEmpty(existingProject.getFundingScheme())) {
+                existingProject.setFundingScheme(project.getFundingScheme());
+            }
+            return existingProject;
+        } else {
+            return project;
+        }
     }
 
+    public static BigDecimal getFundingEU(Row row, int index) {
+        return new BigDecimal(getBudget(index, row)).stripTrailingZeros();
+    }
+
+    private void save(List<Project> projects) {
+        List<Project> savedProject = projectRepository.saveAll(projects);
+        projectSolrClientService.add(SolrMapper.mapToSolrDocument(savedProject), 100_000);
+    }
+
+    private void setMainCall(Project project, String callIdentifier) {
+        Call existingCall = getMainCall(callIdentifier);
+        if (existingCall != null) {
+            project.setCall(existingCall);
+            existingCall.getProjects().add(project);
+        }
+    }
+
+    @Nullable
     private Call getMainCall(String callIdentifier) {
         List<Call> existingCalls = callRepository.findyIdentifier(callIdentifier);
-
-        assertFalse(existingCalls.isEmpty());
         Call existingCall;
         if (existingCalls.size() > 1) {
             existingCall = existingCalls.stream().filter(call -> call.getUrlType().equals(UrlTypeEnum.TOPIC_DETAILS)).findFirst().orElse(existingCalls.get(0));
-        } else {
+        } else if (existingCalls.size() == 1) {
             existingCall = existingCalls.get(0);
+        } else {
+            existingCall = null;
         }
         return existingCall;
     }
@@ -243,35 +279,40 @@ public class ProjectDataLoader {
         BigDecimal totalCost = new BigDecimal(getBudget(TOTAL_COST_INDEX, row));
         BigDecimal ecMaxContribution = new BigDecimal(getBudget(EC_MAX_CONTRIBUTION_INDEX, row));
         if (totalCost.compareTo(BigDecimal.ZERO) == 0) {
-            return BigDecimal.ZERO;
+            return BigDecimal.ZERO.stripTrailingZeros();
         } else if (ecMaxContribution.compareTo(totalCost) == 0) {
-            return BigDecimal.ZERO;
+            return BigDecimal.ZERO.stripTrailingZeros();
         } else {
-            return totalCost.subtract(ecMaxContribution);
+            return totalCost.subtract(ecMaxContribution).stripTrailingZeros();
         }
     }
 
-    private static String getBudget(int budgetIndex, Row row) {
+    public static String getBudget(int budgetIndex, Row row) {
         String budget;
         Cell budgetCell = row.getCell(budgetIndex);
+        if (budgetCell == null) {
+            return "0";
+        }
         if (budgetCell.getCellType() == CellType.NUMERIC) {
             budget = String.valueOf(budgetCell.getNumericCellValue());
         } else {
-            budget = budgetCell.getStringCellValue();
+            budget = budgetCell.getStringCellValue().replace(",", ".");
         }
         return budget;
     }
 
-    private static Timestamp getDate(int submissionDLIndex, Row row) {
-        if (row.getCell(submissionDLIndex) == null || row.getCell(submissionDLIndex).getLocalDateTimeCellValue() == null) {
+    private static LocalDate getDate(int submissionDLIndex, Row row) {
+        if (row.getCell(submissionDLIndex) == null || row.getCell(submissionDLIndex).getStringCellValue() == null) {
             return null;
         }
-        return DateMapper.map(row.getCell(submissionDLIndex).getLocalDateTimeCellValue());
+        return DateMapper.mapToDate(row.getCell(submissionDLIndex).getStringCellValue());
     }
 
     private static void addDescriptionIfPresent(Row row, int index, Project project, LongTextTypeEnum description) {
         if (isNotEmpty(row.getCell(index).getStringCellValue())) {
-            project.getLongTexts().add(LongText.builder().type(description).text(row.getCell(index).getStringCellValue()).build());
+            LongText longText = LongText.builder().type(description).text(row.getCell(index).getStringCellValue()).build();
+            project.getLongTexts().add(longText);
+            longText.setProject(project);
         }
     }
 

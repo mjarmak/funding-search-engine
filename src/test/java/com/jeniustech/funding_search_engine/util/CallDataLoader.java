@@ -44,7 +44,7 @@ public class CallDataLoader {
     void loadData() {
         String path = "C:/Projects/funding-search-engine/src/test/resources/data/calls/";
         List<String> csvFiles = List.of(
-//                "output_query-open_1718653202242.csv"
+                "output_query-open_1718653202242.csv",
                 "output_query-upcoming_1718653130808.csv",
                 "output_query-closed_1718653220506.csv"
         );
@@ -127,8 +127,8 @@ public class CallDataLoader {
                         .endDate(DateMapper.mapToTimestamp(row[submissionDLIndex]))
                         .endDate2(DateMapper.mapToTimestamp(row[submissionDL2Index]))
                         .startDate(DateMapper.mapToTimestamp(row[openDateIndex]))
-                        .budgetMin(new BigDecimal(row[budgetMinIndex]))
-                        .budgetMax(new BigDecimal(row[budgetMaxIndex]))
+                        .budgetMin(new BigDecimal(row[budgetMinIndex]).stripTrailingZeros())
+                        .budgetMax(new BigDecimal(row[budgetMaxIndex]).stripTrailingZeros())
                         .projectNumber(getProjectNumber(row[numberOfProjectsIndex]))
                         .typeOfMGADescription(valueOrDefault(row[typeOfMGADescriptionIndex], null))
                         .build();

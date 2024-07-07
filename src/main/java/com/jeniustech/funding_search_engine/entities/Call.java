@@ -39,7 +39,7 @@ public class Call {
     @Column(length = 255, nullable = false)
     private String title;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "call")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "call", fetch = FetchType.LAZY)
     private List<LongText> longTexts;
 
     @Column(length = 255)
@@ -69,7 +69,7 @@ public class Call {
     @Column(name = "type_of_mga_description", length = 255)
     private String typeOfMGADescription;
 
-    @OneToMany
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "call")
     private List<Project> projects;
 
     @CreationTimestamp
