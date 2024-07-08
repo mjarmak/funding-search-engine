@@ -74,8 +74,8 @@ public class OrganisationDataLoader {
 
         String path = "data/projects/split/";
         String fileName = "organization";
-        int startFile = 1;
-        int endFile = 4;
+        int startFile = 9;
+        int endFile = 12;
 
         Stream.iterate(startFile, i -> i + 1).limit(endFile)
                 .forEach(i -> {
@@ -177,20 +177,24 @@ public class OrganisationDataLoader {
                 items.add(item);
             }
             if (items.size() == BATCH_SIZE) {
-                System.out.println("Saving batch of " + items.size() + " items\n");
+                logSaveBatch(items);
                 save(items);
                 items.clear();
             }
         } else if (!items.isEmpty()) {
-            System.out.println("Saving batch of " + items.size() + " items\n");
+            logSaveBatch(items);
             save(items);
             items.clear();
         }
         if (row.getRowNum() == sheet.getLastRowNum() && !items.isEmpty()) {
-            System.out.println("Saving last batch of " + items.size() + " items\n");
+            logSaveBatch(items);
             save(items);
             items.clear();
         }
+    }
+
+    private static void logSaveBatch(List<Organisation> items) {
+        System.out.println("Saving batch of " + items.size() + " items, less than " + BATCH_SIZE + " due to duplicate item skipping\n");
     }
 
     private Organisation getOrganisation(Row row) {

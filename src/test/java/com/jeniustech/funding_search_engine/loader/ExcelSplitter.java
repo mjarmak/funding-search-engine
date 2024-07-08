@@ -31,6 +31,7 @@ public class ExcelSplitter {
     private static Workbook currentWorkbook;
     private static Sheet currentSheet;
     private static List<String> rowData;
+    private static List<String> headerRowData;
 
     private static String path = "C:/Projects/funding-search-engine/src/test/resources/data/projects/";
     private static String inputFilePath = "organization.xlsx";
@@ -67,8 +68,13 @@ public class ExcelSplitter {
         saveCurrentWorkbook();
 
         currentWorkbook = new XSSFWorkbook();
-        currentSheet = currentWorkbook.createSheet("Sheet1");
+        currentSheet = currentWorkbook.createSheet("DATA");
         currentRowCount = 0;
+
+        // Add header row to the new workbook
+        if (headerRowData != null) {
+            addRowDataToSheet(headerRowData);
+        }
     }
 
     private static void saveCurrentWorkbook() throws IOException {
@@ -128,6 +134,10 @@ public class ExcelSplitter {
                     rowData.add("");
                 }
             } else if ("row".equals(qName)) {
+                if (currentRowCount == 0 && headerRowData == null) {
+                    // Store header row data
+                    headerRowData = new ArrayList<>(rowData);
+                }
                 addRowDataToSheet(rowData);
                 if (currentRowCount % ROWS_PER_FILE == 0) {
                     try {
