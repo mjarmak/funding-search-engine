@@ -53,11 +53,11 @@ public class ReportService {
             throw new ReportException("No calls to export");
         }
 
-        try (ByteArrayOutputStream out = new ByteArrayOutputStream();
-             PdfWriter writer = new PdfWriter(out);
-             PdfDocument pdfDoc = new PdfDocument(writer);
-             Document document = new Document(pdfDoc);
-        ) {
+
+        try (ByteArrayOutputStream out = new ByteArrayOutputStream();) {
+            PdfWriter writer = new PdfWriter(out);
+            PdfDocument pdfDoc = new PdfDocument(writer);
+            Document document = new Document(pdfDoc);
             addHeader(document, path);
 
             List<Call> calls = callRepository.findAllById(callIds);
@@ -70,11 +70,13 @@ public class ReportService {
 
             logService.addLog(userData, EXPORT_PDF, callIds.toString().substring(1, Math.min(callIds.toString().length(), 254)));
 
+            writer.close();
+            pdfDoc.close();
+            document.close();
             return new ByteArrayInputStream(out.toByteArray());
         } catch (Exception e) {
             throw new ReportException("Error generating PDF");
         }
-
     }
 
 //    public ByteArrayInputStream generatePdf(Long callId, String subjectId, String path) {
