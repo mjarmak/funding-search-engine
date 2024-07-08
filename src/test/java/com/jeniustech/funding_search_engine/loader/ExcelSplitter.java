@@ -60,7 +60,7 @@ public class ExcelSplitter {
 
     private static void startNewWorkbook() throws IOException {
         if (currentWorkbook != null) {
-            String outputFilePath = path + inputFilePath.replace(".xlsx", "_" + fileCount++ + ".xlsx");
+            String outputFilePath = path + "split/" + inputFilePath.replace(".xlsx", "_" + fileCount++ + ".xlsx");
             try (FileOutputStream fos = new FileOutputStream(outputFilePath)) {
                 currentWorkbook.write(fos);
             }
