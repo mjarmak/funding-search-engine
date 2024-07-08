@@ -49,9 +49,14 @@ public class ExcelSplitter {
             while (sheets.hasNext()) {
                 try (InputStream sheetStream = sheets.next()) {
                     processSheet(sheetStream);
+
+                    // Save the last workbook
+                    saveCurrentWorkbook();
                 }
             }
         }
+        System.out.println("Wrote " + fileCount + " files");
+        System.out.println("Wrote " + currentRowCount + " rows");
     }
 
     private static void processSheet(InputStream sheetStream) throws IOException, SAXException, ParserConfigurationException {
@@ -62,6 +67,14 @@ public class ExcelSplitter {
     }
 
     private static void startNewWorkbook() throws IOException {
+        saveCurrentWorkbook();
+
+        currentWorkbook = new XSSFWorkbook();
+        currentSheet = currentWorkbook.createSheet("Sheet1");
+        currentRowCount = 0;
+    }
+
+    private static void saveCurrentWorkbook() throws IOException {
         if (currentWorkbook != null) {
             String outputFilePath = path + "split/" + inputFilePath.replace(".xlsx", "_" + fileCount++ + ".xlsx");
             try (FileOutputStream fos = new FileOutputStream(outputFilePath)) {
@@ -69,9 +82,6 @@ public class ExcelSplitter {
             }
             currentWorkbook.close();
         }
-        currentWorkbook = new XSSFWorkbook();
-        currentSheet = currentWorkbook.createSheet("Sheet1");
-        currentRowCount = 0;
     }
 
     private static void addRowDataToSheet(List<String> rowData) {
