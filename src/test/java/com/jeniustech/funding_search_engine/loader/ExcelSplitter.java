@@ -22,6 +22,8 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
 
 @SpringBootTest
 public class ExcelSplitter {
@@ -31,6 +33,7 @@ public class ExcelSplitter {
     private static int fileCount = 1;
     private static Workbook currentWorkbook;
     private static Sheet currentSheet;
+    private static List<String> rowData;
 
     private static String path = "C:/Projects/funding-search-engine/src/test/resources/data/projects/";
     private static String inputFilePath = "organization.xlsx";
@@ -71,32 +74,39 @@ public class ExcelSplitter {
         currentRowCount = 0;
     }
 
+    private static void addRowDataToSheet(List<String> rowData) {
+        Row newRow = currentSheet.createRow(currentRowCount++);
+        int cellIndex = 0;
+        for (String cellValue : rowData) {
+            Cell newCell = newRow.createCell(cellIndex++);
+            newCell.setCellValue(cellValue);
+        }
+    }
+
     private static class SheetHandler extends DefaultHandler {
-        private Row currentRow;
-        private Cell currentCell;
-        private String currentCellValue;
-        private int currentCellIndex;
+        private boolean isCellOpen = false;
 
         public SheetHandler() throws IOException {
             startNewWorkbook();
         }
 
         @Override
-        public void startElement(String uri, String localName, String qName, Attributes attributes) {
+        public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
             if ("row".equals(qName)) {
-                currentRow = currentSheet.createRow(currentRowCount++);
-                currentCellIndex = 0;
+                rowData = new ArrayList<>();
             } else if ("c".equals(qName)) {
-                currentCell = currentRow.createCell(currentCellIndex++);
-                currentCellValue = "";
+                isCellOpen = true;
             }
         }
 
         @Override
         public void endElement(String uri, String localName, String qName) throws SAXException {
             if ("v".equals(qName)) {
-                currentCell.setCellValue(currentCellValue);
+                isCellOpen = false;
+            } else if ("c".equals(qName)) {
+                isCellOpen = false;
             } else if ("row".equals(qName)) {
+                addRowDataToSheet(rowData);
                 if (currentRowCount % ROWS_PER_FILE == 0) {
                     try {
                         startNewWorkbook();
@@ -108,8 +118,10 @@ public class ExcelSplitter {
         }
 
         @Override
-        public void characters(char[] ch, int start, int length) {
-            currentCellValue += new String(ch, start, length);
+        public void characters(char[] ch, int start, int length) throws SAXException {
+            if (isCellOpen) {
+                rowData.add(new String(ch, start, length));
+            }
         }
     }
 }

@@ -69,9 +69,9 @@ public class OrganisationDataLoader {
 
     @Test
     void loadData() {
-        IOUtils.setByteArrayMaxOverride(1_000_000_000); // Setting it to 200 million bytes (200MB)
+        IOUtils.setByteArrayMaxOverride(1_000_000_000);
 
-        String excelFilePath = "data/projects/organization2.xlsx";
+        String excelFilePath = "data/projects/organization.xlsx";
 
         try (FileInputStream fis = new FileInputStream(new ClassPathResource(excelFilePath).getFile());
              Workbook workbook = new XSSFWorkbook(fis)) {
