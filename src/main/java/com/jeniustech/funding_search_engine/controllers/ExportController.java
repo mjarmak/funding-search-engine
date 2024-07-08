@@ -1,5 +1,6 @@
 package com.jeniustech.funding_search_engine.controllers;
 
+import com.jeniustech.funding_search_engine.exceptions.ReportException;
 import com.jeniustech.funding_search_engine.mappers.UserDataMapper;
 import com.jeniustech.funding_search_engine.models.JwtModel;
 import com.jeniustech.funding_search_engine.services.ExportService;
@@ -47,10 +48,30 @@ public class ExportController {
             @PathVariable Long callId,
             @AuthenticationPrincipal Jwt jwt,
             @RequestParam String imageUrl
-    ) {
+    ) throws ReportException {
         JwtModel jwtModel = UserDataMapper.map(jwt);
 
-        ByteArrayInputStream bis = reportService.generatePdf(callId, jwtModel.getUserId(), imageUrl);
+        ByteArrayInputStream bis = reportService.generatePdf(List.of(callId), jwtModel.getUserId(), imageUrl);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Content-Disposition", "inline; filename=data.pdf");
+
+        return ResponseEntity
+                .ok()
+                .headers(headers)
+                .contentType(MediaType.APPLICATION_PDF)
+                .body(new InputStreamResource(bis));
+    }
+
+    @PostMapping("/calls/pdf")
+    public ResponseEntity<InputStreamResource> generatePdf(
+            @RequestBody List<Long> callIds,
+            @AuthenticationPrincipal Jwt jwt,
+            @RequestParam String imageUrl
+    ) throws ReportException {
+        JwtModel jwtModel = UserDataMapper.map(jwt);
+
+        ByteArrayInputStream bis = reportService.generatePdf(callIds, jwtModel.getUserId(), imageUrl);
 
         HttpHeaders headers = new HttpHeaders();
         headers.add("Content-Disposition", "inline; filename=data.pdf");

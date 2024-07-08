@@ -89,7 +89,6 @@ public class Project {
     public String getFundingEUString() {
         return fundingEU.stripTrailingZeros().toPlainString();
     }
-
     public String getFundingOrganisationString() {
         return fundingOrganisation.stripTrailingZeros().toPlainString();
     }

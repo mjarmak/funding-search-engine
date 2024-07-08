@@ -25,7 +25,10 @@ public class OrganisationContactInfo {
     @Enumerated(EnumType.ORDINAL)
     private ContactInfoTypeEnum type;
 
+    @Column(nullable = false)
     private String name;
+
+    @Column(nullable = false)
     private String value;
 
 }

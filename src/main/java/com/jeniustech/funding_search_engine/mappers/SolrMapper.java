@@ -93,7 +93,6 @@ public interface SolrMapper {
                 .build(
                 );
     }
-
     static List<SolrInputDocument> mapToSolrDocument(List<Project> projects) {
         if (projects == null) {
             return null;
