@@ -9,7 +9,6 @@ import org.apache.poi.util.IOUtils;
 import org.apache.poi.xssf.eventusermodel.XSSFReader;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.xml.sax.Attributes;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -25,9 +24,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-@SpringBootTest
 public class ExcelSplitter {
-
     private static final int ROWS_PER_FILE = 1000;
     private static int currentRowCount = 0;
     private static int fileCount = 1;
@@ -95,6 +92,8 @@ public class ExcelSplitter {
 
     private static class SheetHandler extends DefaultHandler {
         private boolean isCellOpen = false;
+        private String currentCellReference;
+        private int lastColumnNumber = -1;
 
         public SheetHandler() throws IOException {
             startNewWorkbook();
@@ -104,8 +103,17 @@ public class ExcelSplitter {
         public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
             if ("row".equals(qName)) {
                 rowData = new ArrayList<>();
+                lastColumnNumber = -1;
             } else if ("c".equals(qName)) {
                 isCellOpen = true;
+                currentCellReference = attributes.getValue("r");
+                int currentColumn = getColumnIndex(currentCellReference);
+
+                // Fill in missing cells
+                for (int i = lastColumnNumber + 1; i < currentColumn; i++) {
+                    rowData.add("");
+                }
+                lastColumnNumber = currentColumn;
             }
         }
 
@@ -115,6 +123,10 @@ public class ExcelSplitter {
                 isCellOpen = false;
             } else if ("c".equals(qName)) {
                 isCellOpen = false;
+                // Ensure each cell ends up in the correct column position
+                if (rowData.size() <= lastColumnNumber) {
+                    rowData.add("");
+                }
             } else if ("row".equals(qName)) {
                 addRowDataToSheet(rowData);
                 if (currentRowCount % ROWS_PER_FILE == 0) {
@@ -130,8 +142,25 @@ public class ExcelSplitter {
         @Override
         public void characters(char[] ch, int start, int length) throws SAXException {
             if (isCellOpen) {
-                rowData.add(new String(ch, start, length));
+                String cellValue = new String(ch, start, length);
+                if (rowData.size() <= lastColumnNumber) {
+                    rowData.add(cellValue);
+                } else {
+                    rowData.set(lastColumnNumber, rowData.get(lastColumnNumber) + cellValue);
+                }
             }
+        }
+
+        private int getColumnIndex(String cellReference) {
+            int columnIndex = -1;
+            for (int i = 0; i < cellReference.length(); i++) {
+                if (Character.isDigit(cellReference.charAt(i))) {
+                    break;
+                }
+                int thisChar = cellReference.charAt(i) - 'A' + 1;
+                columnIndex = (columnIndex + 1) * 26 + thisChar;
+            }
+            return columnIndex - 1;
         }
     }
 }

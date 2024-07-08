@@ -27,6 +27,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Stream;
 
 import static com.jeniustech.funding_search_engine.loader.ProjectDataLoader.getFundingEU;
 import static com.jeniustech.funding_search_engine.loader.ProjectDataLoader.getFundingOrganisation;
@@ -71,10 +72,24 @@ public class OrganisationDataLoader {
     void loadData() {
         IOUtils.setByteArrayMaxOverride(1_000_000_000);
 
-        String excelFilePath = "data/projects/organization.xlsx";
+        String path = "data/projects/split/";
+        String fileName = "organization";
+        int startFile = 1;
+        int endFile = 4;
 
-        try (FileInputStream fis = new FileInputStream(new ClassPathResource(excelFilePath).getFile());
-             Workbook workbook = new XSSFWorkbook(fis)) {
+        Stream.iterate(startFile, i -> i + 1).limit(endFile)
+                .forEach(i -> {
+                    String excelFilePath = path + fileName + "_" + i + ".xlsx";
+                    System.out.println("Loading file " + excelFilePath);
+                    loadFile(excelFilePath);
+                });
+    }
+
+    private void loadFile(String fileName) {
+        try (
+                FileInputStream fis = new FileInputStream(new ClassPathResource(fileName).getFile());
+                Workbook workbook = new XSSFWorkbook(fis)
+        ) {
 
             Sheet sheet = workbook.getSheetAt(0); // Get the first sheet
 
@@ -138,7 +153,7 @@ public class OrganisationDataLoader {
             // save in batches of 1000
             List<Organisation> organisations = new ArrayList<>();
             for (Row row : sheet) {
-                System.out.println(row.getRowNum() + ", ");
+//                System.out.println(row.getRowNum() + ", ");
                 Organisation organisation = getOrganisation(row);
                 processSave(sheet, organisations, row, organisation);
             }
