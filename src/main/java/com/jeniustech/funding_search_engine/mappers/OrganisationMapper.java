@@ -15,6 +15,7 @@ public interface OrganisationMapper {
                 .shortName(organisation.getShortName())
                 .address(AddressMapper.mapToDTO(organisation.getAddress()))
                 .type(organisation.getType())
+                .typeName(organisation.getType() != null ? organisation.getType().getName() : null)
                 .sme(organisation.isSme())
                 .vatNumber(organisation.getVatNumber())
                 .nutsCode(organisation.getNutsCode())

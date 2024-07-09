@@ -11,7 +11,6 @@ import com.jeniustech.funding_search_engine.repository.CallRepository;
 import com.jeniustech.funding_search_engine.services.solr.CallSolrClientService;
 import com.opencsv.CSVReader;
 import com.opencsv.exceptions.CsvValidationException;
-import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -40,7 +39,7 @@ public class CallDataLoader {
     @Autowired
     CallSolrClientService callSolrClientService;
 
-    @Test
+//    @Test
     void loadData() {
         String path = "C:/Projects/funding-search-engine/src/test/resources/data/calls/";
         List<String> csvFiles = List.of(

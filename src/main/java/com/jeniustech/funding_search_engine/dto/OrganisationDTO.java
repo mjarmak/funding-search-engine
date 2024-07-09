@@ -20,5 +20,6 @@ public class OrganisationDTO {
     private String nutsCode;
     private boolean sme;
     private OrganisationTypeEnum type;
+    private String typeName;
     private List<ContactInfoDTO> contactInfos;
 }

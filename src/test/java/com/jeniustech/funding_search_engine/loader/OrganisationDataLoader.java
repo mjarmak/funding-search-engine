@@ -13,7 +13,6 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.util.IOUtils;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.core.io.ClassPathResource;
@@ -68,7 +67,7 @@ public class OrganisationDataLoader {
     int NET_EC_CONTRIBUTION_INDEX = -1;
     int TOTAL_COST_INDEX = -1;
 
-    @Test
+//    @Test
     void loadData() {
         IOUtils.setByteArrayMaxOverride(1_000_000_000);
 

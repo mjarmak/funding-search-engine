@@ -16,7 +16,6 @@ import com.jeniustech.funding_search_engine.services.solr.ProjectSolrClientServi
 import jakarta.annotation.Nullable;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.core.io.ClassPathResource;
@@ -66,7 +65,7 @@ public class ProjectDataLoader {
     int OBJECTIVE_INDEX = -1;
     int RCN_INDEX = -1;
 
-    @Test
+//    @Test
     void loadData() {
         String excelFilePath = "data/projects/project.xlsx";
 
