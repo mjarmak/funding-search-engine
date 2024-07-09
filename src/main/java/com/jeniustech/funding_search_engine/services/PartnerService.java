@@ -40,7 +40,7 @@ public class PartnerService {
         query.append(call.getTitle());
         if (call.getDescription() != null) {
             query.append(" ");
-            query.append(call.getDescription(), 0, 512);
+            query.append(call.getDescription(), 0, Math.min(call.getDescription().length(), 512));
         }
         SearchDTO<ProjectDTO> projectDTOSearchDTO = projectSolrClientService.search(filterQuery(query), 0, 10, null);
         List<ProjectDTO> projectDTOS = projectDTOSearchDTO.getResults();
@@ -69,7 +69,7 @@ public class PartnerService {
             }
         }
         partners.sort((p1, p2) -> Float.compare(p2.getMaxScore(), p1.getMaxScore()));
-        return partners;
+        return partners.subList(0, Math.min(partners.size(), 10));
     }
 
     private static String filterQuery(StringBuilder query) {

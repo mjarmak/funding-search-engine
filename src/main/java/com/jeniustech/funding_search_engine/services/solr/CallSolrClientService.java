@@ -4,6 +4,7 @@ import com.jeniustech.funding_search_engine.dto.CallDTO;
 import com.jeniustech.funding_search_engine.dto.SearchDTO;
 import com.jeniustech.funding_search_engine.entities.UserData;
 import com.jeniustech.funding_search_engine.enums.LogTypeEnum;
+import com.jeniustech.funding_search_engine.enums.StatusFilterEnum;
 import com.jeniustech.funding_search_engine.exceptions.DocumentSaveException;
 import com.jeniustech.funding_search_engine.exceptions.SearchException;
 import com.jeniustech.funding_search_engine.exceptions.UserNotFoundException;
@@ -23,6 +24,7 @@ import org.apache.solr.common.params.CommonParams;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -50,7 +52,7 @@ public class CallSolrClientService implements ISolrClientService<CallDTO> {
 
     public UpdateResponse add(SolrInputDocument document, int duration) throws DocumentSaveException {
         try {
-            final UpdateResponse updateResponse =  this.solrClient.add(document, duration);
+            final UpdateResponse updateResponse = this.solrClient.add(document, duration);
             this.solrClient.commit();
             return updateResponse;
         } catch (Exception e) {
@@ -60,6 +62,10 @@ public class CallSolrClientService implements ISolrClientService<CallDTO> {
     }
 
     public SearchDTO<CallDTO> search(String query, int pageNumber, int pageSize, JwtModel jwtModel) throws SearchException {
+        return search(query, pageNumber, pageSize, List.of(StatusFilterEnum.UPCOMING, StatusFilterEnum.OPEN, StatusFilterEnum.CLOSED), jwtModel);
+    }
+
+    public SearchDTO<CallDTO> search(String query, int pageNumber, int pageSize, List<StatusFilterEnum> statusFilters, JwtModel jwtModel) throws SearchException {
         UserData userData = this.userDataRepository.findBySubjectId(jwtModel.getUserId()).orElseThrow(() -> new UserNotFoundException("User not found"));
 
         ValidatorService.validateUserSearch(userData);
@@ -79,6 +85,22 @@ public class CallSolrClientService implements ISolrClientService<CallDTO> {
             solrQuery.addField("*");
             solrQuery.addField("score");
             solrQuery.setSort("score", SolrQuery.ORDER.desc);
+
+            if (statusFilters != null && !statusFilters.isEmpty() && statusFilters.size() < 3) {
+                List<String> filters = new ArrayList<>();
+                for (StatusFilterEnum statusFilter : statusFilters) {
+                    switch (statusFilter) {
+                        case UPCOMING -> filters.add("(start_date:[NOW TO *])");
+                        case OPEN ->
+                                filters.add("(start_date:[* TO NOW] AND end_date:[NOW TO *]) OR (start_date:[* TO NOW] AND end_date_2:[NOW TO *])");
+                        case CLOSED ->
+                                filters.add("(end_date:[* TO NOW] AND -end_date_2) OR (end_date:[* TO NOW] AND end_date_2:[* TO NOW])");
+                    }
+                }
+                // join with 'OR'
+                solrQuery.addFilterQuery(String.join(" OR ", filters));
+
+            }
 
             QueryResponse response = this.solrClient.query(solrQuery);
             List<CallDTO> results = SolrMapper.mapToCall(response.getResults());

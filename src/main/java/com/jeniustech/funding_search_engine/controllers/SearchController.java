@@ -2,6 +2,7 @@ package com.jeniustech.funding_search_engine.controllers;
 
 import com.jeniustech.funding_search_engine.dto.CallDTO;
 import com.jeniustech.funding_search_engine.dto.SearchDTO;
+import com.jeniustech.funding_search_engine.enums.StatusFilterEnum;
 import com.jeniustech.funding_search_engine.mappers.UserDataMapper;
 import com.jeniustech.funding_search_engine.models.JwtModel;
 import com.jeniustech.funding_search_engine.services.solr.CallSolrClientService;
@@ -14,6 +15,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 @RestController
 @RequiredArgsConstructor
 public class SearchController {
@@ -25,6 +28,8 @@ public class SearchController {
             @RequestParam @Size(min = 2, max = 255) String query,
             @RequestParam(required = true, defaultValue = "0") int pageNumber,
             @RequestParam(required = true, defaultValue = "20") int pageSize,
+            @RequestParam(required = false, name = "status", defaultValue = "UPCOMING,OPEN,CLOSED"
+            ) List<StatusFilterEnum> statusFilters,
             @AuthenticationPrincipal Jwt jwt
     ) {
         JwtModel jwtModel = UserDataMapper.map(jwt);
@@ -32,6 +37,7 @@ public class SearchController {
                 query,
                 pageNumber,
                 pageSize,
+                statusFilters,
                 jwtModel
         ));
     }
