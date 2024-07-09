@@ -69,4 +69,8 @@ public class Organisation {
     public String getShortNameOrName() {
         return StringUtil.isNotEmpty(this.shortName) ? this.shortName : this.name;
     }
+
+    public boolean isSme() {
+        return BooleanEnum.TRUE.equals(this.sme);
+    }
 }

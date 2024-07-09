@@ -14,6 +14,7 @@ import com.jeniustech.funding_search_engine.repository.UserDataRepository;
 import com.jeniustech.funding_search_engine.services.CallService;
 import com.jeniustech.funding_search_engine.services.LogService;
 import com.jeniustech.funding_search_engine.services.ValidatorService;
+import jakarta.validation.constraints.NotNull;
 import org.apache.solr.client.solrj.SolrClient;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.impl.Http2SolrClient;
@@ -65,7 +66,7 @@ public class CallSolrClientService implements ISolrClientService<CallDTO> {
         return search(query, pageNumber, pageSize, List.of(StatusFilterEnum.UPCOMING, StatusFilterEnum.OPEN, StatusFilterEnum.CLOSED), jwtModel);
     }
 
-    public SearchDTO<CallDTO> search(String query, int pageNumber, int pageSize, List<StatusFilterEnum> statusFilters, JwtModel jwtModel) throws SearchException {
+    public SearchDTO<CallDTO> search(String query, int pageNumber, int pageSize, @NotNull List<StatusFilterEnum> statusFilters, JwtModel jwtModel) throws SearchException {
         UserData userData = this.userDataRepository.findBySubjectId(jwtModel.getUserId()).orElseThrow(() -> new UserNotFoundException("User not found"));
 
         ValidatorService.validateUserSearch(userData);
@@ -86,7 +87,7 @@ public class CallSolrClientService implements ISolrClientService<CallDTO> {
             solrQuery.addField("score");
             solrQuery.setSort("score", SolrQuery.ORDER.desc);
 
-            if (statusFilters != null && !statusFilters.isEmpty() && statusFilters.size() < 3) {
+            if (!statusFilters.isEmpty() && statusFilters.size() < 3) {
                 List<String> filters = new ArrayList<>();
                 for (StatusFilterEnum statusFilter : statusFilters) {
                     switch (statusFilter) {

@@ -279,7 +279,7 @@ public class OrganisationDataLoader {
             OrganisationContactInfo urlContactInfo = OrganisationContactInfo.builder()
                     .type(ContactInfoTypeEnum.URL)
                     .value(url)
-                    .name("Organization Website")
+                    .name("Website")
                     .organisation(organisation)
                     .build();
             organisation.setContactInfos(new ArrayList<>(List.of(urlContactInfo)));
