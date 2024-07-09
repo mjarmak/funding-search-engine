@@ -55,7 +55,7 @@ public class CallController {
         return ResponseEntity.ok(callService.getFavoritesByUserId(jwtModel.getUserId(), pageNumber, pageSize));
     }
 
-    @GetMapping("/call/{id}/suggest/partner")
+    @GetMapping("/call/{id}/partners/recommended")
     public ResponseEntity<List<PartnerDTO>> getSuggestedPartners(
             @PathVariable Long id,
             @AuthenticationPrincipal Jwt jwt

@@ -11,5 +11,6 @@ public interface ProjectColumns {
     String START_DATE = "start_date";
     String END_DATE = "end_date";
     String FUNDING_EU = "funding_eu";
+    String SCORE = "score";
 
 }

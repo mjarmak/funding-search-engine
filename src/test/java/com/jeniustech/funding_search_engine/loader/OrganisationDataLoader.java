@@ -74,10 +74,10 @@ public class OrganisationDataLoader {
 
         String path = "data/projects/split/";
         String fileName = "organization";
-        int startFile = 9;
-        int endFile = 12;
+        int startFile = 80;
+        int fileCount = 2;
 
-        Stream.iterate(startFile, i -> i + 1).limit(endFile)
+        Stream.iterate(startFile, i -> i + 1).limit(fileCount)
                 .forEach(i -> {
                     String excelFilePath = path + fileName + "_" + i + ".xlsx";
                     System.out.println("Loading file " + excelFilePath);
@@ -317,7 +317,7 @@ public class OrganisationDataLoader {
     }
 
     private void save(List<Organisation> organisations) {
-        organisationRepository.saveAll(organisations);
+        organisationRepository.saveAllAndFlush(organisations);
     }
 
     private void updateContactInfos(Organisation organisation, Organisation existingOrganisation) {

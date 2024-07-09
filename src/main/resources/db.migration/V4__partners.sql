@@ -15,8 +15,8 @@ CREATE TABLE address
 CREATE TABLE location_coordinates
 (
     id bigserial PRIMARY KEY,
-    x  varchar(20) NOT NULL,
-    y  varchar(20) NOT NULL
+    x  varchar(30) NOT NULL,
+    y  varchar(30) NOT NULL
 );
 
 CREATE TABLE projects

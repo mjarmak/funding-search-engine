@@ -86,8 +86,8 @@ public interface SolrMapper {
                 .endDate(getDateInUTC(solrDocument, CallColumns.END_DATE))
                 .endDate2(getDateInUTC(solrDocument, CallColumns.END_DATE_2))
                 .startDate(getDateInUTC(solrDocument, CallColumns.START_DATE))
-                .budgetMin(NumberMapper.shortenNumber(valueOrDefault((String) solrDocument.getFieldValue(CallColumns.BUDGET_MIN), null)))
-                .budgetMax(NumberMapper.shortenNumber(valueOrDefault((String) solrDocument.getFieldValue(CallColumns.BUDGET_MAX), null)))
+                .budgetMin(NumberMapper.shortenNumber(valueOrDefault((String) solrDocument.getFieldValue(CallColumns.BUDGET_MIN), (String) solrDocument.getFieldValue(CallColumns.BUDGET_MAX))))
+                .budgetMax(NumberMapper.shortenNumber(valueOrDefault((String) solrDocument.getFieldValue(CallColumns.BUDGET_MAX), (String) solrDocument.getFieldValue(CallColumns.BUDGET_MIN))))
                 .projectNumber(getProjectNumber(solrDocument))
                 .score((Float) solrDocument.getFieldValue(CallColumns.SCORE))
                 .build(
@@ -142,6 +142,7 @@ public interface SolrMapper {
                 .callId((Long) solrDocument.getFieldValue(ProjectColumns.CALL_ID))
                 .callIdentifier((String) solrDocument.getFieldValue(ProjectColumns.CALL_IDENTIFIER))
                 .fundingEU((String) solrDocument.getFieldValue(ProjectColumns.FUNDING_EU))
+                .score((Float) solrDocument.getFieldValue(ProjectColumns.SCORE))
                 .build();
     }
 

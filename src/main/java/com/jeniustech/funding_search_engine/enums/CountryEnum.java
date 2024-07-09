@@ -240,7 +240,9 @@ public enum CountryEnum {
     WF(236, "Wallis and Futuna", "+681", "🇼🇫"),
     YE(237, "Yemen", "+967", "🇾🇪"),
     ZM(238, "Zambia", "+260", "🇿🇲"),
-    ZW(239, "Zimbabwe", "+263", "🇿🇼");
+    ZW(239, "Zimbabwe", "+263", "🇿🇼"),
+    XK(239, "Kosovo", null, null),
+    BQ(239, "Bonaire", null, null);
 
 
     private final Integer hierarchy;

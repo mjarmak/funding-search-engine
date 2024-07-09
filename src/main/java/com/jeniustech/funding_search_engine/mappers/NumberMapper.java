@@ -7,6 +7,9 @@ import java.text.DecimalFormat;
 public interface NumberMapper {
 
     static String shortenNumber(String number) {
+        if (number == null) {
+            return null;
+        }
         return shortenNumber(new BigDecimal(number), 1);
     }
 

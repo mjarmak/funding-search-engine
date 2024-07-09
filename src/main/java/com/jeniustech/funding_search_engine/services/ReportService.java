@@ -11,10 +11,7 @@ import com.itextpdf.kernel.pdf.annot.PdfAnnotation;
 import com.itextpdf.kernel.pdf.annot.PdfLinkAnnotation;
 import com.itextpdf.kernel.pdf.canvas.draw.SolidLine;
 import com.itextpdf.layout.Document;
-import com.itextpdf.layout.element.Image;
-import com.itextpdf.layout.element.LineSeparator;
-import com.itextpdf.layout.element.Link;
-import com.itextpdf.layout.element.Paragraph;
+import com.itextpdf.layout.element.*;
 import com.itextpdf.layout.property.TextAlignment;
 import com.jeniustech.funding_search_engine.entities.Call;
 import com.jeniustech.funding_search_engine.entities.LongText;
@@ -54,7 +51,7 @@ public class ReportService {
         }
 
 
-        try (ByteArrayOutputStream out = new ByteArrayOutputStream();) {
+        try (ByteArrayOutputStream out = new ByteArrayOutputStream()) {
             PdfWriter writer = new PdfWriter(out);
             PdfDocument pdfDoc = new PdfDocument(writer);
             Document document = new Document(pdfDoc);
@@ -66,6 +63,9 @@ public class ReportService {
             }
             for (Call call : calls) {
                 writeCall(document, call);
+                if (calls.indexOf(call) != calls.size() - 1) {
+                    newPage(document);
+                }
             }
 
             logService.addLog(userData, EXPORT_PDF, callIds.toString().substring(1, Math.min(callIds.toString().length(), 254)));
@@ -79,27 +79,9 @@ public class ReportService {
         }
     }
 
-//    public ByteArrayInputStream generatePdf(Long callId, String subjectId, String path) {
-//        UserData userData = userDataRepository.findBySubjectId(subjectId).orElseThrow(() -> new UserNotFoundException("User not found"));
-//        ValidatorService.validateUserPDFExport(userData, logService.getCountByUserIdAndType(userData.getId(), EXPORT_PDF));
-//
-//        try (ByteArrayOutputStream out = new ByteArrayOutputStream();
-//             PdfWriter writer = new PdfWriter(out);
-//             PdfDocument pdfDoc = new PdfDocument(writer);
-//             Document document = new Document(pdfDoc);
-//        ) {
-//            addHeader(document, path);
-//
-//            Call call = callRepository.findById(callId).orElseThrow(() -> new CallNotFoundException("Call not found"));
-//            writeCall(document, call);
-//
-//            logService.addLog(userData, EXPORT_PDF, callId.toString());
-//
-//            return new ByteArrayInputStream(out.toByteArray());
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//    }
+    private void newPage(Document document) {
+        document.add(new AreaBreak());
+    }
 
     private void writeCall(Document document, Call call) {
 

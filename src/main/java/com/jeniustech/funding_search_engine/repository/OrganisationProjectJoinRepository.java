@@ -7,6 +7,6 @@ import org.springframework.data.jpa.repository.Query;
 import java.util.List;
 
 public interface OrganisationProjectJoinRepository extends JpaRepository<OrganisationProjectJoin, Long> {
-    @Query("SELECT opj.organisation.id FROM OrganisationProjectJoin opj WHERE opj.project.id IN ?1")
+    @Query("SELECT opj FROM OrganisationProjectJoin opj WHERE opj.project.id IN ?1")
     List<OrganisationProjectJoin> findAllByProjectIds(List<Long> ids);
 }

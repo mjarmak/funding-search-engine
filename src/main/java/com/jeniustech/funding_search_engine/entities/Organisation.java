@@ -2,6 +2,7 @@ package com.jeniustech.funding_search_engine.entities;
 
 import com.jeniustech.funding_search_engine.enums.BooleanEnum;
 import com.jeniustech.funding_search_engine.enums.OrganisationTypeEnum;
+import com.jeniustech.funding_search_engine.util.StringUtil;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -65,4 +66,7 @@ public class Organisation {
         return "Organisation(id=" + this.getId() + ", name=" + this.getName() + ")";
     }
 
+    public String getShortNameOrName() {
+        return StringUtil.isNotEmpty(this.shortName) ? this.shortName : this.name;
+    }
 }

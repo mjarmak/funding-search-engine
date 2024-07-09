@@ -42,7 +42,7 @@ public class PartnerService {
             query.append(" ");
             query.append(call.getDescription(), 0, 512);
         }
-        SearchDTO<ProjectDTO> projectDTOSearchDTO = projectSolrClientService.search(query.toString(), 0, 10, null);
+        SearchDTO<ProjectDTO> projectDTOSearchDTO = projectSolrClientService.search(filterQuery(query), 0, 10, null);
         List<ProjectDTO> projectDTOS = projectDTOSearchDTO.getResults();
         List<Long> projectIds = projectDTOS.stream().map(ProjectDTO::getId).toList();
         List<OrganisationProjectJoin> organisationProjectJoins = organisationProjectJoinRepository.findAllByProjectIds(projectIds);
@@ -57,18 +57,34 @@ public class PartnerService {
                         PartnerDTO.builder()
                                 .organisationId(join.getOrganisation().getId())
                                 .projectId(projectId)
-                                .name(join.getOrganisation().getName())
+                                .name(join.getOrganisation().getShortNameOrName())
                                 .type(join.getOrganisation().getType())
                                 .country(join.getOrganisation().getAddress().getCountry())
                                 .projectsMatched(1)
-                                .maxScore(projectDTO.getScore())
+                                .maxScore((int) projectDTO.getScore())
                                 .build());
             } else {
                 partner.get().setProjectsMatched(partner.get().getProjectsMatched() + 1);
-                partner.get().setMaxScore(Math.max(partner.get().getMaxScore(), projectDTO.getScore()));
+                partner.get().setMaxScore((int) (partner.get().getMaxScore() + projectDTO.getScore()));
             }
         }
+        partners.sort((p1, p2) -> Float.compare(p2.getMaxScore(), p1.getMaxScore()));
         return partners;
+    }
+
+    private static String filterQuery(StringBuilder query) {
+        return query.toString().replace(":", "")
+                .replace("(", "")
+                .replace(")", "")
+                .replace("[", "")
+                .replace("]", "")
+                .replace("{", "")
+                .replace("}", "")
+                .replace("^", "")
+                .replace("~", "")
+                .replace("*", "")
+                .replace("?", "")
+                .replace("!", "");
     }
 
 }

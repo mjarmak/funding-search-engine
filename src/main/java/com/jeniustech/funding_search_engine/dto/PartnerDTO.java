@@ -14,5 +14,5 @@ public class PartnerDTO {
     private OrganisationTypeEnum type;
     private int projectsMatched;
     private CountryEnum country;
-    private float maxScore;
+    private int maxScore;
 }
