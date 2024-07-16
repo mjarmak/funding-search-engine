@@ -86,6 +86,8 @@ public class CallSolrClientService implements ISolrClientService<CallDTO> {
             solrQuery.addField("*");
             solrQuery.addField("score");
             solrQuery.setSort("score", SolrQuery.ORDER.desc);
+            solrQuery.add("q.op", "AND");
+            solrQuery.addFilterQuery("{!frange l=2}query($q)");
 
             if (!statusFilters.isEmpty() && statusFilters.size() < 3) {
                 List<String> filters = new ArrayList<>();
