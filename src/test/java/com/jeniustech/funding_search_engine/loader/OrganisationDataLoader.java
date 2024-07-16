@@ -73,8 +73,8 @@ public class OrganisationDataLoader {
 
         String path = "data/projects/split/";
         String fileName = "organization";
-        int startFile = 80;
-        int fileCount = 2;
+        int startFile = 79;
+        int fileCount = 3;
 
         Stream.iterate(startFile, i -> i + 1).limit(fileCount)
                 .forEach(i -> {

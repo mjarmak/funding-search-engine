@@ -93,9 +93,9 @@ public class CallSolrClientService implements ISolrClientService<CallDTO> {
                     switch (statusFilter) {
                         case UPCOMING -> filters.add("(start_date:[NOW TO *])");
                         case OPEN ->
-                                filters.add("(start_date:[* TO NOW] AND end_date:[NOW TO *]) OR (start_date:[* TO NOW] AND end_date_2:[NOW TO *])");
+                                filters.add("((start_date:[* TO NOW] AND end_date:[NOW TO *]) OR (start_date:[* TO NOW] AND end_date_2:[NOW TO *]))");
                         case CLOSED ->
-                                filters.add("(end_date:[* TO NOW] AND -end_date_2) OR (end_date:[* TO NOW] AND end_date_2:[* TO NOW])");
+                                filters.add("((end_date:[* TO NOW] AND -end_date_2:*) OR (end_date:[* TO NOW] AND end_date_2:[* TO NOW]))");
                     }
                 }
                 // join with 'OR'
