@@ -66,6 +66,7 @@ public class ProjectSolrClientService implements ISolrClientService<ProjectDTO> 
             solrQuery.addField("*");
             solrQuery.addField("score");
             solrQuery.setSort("score", SolrQuery.ORDER.desc);
+            solrQuery.add("q.op", "OR");
 
             QueryResponse response = this.solrClient.query(solrQuery);
             List<ProjectDTO> results = SolrMapper.mapToProject(response.getResults());

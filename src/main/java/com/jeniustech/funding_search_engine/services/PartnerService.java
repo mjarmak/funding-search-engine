@@ -7,6 +7,7 @@ import com.jeniustech.funding_search_engine.entities.Call;
 import com.jeniustech.funding_search_engine.entities.OrganisationProjectJoin;
 import com.jeniustech.funding_search_engine.entities.UserData;
 import com.jeniustech.funding_search_engine.exceptions.CallNotFoundException;
+import com.jeniustech.funding_search_engine.exceptions.NLPException;
 import com.jeniustech.funding_search_engine.exceptions.UserNotFoundException;
 import com.jeniustech.funding_search_engine.models.JwtModel;
 import com.jeniustech.funding_search_engine.repository.CallRepository;
@@ -16,6 +17,7 @@ import com.jeniustech.funding_search_engine.services.solr.ProjectSolrClientServi
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -28,21 +30,23 @@ public class PartnerService {
     private final CallRepository callRepository;
     private final UserDataRepository userDataRepository;
     private final OrganisationProjectJoinRepository organisationProjectJoinRepository;
+    private final NLPService nlpService;
 
     public List<PartnerDTO> getSuggestedPartners(Long callId, JwtModel jwtModel) {
         UserData userData = this.userDataRepository.findBySubjectId(jwtModel.getUserId()).orElseThrow(() -> new UserNotFoundException("User not found"));
         ValidatorService.validateUserSearchPartners(userData);
 
         Call call = callRepository.findById(callId).orElseThrow(() -> new CallNotFoundException("Call " + callId + " not found"));
-        StringBuilder query = new StringBuilder();
-        query.append(call.getIdentifier());
-        query.append(" ");
-        query.append(call.getTitle());
-        if (call.getDescription() != null) {
-            query.append(" ");
-            query.append(call.getDescription(), 0, Math.min(call.getDescription().length(), 512));
+        String text = call.getIdentifier() + " " + call.getTitle() + " " + call.getLongTextsToString();
+
+        List<String> keywords;
+        try {
+            keywords = nlpService.getKeywords(text);
+        } catch (IOException e) {
+            throw new NLPException(e.getMessage());
         }
-        SearchDTO<ProjectDTO> projectDTOSearchDTO = projectSolrClientService.search(filterQuery(query), 0, 10, null);
+        SearchDTO<ProjectDTO> projectDTOSearchDTO = projectSolrClientService.search(String.join(" ", keywords), 0, 10, null);
+
         List<ProjectDTO> projectDTOS = projectDTOSearchDTO.getResults();
         List<Long> projectIds = projectDTOS.stream().map(ProjectDTO::getId).toList();
         List<OrganisationProjectJoin> organisationProjectJoins = organisationProjectJoinRepository.findAllByProjectIds(projectIds);
