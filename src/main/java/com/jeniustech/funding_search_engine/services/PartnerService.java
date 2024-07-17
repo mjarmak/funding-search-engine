@@ -37,15 +37,8 @@ public class PartnerService {
         ValidatorService.validateUserSearchPartners(userData);
 
         Call call = callRepository.findById(callId).orElseThrow(() -> new CallNotFoundException("Call " + callId + " not found"));
-        String text = call.getIdentifier() + " " + call.getTitle() + " " + call.getLongTextsToString();
-
-        List<String> keywords;
-        try {
-            keywords = nlpService.getKeywords(text);
-        } catch (IOException e) {
-            throw new NLPException(e.getMessage());
-        }
-        SearchDTO<ProjectDTO> projectDTOSearchDTO = projectSolrClientService.search(String.join(" ", keywords), 0, 10, null);
+        String keywords = getKeywords(call);
+        SearchDTO<ProjectDTO> projectDTOSearchDTO = projectSolrClientService.search(keywords, 0, 10, null);
 
         List<ProjectDTO> projectDTOS = projectDTOSearchDTO.getResults();
         List<Long> projectIds = projectDTOS.stream().map(ProjectDTO::getId).toList();
@@ -76,19 +69,20 @@ public class PartnerService {
         return partners.subList(0, Math.min(partners.size(), 10));
     }
 
-    private static String filterQuery(StringBuilder query) {
-        return query.toString().replace(":", "")
-                .replace("(", "")
-                .replace(")", "")
-                .replace("[", "")
-                .replace("]", "")
-                .replace("{", "")
-                .replace("}", "")
-                .replace("^", "")
-                .replace("~", "")
-                .replace("*", "")
-                .replace("?", "")
-                .replace("!", "");
+    private String getKeywords(Call call) {
+        if (call.getKeywords() != null) {
+            return call.getKeywords();
+        }
+        String text = call.getIdentifier() + " " + call.getTitle() + " " + call.getLongTextsToString();
+
+        try {
+            String keywords = String.join(" ", nlpService.getKeywords(text));
+            call.setKeywords(keywords);
+            callRepository.save(call);
+            return keywords;
+        } catch (IOException e) {
+            throw new NLPException(e.getMessage());
+        }
     }
 
 }

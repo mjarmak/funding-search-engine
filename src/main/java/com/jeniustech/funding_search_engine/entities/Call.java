@@ -39,6 +39,9 @@ public class Call {
     @Column(length = 255, nullable = false)
     private String title;
 
+    @Column(length = 255)
+    private String keywords;
+
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "call", fetch = FetchType.LAZY)
     private List<LongText> longTexts;
 
@@ -126,6 +129,14 @@ public class Call {
         } else {
             return null;
         }
+    }
+
+    public String getAllText() {
+        String result = identifier + " " + title;
+        if (getLongTextsToString() != null) {
+            result = result + " " + getLongTextsToString();
+        }
+        return result;
     }
 
     public String getDescription() {

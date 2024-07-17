@@ -1,3 +1,7 @@
+month
+year
+day
+datum
 i
 me
 my
