@@ -1,7 +1,7 @@
 version: '3'
 services:
   funding_search_engine_test:
-    image: jeniustech/funding-search-engine:0.0.7
+    image: jeniustech/funding-search-engine:0.0.8
     container_name: funding_search_engine_test
     restart: always
     ports:

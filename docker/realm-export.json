@@ -957,14 +957,14 @@
   },
   "smtpServer": {
     "password": "**********",
-    "replyToDisplayName": "Innovilyse",
+    "replyToDisplayName": "INNOVILYSE",
     "starttls": "",
     "port": "465",
     "auth": "true",
     "host": "smtp.hostinger.com",
     "replyTo": "contact@innovilyse.com",
     "from": "contact@innovilyse.com",
-    "fromDisplayName": "Innovilyse",
+    "fromDisplayName": "INNOVILYSE",
     "ssl": "true",
     "user": "contact@innovilyse.com"
   },

@@ -1,7 +1,7 @@
 Run in order:
-docker build -t funding-search-engine:0.0.7 .
-docker tag funding-search-engine:0.0.7 jeniustech/funding-search-engine:0.0.7
-docker push jeniustech/funding-search-engine:0.0.7
+docker build -t funding-search-engine:0.0.8 .
+docker tag funding-search-engine:0.0.8 jeniustech/funding-search-engine:0.0.8
+docker push jeniustech/funding-search-engine:0.0.8
 
 docker pull jeniustech/funding-search-engine:0.0.6
 

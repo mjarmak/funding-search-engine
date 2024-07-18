@@ -147,7 +147,7 @@ public class ReportService {
     }
 
     private static void addHeader(Document document, String path) throws IOException {
-        String largeText = "Innovilyse";
+        String largeText = "INNOVILYSE";
         Paragraph paragraph = new Paragraph(largeText)
                 .setFontSize(50)
                 .setBold()

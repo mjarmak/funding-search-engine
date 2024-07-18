@@ -33,7 +33,7 @@
 
 <body class="${properties.kcBodyClass!}">
   <div class="${properties.kcLoginClass!}">
-      <div class="text-center-align app-title"><span class="app-title-welcome">Welcome To</span><br><span class="app-title-name">Innovilyse</span></div>
+      <div class="text-center-align app-title"><span class="app-title-welcome">Welcome To</span><br><span class="app-title-name">INNOVILYSE</span></div>
     <div class="${properties.kcFormCardClass!} <#if displayWide>${properties.kcFormCardAccountClass!}</#if>">
       <header class="${properties.kcFormHeaderClass!}">
         <#if realm.internationalizationEnabled  && locale.supported?size gt 1>
