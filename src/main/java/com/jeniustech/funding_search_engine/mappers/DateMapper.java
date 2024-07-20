@@ -5,6 +5,8 @@ import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
 
+import static com.jeniustech.funding_search_engine.scraper.util.ScraperStringUtil.solrCSVFormat;
+
 public interface DateMapper {
 
     DateTimeFormatter csvFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
@@ -19,6 +21,13 @@ public interface DateMapper {
         return timestamp.toLocalDateTime();
     }
 
+    static String mapToSolrString(LocalDateTime localDateTime) {
+        if (localDateTime == null) {
+            return null;
+        }
+        return localDateTime.format(solrFormatter);
+
+    }
     static String mapToSolrString(Timestamp timestamp) {
         if (timestamp == null) {
             return null;
@@ -40,11 +49,9 @@ public interface DateMapper {
         return Timestamp.valueOf(localDateTime);
     }
 
-    static LocalDateTime map(String date) {
-        if (date == null) {
-            return null;
-        }
-        return LocalDateTime.parse(date, csvFormatter);
+    public static LocalDateTime getLocalDateTime(String date) {
+        String utc = toUTC(date);
+        return LocalDateTime.parse(utc, csvFormatter);
     }
 
     static Timestamp mapToTimestamp(String date) {
@@ -68,6 +75,11 @@ public interface DateMapper {
         OffsetDateTime offsetDateTime = date.toInstant().atOffset(ZoneOffset.UTC);
         ZonedDateTime utcZonedDateTime = offsetDateTime.atZoneSameInstant(ZoneOffset.UTC);
         return utcZonedDateTime.toLocalDateTime();
+    }
+    public static String toUTC(String date) {
+        OffsetDateTime offsetDateTime = OffsetDateTime.parse(date, solrCSVFormat);
+        ZonedDateTime utcZonedDateTime = offsetDateTime.atZoneSameInstant(ZoneOffset.UTC);
+        return utcZonedDateTime.format(csvFormatter);
     }
 
     static String formatToDisplay(Timestamp timestamp) {

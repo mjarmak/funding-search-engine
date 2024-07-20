@@ -50,6 +50,7 @@ public interface SolrMapper {
         if (StringUtil.isNotEmpty(call.getProjectNumber())) {
             document.addField(CallColumns.PROJECT_NUMBER, call.getProjectNumber());
         }
+        document.addField(CallColumns.CREATED_AT, DateMapper.mapToSolrString(LocalDateTime.now()));
         return document;
     }
 

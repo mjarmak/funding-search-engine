@@ -4,18 +4,17 @@ import org.junit.jupiter.api.Test;
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.Date;
 
+import static com.jeniustech.funding_search_engine.scraper.util.ScraperStringUtil.solrCSVFormat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class DateMapperTest {
 
-    DateTimeFormatter solrFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSXXXX");
 
     @Test
     void getLocalDateTimeTest() {
-        LocalDateTime localDateTime = DateMapper.map("2014-08-28T17:01:02");
+        LocalDateTime localDateTime = DateMapper.getLocalDateTime("2014-08-28T17:01:02");
         assertEquals("2014-08-28T17:01:02", localDateTime.toString());
         assertEquals(2014, localDateTime.getYear());
         assertEquals(8, localDateTime.getMonthValue());
@@ -42,7 +41,7 @@ public class DateMapperTest {
         if (date == null || date.isEmpty()) {
             return null;
         }
-        return Timestamp.valueOf(LocalDateTime.parse(date, solrFormat));
+        return Timestamp.valueOf(LocalDateTime.parse(date, solrCSVFormat));
     }
 
 }

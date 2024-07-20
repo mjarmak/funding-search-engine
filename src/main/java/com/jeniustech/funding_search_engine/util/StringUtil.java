@@ -11,6 +11,9 @@ public interface StringUtil {
     static boolean isNotEmpty(String row) {
         return row != null && !row.isEmpty() && !row.isBlank() && !row.equals("null");
     }
+    static boolean isEmpty(String row) {
+        return row == null || row.isEmpty() || row.isBlank() || row.equals("null");
+    }
 
     static boolean isNotEmpty(Long row) {
         return row != null;
@@ -76,4 +79,10 @@ public interface StringUtil {
             return (String) defaultValue;
         }
     }
+    static String removeMultiSpaces(String out) {
+        out = out.replaceAll("\\s+", " ");
+        out = out.replace(" ", "");
+        return out;
+    }
+
 }

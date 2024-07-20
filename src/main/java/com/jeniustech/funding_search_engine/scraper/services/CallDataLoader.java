@@ -1,20 +1,20 @@
-package com.jeniustech.funding_search_engine.loader;
+package com.jeniustech.funding_search_engine.scraper.services;
 
 import com.jeniustech.funding_search_engine.entities.Call;
 import com.jeniustech.funding_search_engine.entities.LongText;
 import com.jeniustech.funding_search_engine.enums.LongTextTypeEnum;
 import com.jeniustech.funding_search_engine.enums.SubmissionProcedureEnum;
 import com.jeniustech.funding_search_engine.enums.UrlTypeEnum;
+import com.jeniustech.funding_search_engine.exceptions.ScraperException;
 import com.jeniustech.funding_search_engine.mappers.DateMapper;
 import com.jeniustech.funding_search_engine.mappers.SolrMapper;
 import com.jeniustech.funding_search_engine.repository.CallRepository;
+import com.jeniustech.funding_search_engine.scraper.constants.excel.CallCSVColumns;
+import com.jeniustech.funding_search_engine.services.NLPService;
 import com.jeniustech.funding_search_engine.services.solr.CallSolrClientService;
-import com.opencsv.CSVReader;
-import com.opencsv.exceptions.CsvValidationException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.test.annotation.Rollback;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.FileReader;
@@ -24,22 +24,20 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static com.jeniustech.funding_search_engine.constants.excel.CallColumns.*;
-import static com.jeniustech.funding_search_engine.util.StringUtil.isNotEmpty;
-import static com.jeniustech.funding_search_engine.util.StringUtil.valueOrDefault;
-import static org.junit.jupiter.api.Assertions.fail;
+import static com.jeniustech.funding_search_engine.util.StringUtil.*;
 
 @Transactional(rollbackFor = Exception.class)
 @Rollback(false)
-@SpringBootTest
+@Service
 public class CallDataLoader {
 
     @Autowired
     CallRepository callRepository;
     @Autowired
     CallSolrClientService callSolrClientService;
+    @Autowired
+    private NLPService nlpService;
 
-//    @Test
     void loadData() {
         String path = "C:/Projects/funding-search-engine/src/test/resources/data/calls/";
         List<String> csvFiles = List.of(
@@ -80,32 +78,32 @@ public class CallDataLoader {
             int index = 0;
             for (String cell : headers) {
                 switch (cell) {
-                    case IDENTIFIER -> identifierIndex = index;
-                    case TITLE -> titleIndex = index;
-                    case SUBMISSION_DL -> submissionDLIndex = index;
-                    case SUBMISSION_DL2 -> submissionDL2Index = index;
-                    case ACTION_TYPE -> actionTypeIndex = index;
-                    case DATE_OPEN -> openDateIndex = index;
-                    case BUDGET_MIN -> budgetMinIndex = index;
-                    case BUDGET_MAX -> budgetMaxIndex = index;
-                    case DESCRIPTION -> descriptionIndex = index;
-                    case NUMBER_OF_PROJECTS -> numberOfProjectsIndex = index;
-                    case PATH_ID -> pathIdIndex = index;
-                    case REFERENCE -> referenceIndex = index;
-                    case DESTINATION_DETAILS -> destinationDetailsIndex = index;
-                    case MISSION_DETAILS -> missionDetailsIndex = index;
-                    case TYPE_OF_MGA_DESCRIPTION -> typeOfMGADescriptionIndex = index;
-                    case SUBMISSION_PROCEDURE -> submissionProcedureIndex = index;
-                    case BENEFICIARY_ADMINISTRATION -> beneficiaryAdministrationIndex = index;
-                    case DURATION -> durationIndex = index;
-                    case FURTHER_INFORMATION -> furtherInformationIndex = index;
+                    case CallCSVColumns.IDENTIFIER -> identifierIndex = index;
+                    case CallCSVColumns.TITLE -> titleIndex = index;
+                    case CallCSVColumns.SUBMISSION_DL -> submissionDLIndex = index;
+                    case CallCSVColumns.SUBMISSION_DL2 -> submissionDL2Index = index;
+                    case CallCSVColumns.ACTION_TYPE -> actionTypeIndex = index;
+                    case CallCSVColumns.DATE_OPEN -> openDateIndex = index;
+                    case CallCSVColumns.BUDGET_MIN -> budgetMinIndex = index;
+                    case CallCSVColumns.BUDGET_MAX -> budgetMaxIndex = index;
+                    case CallCSVColumns.DESCRIPTION -> descriptionIndex = index;
+                    case CallCSVColumns.NUMBER_OF_PROJECTS -> numberOfProjectsIndex = index;
+                    case CallCSVColumns.PATH_ID -> pathIdIndex = index;
+                    case CallCSVColumns.REFERENCE -> referenceIndex = index;
+                    case CallCSVColumns.DESTINATION_DETAILS -> destinationDetailsIndex = index;
+                    case CallCSVColumns.MISSION_DETAILS -> missionDetailsIndex = index;
+                    case CallCSVColumns.TYPE_OF_MGA_DESCRIPTION -> typeOfMGADescriptionIndex = index;
+                    case CallCSVColumns.SUBMISSION_PROCEDURE -> submissionProcedureIndex = index;
+                    case CallCSVColumns.BENEFICIARY_ADMINISTRATION -> beneficiaryAdministrationIndex = index;
+                    case CallCSVColumns.DURATION -> durationIndex = index;
+                    case CallCSVColumns.FURTHER_INFORMATION -> furtherInformationIndex = index;
                 }
                 index++;
             }
 
             if (titleIndex == 0 || submissionDLIndex == 0 || submissionDL2Index == 0 || actionTypeIndex == 0 || openDateIndex == 0 || budgetMinIndex == 0 || budgetMaxIndex == 0 || descriptionIndex == 0 || destinationDetailsIndex == 0 || missionDetailsIndex == 0 || numberOfProjectsIndex == 0 || pathIdIndex == 0 || referenceIndex == 0 || typeOfMGADescriptionIndex == 0 || submissionProcedureIndex == 0 || beneficiaryAdministrationIndex == 0 || durationIndex == 0 || furtherInformationIndex == 0) {
                 System.out.println("Header not found");
-                fail();
+                throw new ScraperException("Header not found");
             }
 
             int rowNumber = 0;
@@ -213,24 +211,34 @@ public class CallDataLoader {
                         if (isNotEmpty(call.getTypeOfMGADescription())) {
                             existingCall.setTypeOfMGADescription(call.getTypeOfMGADescription());
                         }
+                        if (isEmpty(existingCall.getKeywords())) {
+                            setKeywords(existingCall);
+                        }
 
                         callRepository.save(existingCall);
                         callSolrClientService.add(SolrMapper.mapToSolrDocument(existingCall), 100_000);
                     } else {
                         System.out.println("Adding call: " + call.getIdentifier());
+                        setKeywords(call);
                         Call savedCall = callRepository.save(call);
                         callSolrClientService.add(SolrMapper.mapToSolrDocument(savedCall), 100_000);
                     }
                 } catch (DataIntegrityViolationException e) {
                     e.printStackTrace();
-                    fail();
+                    throw new ScraperException("Data integrity violation");
                 }
                 rowNumber++;
             }
         } catch (IOException | ArrayIndexOutOfBoundsException | CsvValidationException e) {
             e.printStackTrace();
-            fail();
+            Assertions.fail();
         }
+    }
+
+    private void setKeywords(Call call) throws IOException {
+        String text = call.getAllText();
+        List<String> keywords = nlpService.getKeywords(text);
+        call.setKeywords(String.join(" ", keywords));
     }
 
     private static void addDescriptionIfPresent(String[] row, int descriptionIndex, Call call, LongTextTypeEnum description) {
