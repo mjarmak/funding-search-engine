@@ -7,10 +7,7 @@ import com.jeniustech.funding_search_engine.exceptions.OrganisationNotFoundExcep
 import com.jeniustech.funding_search_engine.exceptions.ProjectNotFoundException;
 import com.jeniustech.funding_search_engine.repository.OrganisationRepository;
 import com.jeniustech.funding_search_engine.repository.ProjectRepository;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.util.IOUtils;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +25,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
 
-import static com.jeniustech.funding_search_engine.loader.ProjectDataLoader.getFundingEU;
 import static com.jeniustech.funding_search_engine.loader.ProjectDataLoader.getFundingOrganisation;
 import static com.jeniustech.funding_search_engine.util.StringUtil.isNotEmpty;
 import static org.junit.jupiter.api.Assertions.fail;
@@ -156,6 +152,10 @@ public class OrganisationDataLoader {
                 Organisation organisation = getOrganisation(row);
                 processSave(sheet, organisations, row, organisation);
             }
+            if (!organisations.isEmpty()) {
+                System.out.println("Saving last batch of " + organisations.size() + " items");
+                save(organisations);
+            }
         } catch (IOException | DataIntegrityViolationException e) {
             e.printStackTrace();
             fail();
@@ -221,7 +221,7 @@ public class OrganisationDataLoader {
                 organisation,
                 OrganisationProjectJoinTypeEnum.valueOfName(row.getCell(ROLE_INDEX).getStringCellValue()),
                 getFundingOrganisation(TOTAL_COST_INDEX, NET_EC_CONTRIBUTION_INDEX, row),
-                getFundingEU(row, NET_EC_CONTRIBUTION_INDEX)
+                getBudget(row, NET_EC_CONTRIBUTION_INDEX)
         );
 
         // set address
@@ -316,6 +316,9 @@ public class OrganisationDataLoader {
     }
 
     private void save(List<Organisation> organisations) {
+        if (organisations.isEmpty()) {
+            return;
+        }
         organisationRepository.saveAllAndFlush(organisations);
     }
 
@@ -423,4 +426,20 @@ public class OrganisationDataLoader {
         organisation.setOrganisationProjectJoins(new ArrayList<>(List.of(projectLink)));
     }
 
+    public static BigDecimal getBudget(Row row, int index) {
+        return new BigDecimal(getBudgetString(index, row)).stripTrailingZeros();
+    }
+    public static String getBudgetString(int budgetIndex, Row row) {
+        String budget;
+        Cell budgetCell = row.getCell(budgetIndex);
+        if (budgetCell == null || !isNotEmpty(budgetCell.getStringCellValue())) {
+            return "0";
+        }
+        if (budgetCell.getCellType() == CellType.NUMERIC) {
+            budget = String.valueOf(budgetCell.getNumericCellValue());
+        } else {
+            budget = budgetCell.getStringCellValue().replace(",", ".");
+        }
+        return budget;
+    }
 }

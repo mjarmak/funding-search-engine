@@ -1,9 +1,6 @@
-package com.jeniustech.funding_search_engine.scraper;
+package com.jeniustech.funding_search_engine.constants;
 
-public interface Constants {
-
-
+public interface ScraperConstants {
     String singleStage = "single-stage";
     String multipleCutoff = "multiple cut-off";
-
 }

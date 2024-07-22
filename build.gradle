@@ -43,6 +43,8 @@ dependencies {
 	implementation 'org.apache.poi:poi:5.2.3'
 	implementation 'org.apache.poi:poi-ooxml:5.2.3'
 
+	implementation 'com.opencsv:opencsv:5.5.2'
+
 
 	implementation 'org.flywaydb:flyway-core'
 	implementation "org.flywaydb:flyway-database-postgresql"
@@ -61,13 +63,9 @@ dependencies {
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'org.springframework.security:spring-security-test'
 
-	testImplementation 'org.apache.poi:poi:5.2.3'
-	testImplementation 'org.apache.poi:poi-ooxml:5.2.3'
 	testImplementation 'org.apache.xmlbeans:xmlbeans:5.1.1'
 
 	testImplementation 'org.apache.commons:commons-collections4:4.4'
-
-	testImplementation 'com.opencsv:opencsv:5.5.2'
 
 }
 

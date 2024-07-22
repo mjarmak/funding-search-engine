@@ -6,6 +6,7 @@ import com.jeniustech.funding_search_engine.dto.CallDTO;
 import com.jeniustech.funding_search_engine.dto.ProjectDTO;
 import com.jeniustech.funding_search_engine.entities.Call;
 import com.jeniustech.funding_search_engine.entities.Project;
+import com.jeniustech.funding_search_engine.scraper.util.ScraperStringUtil;
 import com.jeniustech.funding_search_engine.util.StringUtil;
 import org.apache.solr.common.SolrDocument;
 import org.apache.solr.common.SolrInputDocument;
@@ -19,6 +20,14 @@ import static com.jeniustech.funding_search_engine.util.StringUtil.valueOrDefaul
 
 public interface SolrMapper {
 
+    static List<SolrInputDocument> mapCallsToSolrDocument(List<Call> calls) {
+        if (calls == null) {
+            return null;
+        }
+        return calls.stream()
+                .map(SolrMapper::mapToSolrDocument)
+                .toList();
+    }
     static SolrInputDocument mapToSolrDocument(Call call) {
         SolrInputDocument document = new SolrInputDocument();
         document.addField(CallColumns.ID, call.getId());
@@ -27,7 +36,7 @@ public interface SolrMapper {
             document.addField(CallColumns.TITLE, call.getTitle());
         }
         if (StringUtil.isNotEmpty(call.getLongTextsToString())) {
-            document.addField(CallColumns.LONG_TEXT, call.getLongTextsToString());
+            document.addField(CallColumns.LONG_TEXT, ScraperStringUtil.removeHtmlTags(call.getLongTextsToString()));
         }
         if (StringUtil.isNotEmpty(call.getActionType())) {
             document.addField(CallColumns.ACTION_TYPE, call.getActionType());

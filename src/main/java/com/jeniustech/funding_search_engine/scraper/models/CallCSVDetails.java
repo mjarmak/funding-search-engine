@@ -3,7 +3,9 @@ package com.jeniustech.funding_search_engine.scraper.models;
 import lombok.Builder;
 import lombok.Value;
 
-import static com.jeniustech.funding_search_engine.scraper.util.ScraperStringUtil.processString;
+import java.util.List;
+
+import static com.jeniustech.funding_search_engine.util.StringUtil.processString;
 
 @Builder
 @Value
@@ -34,31 +36,32 @@ public class CallCSVDetails {
     String conditions;
     String supportInformation;
 
-    public static String getHeaders() {
-        return "identifier," +
-                "title," +
-                "action_type," +
-                "type_of_mga_description," +
-                "submission_procedure," +
-                "start_date," +
-                "deadline," +
-                "deadline2," +
-                "budget_min," +
-                "budget_max," +
-                "project_number," +
-                "path_id," +
-                "reference," +
-                "description," +
-                "mission_details," +
-                "destination_details," +
-                "beneficiary_administration," +
-                "further_information," +
-                "duration";
-
+    public static List<String> getCSVHeaders() {
+        return List.of(
+                "identifier",
+                "title",
+                "action_type",
+                "type_of_mga_description",
+                "submission_procedure",
+                "start_date",
+                "deadline",
+                "deadline2",
+                "budget_min",
+                "budget_max",
+                "project_number",
+                "path_id",
+                "reference",
+                "description",
+                "mission_details",
+                "destination_details",
+                "beneficiary_administration",
+                "further_information",
+                "duration"
+        );
     }
 
-    public String toCSV() {
-        return String.join(",",
+    public List<String> getCSVValues() {
+        return List.of(
                 processString(identifier, false),
                 processString(title, false),
                 processString(actionType, false),

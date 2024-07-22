@@ -10,8 +10,8 @@ import lombok.extern.slf4j.Slf4j;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import static com.jeniustech.funding_search_engine.scraper.Constants.multipleCutoff;
-import static com.jeniustech.funding_search_engine.scraper.util.ScraperStringUtil.getLocalDateTime;
+import static com.jeniustech.funding_search_engine.constants.ScraperConstants.multipleCutoff;
+import static com.jeniustech.funding_search_engine.mappers.DateMapper.getLocalDateTime;
 
 @Slf4j
 @Value

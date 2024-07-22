@@ -25,7 +25,7 @@ import java.net.ConnectException;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class ScrapeService {
+public class CallScrapeService {
 
     private final RestTemplate restTemplateSearch;
     private final RestTemplate restTemplateDetails;
@@ -36,12 +36,12 @@ public class ScrapeService {
 
     private final int pageSize = 100;
 
-    public ScrapeService() {
+    public CallScrapeService() {
         this.restTemplateSearch = new RestTemplate();
         this.restTemplateDetails = new RestTemplate();
     }
 
-    public void scrape(String query) {
+    public String scrapeCalls(String query, String dest) {
 
         FileSystemResource queryFile;
         try {
@@ -73,10 +73,10 @@ public class ScrapeService {
         log.info("Total pages: {}", totalPages);
 
 
+        String file = dest + "/output_" + query + "_" + System.currentTimeMillis() + ".csv";
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
 
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter("C:/Projects/funding-scraper/src/main/resources/out/output_" + query + "_" + System.currentTimeMillis() + ".csv"))) {
-
-            writer.write(CallCSVDetails.getHeaders());
+            writer.write(String.join(",", CallCSVDetails.getCSVHeaders()));
             writer.newLine();
 
             for (int pageNumber = 1; pageNumber <= totalPages; pageNumber++) {
@@ -100,8 +100,8 @@ public class ScrapeService {
                         details = CSVMapper.map(item);
                     }
                     if (details != null) {
-                        log.debug(details.toCSV());
-                        writer.write(details.toCSV());
+                        log.debug(details.getIdentifier());
+                        writer.write(String.join(",", details.getCSVValues()));
                         writer.newLine();
                     }
                 }
@@ -114,6 +114,7 @@ public class ScrapeService {
 
 
         log.info("Done");
+        return file;
     }
 
     private EUSearchResultDTO getSearch(int pageNumber, int pageSize, FileSystemResource queryFile, FileSystemResource languageFile) {

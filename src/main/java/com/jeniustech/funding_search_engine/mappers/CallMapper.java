@@ -4,7 +4,6 @@ import com.jeniustech.funding_search_engine.dto.CallDTO;
 import com.jeniustech.funding_search_engine.dto.LongTextDTO;
 import com.jeniustech.funding_search_engine.entities.Call;
 import com.jeniustech.funding_search_engine.entities.LongText;
-import com.jeniustech.funding_search_engine.util.DetailFormatter;
 
 import java.util.List;
 
@@ -36,7 +35,7 @@ public interface CallMapper {
     private static LongTextDTO map(LongText longText) {
         return LongTextDTO.builder()
                 .type(longText.getType())
-                .text(DetailFormatter.format(longText.getText(), DetailFormatter.FormatTypeEnum.HTML))
+                .text(longText.getText())
                 .build();
     }
 

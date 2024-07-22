@@ -51,7 +51,7 @@ public class CallSolrClientService implements ISolrClientService<CallDTO> {
                 .build();
     }
 
-    public UpdateResponse add(SolrInputDocument document, int duration) throws DocumentSaveException {
+    public UpdateResponse add(List<SolrInputDocument> document, int duration) throws DocumentSaveException {
         try {
             final UpdateResponse updateResponse = this.solrClient.add(document, duration);
             this.solrClient.commit();

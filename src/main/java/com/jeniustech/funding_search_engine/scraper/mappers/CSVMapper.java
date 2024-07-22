@@ -4,7 +4,7 @@ import com.jeniustech.funding_search_engine.scraper.models.CallCSVDetails;
 import com.jeniustech.funding_search_engine.scraper.models.EUCallDTO;
 import com.jeniustech.funding_search_engine.scraper.models.EUCallDetailDTO;
 
-import static com.jeniustech.funding_search_engine.scraper.Constants.singleStage;
+import static com.jeniustech.funding_search_engine.constants.ScraperConstants.singleStage;
 
 public interface CSVMapper {
 

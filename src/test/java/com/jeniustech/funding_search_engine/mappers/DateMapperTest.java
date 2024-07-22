@@ -6,7 +6,7 @@ import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.Date;
 
-import static com.jeniustech.funding_search_engine.scraper.util.ScraperStringUtil.solrCSVFormat;
+import static com.jeniustech.funding_search_engine.mappers.DateMapper.solrCSVFormat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class DateMapperTest {

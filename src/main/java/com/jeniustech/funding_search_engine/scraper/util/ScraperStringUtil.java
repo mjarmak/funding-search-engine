@@ -1,48 +1,11 @@
 package com.jeniustech.funding_search_engine.scraper.util;
 
-import java.nio.charset.StandardCharsets;
-import java.time.LocalDateTime;
-import java.time.OffsetDateTime;
-import java.time.ZoneOffset;
-import java.time.ZonedDateTime;
-import java.time.format.DateTimeFormatter;
+import com.jeniustech.funding_search_engine.util.StringUtil;
 
-import static com.jeniustech.funding_search_engine.mappers.DateMapper.csvFormatter;
-import static com.jeniustech.funding_search_engine.util.StringUtil.removeMultiSpaces;
+import java.nio.charset.StandardCharsets;
 
 public class ScraperStringUtil {
 
-    public static final DateTimeFormatter solrCSVFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSXXXX");
-
-    public static String processString(Object str, boolean isDateString) {
-        if (str == null) {
-            return "";
-        }
-        if (isDateString) {
-            return toUTC((String) str);
-        }
-        if (str instanceof String) {
-            String out;
-            out = ((String) str).trim();
-
-//            out = replaceSpecialHtmlCharacters(out);
-//            out = removeHtmlTags(out);
-
-//            out = encode(out);
-//            out = replaceStrangeCharacters(out);
-//            out = replaceSpecialCharacters(out);
-            out = removeMultiSpaces(out);
-            out = (out).replace("\"", "\"\"");
-            if ((out).contains(",") || (out).contains("\n")) {
-                out = "\"" + out + "\"";
-            }
-
-            out = nullIfEmpty(out);
-
-            return out;
-        }
-        return str.toString();
-    }
 
     private static String replaceSpecialCharacters(String out) {
         out = out.replaceAll("[ÄÅÂÁÀ]", "A");
@@ -67,55 +30,13 @@ public class ScraperStringUtil {
         return out;
     }
 
-    private static String nullIfEmpty(String out) {
-        if (out.equals("")) {
-            out = null;
-        } else if (out.isEmpty() || out.isBlank()) {
-            out = null;
-        } else if (out.equals("null")) {
-            out = null;
-        } else if (out.equals("-")) {
-            out = null;
-        }
-        return out;
-    }
-
-    private static String encode(String out) {
+    public static String encode(String out) {
         byte[] bytes = out.getBytes(StandardCharsets.ISO_8859_1);
         out = new String(bytes, StandardCharsets.UTF_8);
         return out;
     }
 
-    private static String replaceStrangeCharacters(String out) {
-        out = out.replace("â€™", "'");
-        out = out.replace("â‚¬", "€");
-        out = out.replace("Â£", "£");
-        out = out.replace("a€™", "'");
-        out = out.replace("Â¥", "¥");
-        out = out.replace("Â©", "©");
-        out = out.replace("Â®", "®");
-        out = out.replace("â„¢", "™");
-        out = out.replace("Â§", "§");
-        out = out.replace("Â°", "°");
-        out = out.replace("Â±", "±");
-        out = out.replace("Âµ", "µ");
-        out = out.replace("Â¶", "¶");
-        out = out.replace("Â·", "·");
-        out = out.replace("â€¢", "•");
-        out = out.replace("Ãª", "•");
-        out = out.replace("â€¦", "…");
-        out = out.replace("â€”", "—");
-        out = out.replace("â€“", "–");
-        out = out.replace("â€œ", "“");
-        out = out.replace("â€", "”");
-        out = out.replace("â€˜", "'");
-        out = out.replace("Â«", "«");
-        out = out.replace("Â»", "»");
-        out = out.replace("Ã³", "");
-        out = out.replace("Ã©", "");
-        out = out.replace("Ã¨", "");
-        out = out.replace("Â", "");
-
+    public static String replaceStrangeCharacters(String out) {
         out = out.replace("’", "'");
         out = out.replace("‘", "'");
         out = out.replace("–", "-");
@@ -125,52 +46,30 @@ public class ScraperStringUtil {
         return out;
     }
 
-    private static String replaceSpecialHtmlCharacters(String out) {
-        out = out.replace("&nbsp;", " ");
-        out = out.replace("&mdash;", "-");
-        out = out.replace("&ndash;", "-");
-        out = out.replace("&amp;", "&");
-        out = out.replace("&quot;", "\"");
-        out = out.replace("&lt;", "<");
-        out = out.replace("&gt;", ">");
-        out = out.replace("&euro;", "€");
-        out = out.replace("&pound;", "£");
-        out = out.replace("&yen;", "¥");
-        out = out.replace("&copy;", "©");
-        out = out.replace("&reg;", "®");
-        out = out.replace("&trade;", "™");
-        out = out.replace("&sect;", "§");
-        out = out.replace("&deg;", "°");
-        out = out.replace("&plusmn;", "±");
-        out = out.replace("&micro;", "µ");
-        out = out.replace("&para;", "¶");
-        out = out.replace("&middot;", "·");
-        out = out.replace("&bull;", "•");
-        out = out.replace("&hellip;", "…");
-        out = out.replace("&mdash;", "—");
-        out = out.replace("&ndash;", "–");
-        out = out.replace("&ldquo;", "“");
-        out = out.replace("&rdquo;", "”");
-        out = out.replace("&lsquo;", "'");
-        out = out.replace("&rsquo;", "’");
-        out = out.replace("&laquo;", "«");
-        out = out.replace("&raquo;", "»");
-        return out;
-    }
+    public static String removeUselessHtmlData(String text) {
+        text = text.replaceAll("\\s+((?!href)[^=\\s]+)=\"[^\"]*\"", "");
+        text = text.replaceAll("target=_self", "");
 
-    public static String toUTC(String date) {
-        OffsetDateTime offsetDateTime = OffsetDateTime.parse(date, formatter);
-        ZonedDateTime utcZonedDateTime = offsetDateTime.atZoneSameInstant(ZoneOffset.UTC);
-        return utcZonedDateTime.format(csvFormatter);
+        text = text.replaceAll("<a[^>]*href=#.*?\\d+[^>]*>.*?</a>", "");
+        text = text.replaceAll("<a[^>]*href=\"#.*?\\d+\"[^>]*>.*?</a>", "");
+        text = text.replaceAll("\\s+id=[^\\s>]*", "");
+        text = text.replaceAll("<sup></sup>", "");
+
+        text = text.replaceAll("href=\"", "target=\"_blank\" href=\"");
+        text = text.replaceAll("<p >", "<p>");
+        text = text.replaceAll("> <", "><");
+        text = text.replaceAll("<SPAN>", "<span>");
+        text = text.replaceAll("<SPAN >", "<span>");
+        text = text.replaceAll("<span >", "<span>");
+        text = text.replaceAll("</SPAN>", "</span>");
+        text = text.replaceAll("<p></p>", "");
+        text = text.replaceAll("<p><br></p>", "");
+        return text;
     }
 
     public static String removeHtmlTags(String str) {
-        return str.replaceAll("<[^>]*>", "");
+        return StringUtil.removeMultiSpaces(str.replaceAll("<[^>]*>", " ")).trim();
     }
 
-    public static LocalDateTime getLocalDateTime(String date) {
-        String utc = toUTC(date);
-        return LocalDateTime.parse(utc, csvFormatter);
-    }
 
 }

@@ -14,7 +14,10 @@ import com.jeniustech.funding_search_engine.repository.CallRepository;
 import com.jeniustech.funding_search_engine.repository.ProjectRepository;
 import com.jeniustech.funding_search_engine.services.solr.ProjectSolrClientService;
 import jakarta.annotation.Nullable;
-import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -31,6 +34,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import static com.jeniustech.funding_search_engine.loader.OrganisationDataLoader.getBudget;
+import static com.jeniustech.funding_search_engine.loader.OrganisationDataLoader.getBudgetString;
 import static com.jeniustech.funding_search_engine.util.StringUtil.isNotEmpty;
 import static org.junit.jupiter.api.Assertions.fail;
 
@@ -128,6 +133,10 @@ public class ProjectDataLoader {
                 Project project = getProject(row);
                 processSave(sheet, projects, row, project);
             }
+            if (!projects.isEmpty()) {
+                System.out.println("Saving last batch of " + projects.size() + " items");
+                save(projects);
+            }
         } catch (IOException | DataIntegrityViolationException e) {
             e.printStackTrace();
             fail();
@@ -167,7 +176,7 @@ public class ProjectDataLoader {
                 .acronym(row.getCell(ACRONYM_INDEX).getStringCellValue())
                 .title(row.getCell(TITLE_INDEX).getStringCellValue())
                 .fundingOrganisation(getFundingOrganisation(TOTAL_COST_INDEX, EC_MAX_CONTRIBUTION_INDEX, row))
-                .fundingEU(getFundingEU(row, EC_MAX_CONTRIBUTION_INDEX))
+                .fundingEU(getBudget(row, EC_MAX_CONTRIBUTION_INDEX))
                 .status(ProjectStatusEnum.valueOf(row.getCell(STATUS_INDEX).getStringCellValue()))
                 .signDate(getDate(EC_SIGNATURE_DATE_INDEX, row))
                 .startDate(getDate(START_DATE_INDEX, row))
@@ -252,11 +261,10 @@ public class ProjectDataLoader {
         }
     }
 
-    public static BigDecimal getFundingEU(Row row, int index) {
-        return new BigDecimal(getBudget(index, row)).stripTrailingZeros();
-    }
-
     private void save(List<Project> projects) {
+        if (projects.isEmpty()) {
+            return;
+        }
         List<Project> savedProject = projectRepository.saveAll(projects);
         projectSolrClientService.add(SolrMapper.mapToSolrDocument(savedProject), 100_000);
     }
@@ -284,8 +292,8 @@ public class ProjectDataLoader {
     }
 
     public static BigDecimal getFundingOrganisation(int TOTAL_COST_INDEX, int EC_MAX_CONTRIBUTION_INDEX, Row row) {
-        BigDecimal totalCost = new BigDecimal(getBudget(TOTAL_COST_INDEX, row));
-        BigDecimal ecMaxContribution = new BigDecimal(getBudget(EC_MAX_CONTRIBUTION_INDEX, row));
+        BigDecimal totalCost = new BigDecimal(getBudgetString(TOTAL_COST_INDEX, row));
+        BigDecimal ecMaxContribution = new BigDecimal(getBudgetString(EC_MAX_CONTRIBUTION_INDEX, row));
         if (totalCost.compareTo(BigDecimal.ZERO) == 0) {
             return BigDecimal.ZERO.stripTrailingZeros();
         } else if (ecMaxContribution.compareTo(totalCost) == 0) {
@@ -293,20 +301,6 @@ public class ProjectDataLoader {
         } else {
             return totalCost.subtract(ecMaxContribution).stripTrailingZeros();
         }
-    }
-
-    public static String getBudget(int budgetIndex, Row row) {
-        String budget;
-        Cell budgetCell = row.getCell(budgetIndex);
-        if (budgetCell == null || !isNotEmpty(budgetCell.getStringCellValue())) {
-            return "0";
-        }
-        if (budgetCell.getCellType() == CellType.NUMERIC) {
-            budget = String.valueOf(budgetCell.getNumericCellValue());
-        } else {
-            budget = budgetCell.getStringCellValue().replace(",", ".");
-        }
-        return budget;
     }
 
     private static LocalDate getDate(int submissionDLIndex, Row row) {
