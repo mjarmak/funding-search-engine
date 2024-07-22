@@ -42,6 +42,7 @@ public class Organisation {
     private String vatNumber;
     private String nutsCode;
 
+    @Enumerated(EnumType.ORDINAL)
     private BooleanEnum sme;
 
     private OrganisationTypeEnum type;

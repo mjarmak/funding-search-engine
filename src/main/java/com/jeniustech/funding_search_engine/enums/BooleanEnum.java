@@ -10,4 +10,10 @@ public enum BooleanEnum {
         }
         return Boolean.parseBoolean(value.toLowerCase()) ? TRUE : FALSE;
     }
+    public static BooleanEnum fromBoolean(boolean value) {
+        return value ? TRUE : FALSE;
+    }
+    public boolean toBoolean() {
+        return this == TRUE;
+    }
 }
