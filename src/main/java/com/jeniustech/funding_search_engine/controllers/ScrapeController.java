@@ -1,8 +1,8 @@
-package com.jeniustech.funding_search_engine.scraper.controllers;
+package com.jeniustech.funding_search_engine.controllers;
 
 import com.jeniustech.funding_search_engine.scraper.services.CallDataLoader;
 import com.jeniustech.funding_search_engine.scraper.services.CallScrapeService;
-import com.jeniustech.funding_search_engine.services.EmailService;
+import com.jeniustech.funding_search_engine.services.NotificationService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,7 +19,7 @@ public class ScrapeController {
 
     private final CallScrapeService scrapeService;
     private final CallDataLoader callDataLoader;
-    private final EmailService emailService;
+    private final NotificationService notificationService;
 
     @GetMapping("/scrape")
     public void scrape(
@@ -37,7 +37,7 @@ public class ScrapeController {
             log.info("Loading file: {}", file);
             callDataLoader.loadFile(file);
         }
-        emailService.sendNotifications();
+        notificationService.sendAllNotifications();
     }
 
 }

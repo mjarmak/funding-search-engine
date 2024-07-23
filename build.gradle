@@ -31,6 +31,8 @@ dependencies {
 
 	implementation 'org.keycloak:keycloak-admin-client:16.1.1'
 
+	implementation 'org.springframework.boot:spring-boot-starter-mail'
+
 	implementation 'org.apache.solr:solr-solrj:9.6.0'
 
 	implementation 'org.apache.opennlp:opennlp-tools:1.9.3'

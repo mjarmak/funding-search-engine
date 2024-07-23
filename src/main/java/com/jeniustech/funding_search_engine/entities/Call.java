@@ -36,16 +36,14 @@ public class Call {
     @Column(length = 150, nullable = false)
     private String reference;
 
-    @Column(length = 255, nullable = false)
+    @Column(nullable = false)
     private String title;
 
-    @Column(length = 255)
     private String keywords;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "call", fetch = FetchType.LAZY)
     private List<LongText> longTexts;
 
-    @Column(length = 255)
     private String actionType;
 
     @Enumerated(EnumType.ORDINAL)
@@ -69,7 +67,7 @@ public class Call {
     @Column(length = 150)
     private String urlId;
 
-    @Column(name = "type_of_mga_description", length = 255)
+    @Column(name = "type_of_mga_description")
     private String typeOfMGADescription;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "call")
@@ -90,6 +88,13 @@ public class Call {
     }
 
     public String getBudgetRangeString() {
+        return getBudgetRangeString(budgetMin, budgetMax);
+    }
+
+    public static String getBudgetRangeString(String budgetMin, String budgetMax) {
+        return getBudgetRangeString(new BigDecimal(budgetMin), new BigDecimal(budgetMax));
+    }
+    public static String getBudgetRangeString(BigDecimal budgetMin, BigDecimal budgetMax) {
         if (budgetMin == null && budgetMax == null) {
             return "N/A";
         } else if (budgetMin == null) {

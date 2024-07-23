@@ -25,6 +25,7 @@ import org.apache.solr.common.params.CommonParams;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -66,6 +67,24 @@ public class CallSolrClientService implements ISolrClientService<CallDTO> {
         return search(query, pageNumber, pageSize, List.of(StatusFilterEnum.UPCOMING, StatusFilterEnum.OPEN, StatusFilterEnum.CLOSED), jwtModel);
     }
 
+    public List<CallDTO> searchAfterDate(String query, LocalDateTime date) throws SearchException {
+        try {
+            final SolrQuery solrQuery = new SolrQuery(
+                    CommonParams.Q, query,
+                    CommonParams.FQ, "created_date:[" + date + " TO *]"
+            );
+            solrQuery.addField("*");
+            solrQuery.setSort("score", SolrQuery.ORDER.desc);
+            solrQuery.addFilterQuery("{!frange l=2}query($q)");
+
+            QueryResponse response = this.solrClient.query(solrQuery);
+            return SolrMapper.mapToCall(response.getResults());
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new SearchException("Failed to search", e);
+        }
+    }
+
     public SearchDTO<CallDTO> search(String query, int pageNumber, int pageSize, @NotNull List<StatusFilterEnum> statusFilters, JwtModel jwtModel) throws SearchException {
         UserData userData = this.userDataRepository.findBySubjectId(jwtModel.getUserId()).orElseThrow(() -> new UserNotFoundException("User not found"));
 
@@ -86,7 +105,6 @@ public class CallSolrClientService implements ISolrClientService<CallDTO> {
             solrQuery.addField("*");
             solrQuery.addField("score");
             solrQuery.setSort("score", SolrQuery.ORDER.desc);
-//            solrQuery.add("q.op", "AND");
             solrQuery.addFilterQuery("{!frange l=2}query($q)");
 
             if (!statusFilters.isEmpty() && statusFilters.size() < 3) {
