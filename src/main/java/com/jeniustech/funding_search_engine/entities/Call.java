@@ -91,9 +91,6 @@ public class Call {
         return getBudgetRangeString(budgetMin, budgetMax);
     }
 
-    public static String getBudgetRangeString(String budgetMin, String budgetMax) {
-        return getBudgetRangeString(new BigDecimal(budgetMin), new BigDecimal(budgetMax));
-    }
     public static String getBudgetRangeString(BigDecimal budgetMin, BigDecimal budgetMax) {
         if (budgetMin == null && budgetMax == null) {
             return "N/A";

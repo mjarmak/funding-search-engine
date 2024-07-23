@@ -59,7 +59,11 @@ public interface SolrMapper {
         if (StringUtil.isNotEmpty(call.getProjectNumber())) {
             document.addField(CallColumns.PROJECT_NUMBER, call.getProjectNumber());
         }
-        document.addField(CallColumns.CREATED_AT, DateMapper.mapToSolrString(LocalDateTime.now()));
+        if (call.getCreatedAt() != null) {
+            document.addField(CallColumns.CREATED_AT, DateMapper.mapToSolrString(call.getCreatedAt()));
+        } else {
+            document.addField(CallColumns.CREATED_AT, DateMapper.mapToSolrString(LocalDateTime.now()));
+        }
         return document;
     }
 
@@ -88,6 +92,7 @@ public interface SolrMapper {
     }
 
     static CallDTO mapToCall(SolrDocument solrDocument) {
+        Object scoreField = solrDocument.getFieldValue(CallColumns.SCORE);
         return CallDTO.builder()
                 .id((Long) solrDocument.getFieldValue(CallColumns.ID))
                 .identifier((String) solrDocument.getFieldValue(CallColumns.IDENTIFIER))
@@ -99,7 +104,7 @@ public interface SolrMapper {
                 .budgetMin(NumberMapper.shortenNumber(valueOrDefault((String) solrDocument.getFieldValue(CallColumns.BUDGET_MIN), (String) solrDocument.getFieldValue(CallColumns.BUDGET_MAX))))
                 .budgetMax(NumberMapper.shortenNumber(valueOrDefault((String) solrDocument.getFieldValue(CallColumns.BUDGET_MAX), (String) solrDocument.getFieldValue(CallColumns.BUDGET_MIN))))
                 .projectNumber(getProjectNumber(solrDocument))
-                .score((Float) solrDocument.getFieldValue(CallColumns.SCORE))
+                .score(scoreField != null ? (Float) scoreField : 0)
                 .build(
                 );
     }

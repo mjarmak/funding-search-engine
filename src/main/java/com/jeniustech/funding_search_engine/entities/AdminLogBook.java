@@ -1,6 +1,6 @@
 package com.jeniustech.funding_search_engine.entities;
 
-import com.jeniustech.funding_search_engine.enums.LogTypeEnum;
+import com.jeniustech.funding_search_engine.enums.AdminLogType;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -15,20 +15,16 @@ import java.sql.Timestamp;
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "log_book")
-public class LogBook {
+@Table(name = "admin_log_book")
+public class AdminLogBook {
 
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id")
-    private UserData userData;
-
     @Enumerated(EnumType.ORDINAL)
-    private LogTypeEnum type;
+    private AdminLogType type;
 
     private String logText;
 

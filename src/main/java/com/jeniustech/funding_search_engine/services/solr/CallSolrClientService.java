@@ -8,6 +8,7 @@ import com.jeniustech.funding_search_engine.enums.StatusFilterEnum;
 import com.jeniustech.funding_search_engine.exceptions.DocumentSaveException;
 import com.jeniustech.funding_search_engine.exceptions.SearchException;
 import com.jeniustech.funding_search_engine.exceptions.UserNotFoundException;
+import com.jeniustech.funding_search_engine.mappers.DateMapper;
 import com.jeniustech.funding_search_engine.mappers.SolrMapper;
 import com.jeniustech.funding_search_engine.models.JwtModel;
 import com.jeniustech.funding_search_engine.repository.UserDataRepository;
@@ -69,9 +70,10 @@ public class CallSolrClientService implements ISolrClientService<CallDTO> {
 
     public List<CallDTO> searchAfterDate(String query, LocalDateTime date) throws SearchException {
         try {
+            String dateString = DateMapper.mapToSolrString(date);
             final SolrQuery solrQuery = new SolrQuery(
                     CommonParams.Q, query,
-                    CommonParams.FQ, "created_date:[" + date + " TO *]"
+                    CommonParams.FQ, "created_date:[" + dateString + " TO *]"
             );
             solrQuery.addField("*");
             solrQuery.setSort("score", SolrQuery.ORDER.desc);

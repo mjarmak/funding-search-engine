@@ -1,7 +1,6 @@
 package com.jeniustech.funding_search_engine.services;
 
 import com.jeniustech.funding_search_engine.dto.CallDTO;
-import com.jeniustech.funding_search_engine.entities.Call;
 import com.jeniustech.funding_search_engine.entities.SavedSearch;
 import com.jeniustech.funding_search_engine.exceptions.ScraperException;
 import jakarta.mail.MessagingException;
@@ -26,6 +25,9 @@ public class EmailService {
     private final JavaMailSender mailSender;
 
     public void sendNewCallsNotification(SavedSearch savedSearch, List<CallDTO> callDTOS) {
+        if (callDTOS.isEmpty()) {
+            return;
+        }
         StringBuilder text = new StringBuilder("New calls have been found:\n\n");
         for (CallDTO callDTO : callDTOS) {
             text.append(callDTO.getIdentifier()).append(" - ").append(callDTO.getTitle()).append("\n");
@@ -35,7 +37,11 @@ public class EmailService {
                 text.append(" - ").append(callDTO.getEndDate2());
             }
             text.append("\n");
-            text.append("Budget: ").append(Call.getBudgetRangeString(callDTO.getBudgetMin(), callDTO.getBudgetMax())).append("EUR\n\n");
+            String budgetRangeString = callDTO.getBudgetMin();
+            if (callDTO.getBudgetMax() != null && !callDTO.getBudgetMax().equals(callDTO.getBudgetMin())) {
+                budgetRangeString += " - " + callDTO.getBudgetMax();
+            }
+            text.append("Budget: ").append(budgetRangeString).append("EUR\n\n");
         }
 
         MimeMessage message = mailSender.createMimeMessage();
