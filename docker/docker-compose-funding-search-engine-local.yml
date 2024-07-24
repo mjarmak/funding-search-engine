@@ -1,21 +1,49 @@
 version: '3'
 services:
+  postgres_funding:
+    image: postgres
+    container_name: postgres
+    restart: always
+    networks:
+      - funding_network
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: pwd
+      POSTGRES_DB: funding_prod
+    volumes:
+      - B:/Projects/funding-search-engine/postgres:/var/lib/postgresql/data
+
+  solr:
+    image: solr:9.6.0
+    container_name: solr
+    restart: always
+    networks:
+      - funding_network
+    ports:
+      - "8983:8983"
+    volumes:
+      - B:/Projects/funding-search-engine/solr/data:/var/solr
+
   funding_search_engine:
     image: jeniustech/funding-search-engine:0.0.92
     container_name: funding_search_engine
     restart: always
+    networks:
+      - funding_network
     ports:
       - "8080:8080"
     volumes:
-      - /var/data/scrape_data:/var/scrape_data
+      - B:/Projects/funding-search-engine/scrape_data:/var/scrape_data
     environment:
       - PORT=8080
       - FLYWAY_ENABLED=true
-      - DB_URL=jdbc:postgresql://45.133.178.241:5432/funding_prod
+      - DB_URL=jdbc:postgresql://postgres_funding:5432/funding_prod
       - DB_USER=admin
-      - DB_PASSWORD=nm[pv3[0%&#{!td745@#
+      - DB_PASSWORD=pwd
       - DB_POOL_SIZE=50
-      - SOLR_URL=http://45.133.178.241:8983/solr
+      - SOLR_URL=http://solr:8983/solr
 
       - KEYCLOAK_CERTS_URI=https://auth.innovilyse.com/auth/realms/innovilyse/protocol/openid-connect/certs
       - KEYCLOAK_URL=https://auth.innovilyse.com/auth
@@ -34,3 +62,12 @@ services:
       - STRIPE_WEBHOOK_SECRET=whsec_obpppCjQ3xV1CTLw06yVZ5D6MaAuxMvu
       - SCRAPER_DIRECTORY=/var/scrape_data
       - UI_URL=https://app.innovilyse.com
+    depends_on:
+      - postgres_funding
+      - solr
+
+networks:
+  funding_network:
+
+volumes:
+  solr_data:
