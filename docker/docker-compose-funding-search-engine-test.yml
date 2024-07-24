@@ -6,6 +6,8 @@ services:
     restart: always
     ports:
       - "8080:8080"
+    volumes:
+      - /var/data/scrape_data:/var/scrape_data
     environment:
       - PORT=8080
       - FLYWAY_ENABLED=true

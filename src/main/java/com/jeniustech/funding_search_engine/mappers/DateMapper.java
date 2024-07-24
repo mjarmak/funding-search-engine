@@ -81,11 +81,14 @@ public interface DateMapper {
         return utcZonedDateTime.format(csvFormatter);
     }
 
-    static String formatToDisplay(Timestamp timestamp) {
-        if (timestamp == null) {
+    static String formatToDisplay(LocalDateTime localDateTime) {
+        if (localDateTime == null) {
             return null;
         }
-        return timestamp.toLocalDateTime().format(displayFormatter);
+        return localDateTime.format(displayFormatter);
+    }
+    static String formatToDisplay(Timestamp timestamp) {
+        return formatToDisplay(map(timestamp));
     }
 
 }

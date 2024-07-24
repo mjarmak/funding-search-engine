@@ -14,8 +14,8 @@ import com.jeniustech.funding_search_engine.services.NLPService;
 import com.jeniustech.funding_search_engine.services.solr.CallSolrClientService;
 import com.opencsv.CSVReader;
 import com.opencsv.exceptions.CsvValidationException;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
@@ -28,17 +28,14 @@ import java.util.Optional;
 
 import static com.jeniustech.funding_search_engine.util.StringUtil.*;
 
-//@Transactional(rollbackFor = Exception.class)
 @Service
 @Slf4j
+@RequiredArgsConstructor
 public class CallDataLoader {
 
-    @Autowired
-    CallRepository callRepository;
-    @Autowired
-    CallSolrClientService callSolrClientService;
-    @Autowired
-    private NLPService nlpService;
+    private final CallRepository callRepository;
+    private final CallSolrClientService callSolrClientService;
+    private final NLPService nlpService;
 
     int identifierIndex = 0;
     int titleIndex = 0;

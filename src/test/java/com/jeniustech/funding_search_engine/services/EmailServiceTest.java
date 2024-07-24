@@ -20,6 +20,7 @@ public class EmailServiceTest {
     public void testSendNewCallsNotification() {
         List<CallDTO> callDTOS = List.of(
                 CallDTO.builder()
+                        .id(1L)
                         .identifier("GV-2-2014")
                         .title("Optimised and systematic energy management in electric vehicles")
                         .actionType("RIA Research and Innovation action")
@@ -30,6 +31,7 @@ public class EmailServiceTest {
                         .budgetMax("2000000")
                         .build(),
                 CallDTO.builder()
+                        .id(2L)
                         .identifier("GV-2-2015")
                         .title("Optimised and systematic energy management in electric vehicles")
                         .actionType("RIA Research and Innovation action")
@@ -41,6 +43,7 @@ public class EmailServiceTest {
                         .build()
         );
         SavedSearch savedSearch = SavedSearch.builder()
+                .name("Electric Vehicles")
                 .value("electric vehicles")
                 .userData(UserData.builder()
                         .email("mohamadjarmak@gmail.com")

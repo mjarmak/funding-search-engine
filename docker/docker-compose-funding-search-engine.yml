@@ -6,6 +6,8 @@ services:
     restart: always
     ports:
       - "8080:8080"
+    volumes:
+      - /var/data/scrape_data:/var/scrape_data
     environment:
       - PORT=8080
       - FLYWAY_ENABLED=true
@@ -28,5 +30,5 @@ services:
       - GOOGLE_CLIENT_SECRET=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
       - SPRING_PROFILES_ACTIVE=prod
 
-      - STRIPE_API_KEY=sk_test_51PUU4UL9MMMwitwgjRvYpFKvbSg7udQJqnvUtMmkNCdUY3gdyu8I9VzIsywzgnPPiPFgd4CJ37byoGzEGTBmZR8T00Mr70QbB3
-      - STRIPE_WEBHOOK_SECRET=whsec_idc011mZ5f6L468DPgYf5uYShhJ80jtq
+      - STRIPE_API_KEY=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
+      - STRIPE_WEBHOOK_SECRET=whsec_obpppCjQ3xV1CTLw06yVZ5D6MaAuxMvu

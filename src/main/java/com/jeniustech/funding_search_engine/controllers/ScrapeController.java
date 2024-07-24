@@ -5,6 +5,7 @@ import com.jeniustech.funding_search_engine.scraper.services.CallScrapeService;
 import com.jeniustech.funding_search_engine.services.NotificationService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -21,12 +22,17 @@ public class ScrapeController {
     private final CallDataLoader callDataLoader;
     private final NotificationService notificationService;
 
+    @PreAuthorize("hasRole('admin-server')")
     @GetMapping("/scrape")
     public void scrape(
             @RequestParam(value = "query") List<String> queries,
             @RequestParam(value = "destination")
             String destination
     ) {
+        scrapeAndNotify(queries, destination);
+    }
+
+    public void scrapeAndNotify(List<String> queries, String destination) {
         final List<String> files = new ArrayList<>();
         for (String query : queries) {
             log.info("Scraping query: {}", query);
