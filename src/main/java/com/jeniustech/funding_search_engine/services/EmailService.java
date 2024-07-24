@@ -33,7 +33,8 @@ public class EmailService {
         if (callDTOS.isEmpty()) {
             return;
         }
-        String text = getEmailBody(callDTOS, savedSearch);
+        String subject = "New Calls Available on INNOVILYSE for \"" + savedSearch.getName() + "\"";
+        String text = getEmailBody(subject, callDTOS, savedSearch);
 
         MimeMessage message = mailSender.createMimeMessage();
         MimeMessageHelper helper;
@@ -42,7 +43,7 @@ public class EmailService {
             helper.setFrom(new InternetAddress(from, "INNOVILYSE"));
             helper.setReplyTo(from);
             helper.setTo(savedSearch.getUserData().getEmail());
-            helper.setSubject("New Calls Available on INNOVILYSE for \"" + savedSearch.getName() + "\"");
+            helper.setSubject(subject);
             helper.setText(text, true);
             mailSender.send(message);
         } catch (MailSendException | MessagingException | UnsupportedEncodingException e) {
@@ -50,7 +51,7 @@ public class EmailService {
         }
     }
 
-    private String getEmailBody(List<CallDTO> callDTOS, SavedSearch savedSearch) {
+    private String getEmailBody(String subject, List<CallDTO> callDTOS, SavedSearch savedSearch) {
         // as html
         String noWrapCell = "<td style=\"white-space: nowrap\">";
 
@@ -59,7 +60,9 @@ public class EmailService {
         builder.append("<head><style>table {width: 100%; border: 1px solid lightgrey; padding: 4px; border-radius: 8px; border-collapse: collapse;} ");
         builder.append("th, td {border: 1px solid lightgrey; padding: 4px; text-align: left;}</style></head>");
         builder.append("<body>");
-        builder.append("<h1 style=\"text-align:center\">New Calls Available on INNOVILYSE</h1>");
+        builder.append("<h1 style=\"text-align:center\">")
+        .append(subject)
+        .append("</h1>");
         builder.append("<table>");
         builder.append("<tr><th>Call Info</th><th>Proposal Submission Period (UTC)</th><th>Budget (EUR)</th></tr>");
         for (CallDTO callDTO : callDTOS) {
