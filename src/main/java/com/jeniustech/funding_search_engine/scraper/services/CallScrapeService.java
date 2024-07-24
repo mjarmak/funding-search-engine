@@ -7,10 +7,10 @@ import com.jeniustech.funding_search_engine.scraper.models.CallCSVDetails;
 import com.jeniustech.funding_search_engine.scraper.models.EUCallDTO;
 import com.jeniustech.funding_search_engine.scraper.models.EUCallDetailDTO;
 import com.jeniustech.funding_search_engine.scraper.models.EUSearchResultDTO;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.FileSystemResource;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
@@ -21,14 +21,15 @@ import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.net.ConnectException;
+import java.nio.file.Paths;
 
 @Slf4j
 @Service
-@RequiredArgsConstructor
 public class CallScrapeService {
 
     private final RestTemplate restTemplateSearch;
     private final RestTemplate restTemplateDetails;
+    private final ResourceLoader resourceLoader;
 
     private final String searchAPIUrl = "https://api.tech.ec.europa.eu/search-api/prod/rest/search";
 
@@ -36,7 +37,8 @@ public class CallScrapeService {
 
     private final int pageSize = 100;
 
-    public CallScrapeService() {
+    public CallScrapeService(ResourceLoader resourceLoader) {
+        this.resourceLoader = resourceLoader;
         this.restTemplateSearch = new RestTemplate();
         this.restTemplateDetails = new RestTemplate();
     }
@@ -45,13 +47,13 @@ public class CallScrapeService {
 
         FileSystemResource queryFile;
         try {
-            queryFile = new FileSystemResource(new ClassPathResource("query/" + query + ".json").getFile());
+            queryFile = getFile("query/" + query + ".json");
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
         FileSystemResource languageFile;
         try {
-            languageFile = new FileSystemResource(new ClassPathResource("query/languages.json").getFile());
+            languageFile = getFile("query/languages.json");
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -115,6 +117,13 @@ public class CallScrapeService {
 
         log.info("Done");
         return file;
+    }
+
+    private FileSystemResource getFile(String filePath) throws IOException {
+        FileSystemResource queryFile;
+        Resource resource = resourceLoader.getResource("classpath:" + filePath);
+        queryFile = new FileSystemResource(Paths.get(resource.getURI()));
+        return queryFile;
     }
 
     private EUSearchResultDTO getSearch(int pageNumber, int pageSize, FileSystemResource queryFile, FileSystemResource languageFile) {

@@ -34,3 +34,8 @@ services:
       - STRIPE_WEBHOOK_SECRET=whsec_obpppCjQ3xV1CTLw06yVZ5D6MaAuxMvu
       - SCRAPER_DIRECTORY=/var/scrape_data
       - UI_URL=https://app.innovilyse.com
+
+      - MAIL_HOST=smtp.hostinger.com
+      - MAIL_PORT=465
+      - MAIL_USERNAME=contact@innovilyse.com
+      - MAIL_PASSWORD=B+R5c3EXjXep7Kd

@@ -14,7 +14,7 @@ public class DateMapperTest {
 
     @Test
     void getLocalDateTimeTest() {
-        LocalDateTime localDateTime = DateMapper.getLocalDateTime("2014-08-28T17:01:02");
+        LocalDateTime localDateTime = DateMapper.getLocalDateTime("2014-08-28T17:01:02.000+0000");
         assertEquals("2014-08-28T17:01:02", localDateTime.toString());
         assertEquals(2014, localDateTime.getYear());
         assertEquals(8, localDateTime.getMonthValue());

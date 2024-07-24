@@ -9,6 +9,7 @@ import jakarta.mail.internet.InternetAddress;
 import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.mail.MailSendException;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
@@ -44,7 +45,7 @@ public class EmailService {
             helper.setSubject("New Calls Available on INNOVILYSE for \"" + savedSearch.getName() + "\"");
             helper.setText(text, true);
             mailSender.send(message);
-        } catch (MessagingException | UnsupportedEncodingException e) {
+        } catch (MailSendException | MessagingException | UnsupportedEncodingException e) {
             throw new ScraperException(e.getMessage());
         }
     }

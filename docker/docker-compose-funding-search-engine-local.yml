@@ -36,6 +36,9 @@ services:
       - "8080:8080"
     volumes:
       - B:/Projects/funding-search-engine/scrape_data:/var/scrape_data
+    depends_on:
+      - postgres_funding
+      - solr
     environment:
       - PORT=8080
       - FLYWAY_ENABLED=true
@@ -62,9 +65,11 @@ services:
       - STRIPE_WEBHOOK_SECRET=whsec_obpppCjQ3xV1CTLw06yVZ5D6MaAuxMvu
       - SCRAPER_DIRECTORY=/var/scrape_data
       - UI_URL=https://app.innovilyse.com
-    depends_on:
-      - postgres_funding
-      - solr
+
+      - MAIL_HOST=smtp.hostinger.com
+      - MAIL_PORT=465
+      - MAIL_USERNAME=contact@innovilyse.com
+      - MAIL_PASSWORD=B+R5c3EXjXep7Kd
 
 networks:
   funding_network:
