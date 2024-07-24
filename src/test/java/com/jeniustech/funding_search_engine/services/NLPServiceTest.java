@@ -54,7 +54,7 @@ public class NLPServiceTest {
         List<String> keywords = nlpService.getKeywords(text);
         assertEquals(20, keywords.size());
         assertEquals(
-                "[tourism, excellence, eligibility, datum, criterion, applicant, proposal, admissibility, technology, accessibility, need, point, grant, expert, half, consortium, networking, threshold, employee, approach]"
+                "[tourism, excellence, eligibility, criterion, applicant, proposal, admissibility, technology, accessibility, need, point, grant, expert, half, consortium, networking, threshold, employee, approach, score]"
                 , keywords.toString());
 
     }
