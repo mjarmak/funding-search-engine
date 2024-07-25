@@ -1,7 +1,9 @@
 package com.jeniustech.funding_search_engine.controllers;
 
+import com.jeniustech.funding_search_engine.enums.AdminLogType;
 import com.jeniustech.funding_search_engine.scraper.services.CallDataLoader;
 import com.jeniustech.funding_search_engine.scraper.services.CallScrapeService;
+import com.jeniustech.funding_search_engine.services.AdminLogService;
 import com.jeniustech.funding_search_engine.services.NotificationService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -21,6 +23,7 @@ public class ScrapeController {
     private final CallScrapeService scrapeService;
     private final CallDataLoader callDataLoader;
     private final NotificationService notificationService;
+    private final AdminLogService adminLogService;
 
     @PreAuthorize("hasRole('admin-server')")
     @GetMapping("/scrape")
@@ -44,6 +47,7 @@ public class ScrapeController {
             callDataLoader.loadFile(file);
         }
         notificationService.sendAllNotifications();
+        adminLogService.addLog(AdminLogType.SCRAPE_SUCCESS, String.join(",", queries));
     }
 
 }
