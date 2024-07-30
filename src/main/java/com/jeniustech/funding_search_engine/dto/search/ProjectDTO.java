@@ -1,42 +1,37 @@
-package com.jeniustech.funding_search_engine.dto;
+package com.jeniustech.funding_search_engine.dto.search;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.jeniustech.funding_search_engine.enums.FundingSchemeEnum;
+import com.jeniustech.funding_search_engine.dto.LongTextDTO;
 import com.jeniustech.funding_search_engine.enums.ProjectStatusEnum;
 import lombok.Builder;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
+@EqualsAndHashCode(callSuper = true)
 @Builder
 @Data
 @JsonInclude(value = JsonInclude.Include.NON_NULL, content = JsonInclude.Include.NON_NULL)
-public class ProjectDTO {
+public class ProjectDTO extends SearchItemDTO {
     private Long id;
     private Long callId;
-    private String callIdentifier;
-    private Long referenceId;
-
+    private CallDTO call;
+    private List<PartnerDTO> partners;
     private String acronym;
     private String title;
-
     private String fundingOrganisation;
     private String fundingEU;
-
     private ProjectStatusEnum status;
-
     private LocalDateTime signDate;
     private LocalDateTime startDate;
     private LocalDateTime endDate;
-
     private String masterCallIdentifier;
-
     private String legalBasis;
-
-    private FundingSchemeEnum fundingScheme;
-
+    private String fundingScheme;
     private List<LongTextDTO> longTexts;
-
-    private float score;
+    private String url;
+    private Boolean favorite;
+    private Float score;
 }

@@ -1,16 +1,19 @@
-package com.jeniustech.funding_search_engine.dto;
+package com.jeniustech.funding_search_engine.dto.search;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.jeniustech.funding_search_engine.dto.LongTextDTO;
 import lombok.Builder;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
+@EqualsAndHashCode(callSuper = true)
 @Builder
 @Data
 @JsonInclude(value = JsonInclude.Include.NON_NULL, content = JsonInclude.Include.NON_NULL)
-public class CallDTO {
+public class CallDTO extends SearchItemDTO {
     private Long id;
     private String identifier;
     private String title;
@@ -26,10 +29,10 @@ public class CallDTO {
     private String budgetMin;
     private String budgetMax;
     private Short projectNumber;
-    private float score;
     private String url;
 
     private String typeOfMGADescription;
 
     private boolean favorite;
+    private float score;
 }

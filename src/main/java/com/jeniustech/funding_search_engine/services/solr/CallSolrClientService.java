@@ -1,7 +1,7 @@
 package com.jeniustech.funding_search_engine.services.solr;
 
-import com.jeniustech.funding_search_engine.dto.CallDTO;
-import com.jeniustech.funding_search_engine.dto.SearchDTO;
+import com.jeniustech.funding_search_engine.dto.search.CallDTO;
+import com.jeniustech.funding_search_engine.dto.search.SearchDTO;
 import com.jeniustech.funding_search_engine.entities.UserData;
 import com.jeniustech.funding_search_engine.enums.LogTypeEnum;
 import com.jeniustech.funding_search_engine.enums.StatusFilterEnum;
@@ -35,7 +35,6 @@ import java.util.concurrent.TimeUnit;
 public class CallSolrClientService implements ISolrClientService<CallDTO> {
 
     SolrClient solrClient;
-
     private final UserDataRepository userDataRepository;
     private final LogService logService;
     private final CallService callService;
@@ -43,7 +42,10 @@ public class CallSolrClientService implements ISolrClientService<CallDTO> {
     public CallSolrClientService(
             @Value("${spring.data.solr.host}") String url,
             @Value("${spring.data.solr.core.calls}") String core,
-            UserDataRepository userDataRepository, LogService logService, CallService callService) {
+            UserDataRepository userDataRepository,
+            LogService logService,
+            CallService callService
+    ) {
         this.userDataRepository = userDataRepository;
         this.logService = logService;
         this.callService = callService;
@@ -62,10 +64,6 @@ public class CallSolrClientService implements ISolrClientService<CallDTO> {
             e.printStackTrace();
             throw new DocumentSaveException("Failed to save document", e);
         }
-    }
-
-    public SearchDTO<CallDTO> search(String query, int pageNumber, int pageSize, JwtModel jwtModel) throws SearchException {
-        return search(query, pageNumber, pageSize, List.of(StatusFilterEnum.UPCOMING, StatusFilterEnum.OPEN, StatusFilterEnum.CLOSED), jwtModel);
     }
 
     public List<CallDTO> searchAfterDate(String query, LocalDateTime date) throws SearchException {
@@ -97,7 +95,7 @@ public class CallSolrClientService implements ISolrClientService<CallDTO> {
             pageSize = 5;
         }
 
-        logService.addLog(userData, LogTypeEnum.SEARCH, query);
+        logService.addLog(userData, LogTypeEnum.SEARCH_CALL, query);
         try {
             final SolrQuery solrQuery = new SolrQuery(
                     CommonParams.Q, query,
@@ -127,9 +125,9 @@ public class CallSolrClientService implements ISolrClientService<CallDTO> {
 
             QueryResponse response = this.solrClient.query(solrQuery);
             List<CallDTO> results = SolrMapper.mapToCall(response.getResults());
-            List<Long> callIds = results.stream().map(CallDTO::getId).toList();
+            List<Long> ids = results.stream().map(CallDTO::getId).toList();
 
-            List<Long> favoriteIds = callService.checkFavoriteCalls(userData, callIds);
+            List<Long> favoriteIds = callService.checkFavorites(userData, ids);
 
             for (CallDTO callDTO : results) {
                 if (favoriteIds.contains(callDTO.getId())) {

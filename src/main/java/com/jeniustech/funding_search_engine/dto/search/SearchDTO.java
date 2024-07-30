@@ -1,4 +1,4 @@
-package com.jeniustech.funding_search_engine.dto;
+package com.jeniustech.funding_search_engine.dto.search;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Builder;

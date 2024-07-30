@@ -47,6 +47,10 @@ public enum FundingSchemeEnum {
 
     private final String name;
 
+    public String getName() {
+        return name;
+    }
+
     FundingSchemeEnum(final String name) {
         this.name = name;
     }

@@ -1,6 +1,7 @@
 package com.jeniustech.funding_search_engine.entities;
 
 import com.jeniustech.funding_search_engine.enums.OrganisationProjectJoinTypeEnum;
+import com.jeniustech.funding_search_engine.mappers.NumberMapper;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -41,5 +42,15 @@ public class OrganisationProjectJoin {
     @CreationTimestamp
     @Column(updatable = false)
     private Timestamp createdAt;
+
+    public String getFundingOrganisationDisplayString() {
+        if (fundingOrganisation == null || fundingOrganisation.compareTo(BigDecimal.ZERO) == 0) {
+            return null;
+        }
+        return NumberMapper.shortenNumber(fundingOrganisation, 1);
+    }
+    public String getFundingEUDisplayString() {
+        return NumberMapper.shortenNumber(fundingEU, 1);
+    }
 
 }

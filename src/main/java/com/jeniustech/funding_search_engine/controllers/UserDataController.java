@@ -14,7 +14,6 @@ import java.util.List;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping()
 public class UserDataController {
 
     private final UserDataService userDataService;
@@ -62,14 +61,6 @@ public class UserDataController {
             @RequestParam(required = true) String username
             ) {
         return ResponseEntity.ok(userDataService.getUserDataByUsername(username));
-    }
-
-    @GetMapping("search/history")
-    public ResponseEntity<List<String>> getSearchHistory(
-            @AuthenticationPrincipal Jwt jwt
-            ) {
-        JwtModel jwtModel = UserDataMapper.map(jwt);
-        return ResponseEntity.ok(userDataService.getSearchHistory(jwtModel.getUserId()));
     }
 
 }

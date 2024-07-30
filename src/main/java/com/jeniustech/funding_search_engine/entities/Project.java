@@ -2,6 +2,7 @@ package com.jeniustech.funding_search_engine.entities;
 
 import com.jeniustech.funding_search_engine.enums.FundingSchemeEnum;
 import com.jeniustech.funding_search_engine.enums.ProjectStatusEnum;
+import com.jeniustech.funding_search_engine.mappers.NumberMapper;
 import com.jeniustech.funding_search_engine.util.StringUtil;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -59,6 +60,9 @@ public class Project {
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "project", fetch = FetchType.LAZY)
     private List<LongText> longTexts;
 
+    @OneToMany(mappedBy = "project", fetch = FetchType.LAZY)
+    private List<OrganisationProjectJoin> organisationProjectJoins;
+
     @CreationTimestamp
     @Column(updatable = false)
     private Timestamp createdAt;
@@ -87,10 +91,23 @@ public class Project {
     }
 
     public String getFundingEUString() {
+        if (fundingEU == null || fundingEU.compareTo(BigDecimal.ZERO) == 0) {
+            return null;
+        }
         return fundingEU.stripTrailingZeros().toPlainString();
     }
-    public String getFundingOrganisationString() {
-        return fundingOrganisation.stripTrailingZeros().toPlainString();
+
+    public String getFundingOrganisationDisplayString() {
+        if (fundingOrganisation == null || fundingOrganisation.compareTo(BigDecimal.ZERO) == 0) {
+            return null;
+        }
+        return NumberMapper.shortenNumber(fundingOrganisation, 1);
+    }
+    public String getFundingEUDisplayString() {
+        return NumberMapper.shortenNumber(fundingEU, 1);
     }
 
+    public String getUrl() {
+        return "https://cordis.europa.eu/project/id/" + referenceId;
+    }
 }

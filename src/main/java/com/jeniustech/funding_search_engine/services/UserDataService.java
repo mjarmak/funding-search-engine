@@ -265,9 +265,9 @@ public class UserDataService {
     }
 
     @Transactional(readOnly = true)
-    public List<String> getSearchHistory(String userId) {
+    public List<String> getSearchHistory(String userId, LogTypeEnum type) {
         UserData userData = userDataRepository.findBySubjectId(userId).orElseThrow(() -> new UserNotFoundException("User not found"));
-        return logService.getLogsByUserIdAndType(userData.getId(), LogTypeEnum.SEARCH, 20).stream().sorted(
+        return logService.getLogsByUserIdAndType(userData.getId(), type, 20).stream().sorted(
                 (o1, o2) -> o2.getCreatedAt().compareTo(o1.getCreatedAt())
         ).map(LogBook::getLogText).toList();
     }

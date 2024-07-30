@@ -2,8 +2,8 @@ package com.jeniustech.funding_search_engine.mappers;
 
 import com.jeniustech.funding_search_engine.constants.solr.CallColumns;
 import com.jeniustech.funding_search_engine.constants.solr.ProjectColumns;
-import com.jeniustech.funding_search_engine.dto.CallDTO;
-import com.jeniustech.funding_search_engine.dto.ProjectDTO;
+import com.jeniustech.funding_search_engine.dto.search.CallDTO;
+import com.jeniustech.funding_search_engine.dto.search.ProjectDTO;
 import com.jeniustech.funding_search_engine.entities.Call;
 import com.jeniustech.funding_search_engine.entities.Project;
 import com.jeniustech.funding_search_engine.scraper.util.ScraperStringUtil;
@@ -155,8 +155,7 @@ public interface SolrMapper {
                 .endDate(getDateInUTC(solrDocument, CallColumns.END_DATE))
                 .startDate(getDateInUTC(solrDocument, CallColumns.START_DATE))
                 .callId((Long) solrDocument.getFieldValue(ProjectColumns.CALL_ID))
-                .callIdentifier((String) solrDocument.getFieldValue(ProjectColumns.CALL_IDENTIFIER))
-                .fundingEU((String) solrDocument.getFieldValue(ProjectColumns.FUNDING_EU))
+                .fundingEU(NumberMapper.shortenNumber((String) solrDocument.getFieldValue(ProjectColumns.FUNDING_EU)))
                 .score((Float) solrDocument.getFieldValue(ProjectColumns.SCORE))
                 .build();
     }

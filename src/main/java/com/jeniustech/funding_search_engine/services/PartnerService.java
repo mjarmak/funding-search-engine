@@ -1,20 +1,20 @@
 package com.jeniustech.funding_search_engine.services;
 
-import com.jeniustech.funding_search_engine.dto.PartnerDTO;
-import com.jeniustech.funding_search_engine.dto.ProjectDTO;
-import com.jeniustech.funding_search_engine.dto.SearchDTO;
-import com.jeniustech.funding_search_engine.entities.Call;
-import com.jeniustech.funding_search_engine.entities.OrganisationProjectJoin;
-import com.jeniustech.funding_search_engine.entities.UserData;
+import com.jeniustech.funding_search_engine.dto.search.PartnerDTO;
+import com.jeniustech.funding_search_engine.dto.search.ProjectDTO;
+import com.jeniustech.funding_search_engine.dto.search.SearchDTO;
+import com.jeniustech.funding_search_engine.entities.*;
+import com.jeniustech.funding_search_engine.enums.UserCallJoinTypeEnum;
 import com.jeniustech.funding_search_engine.exceptions.CallNotFoundException;
 import com.jeniustech.funding_search_engine.exceptions.NLPException;
 import com.jeniustech.funding_search_engine.exceptions.UserNotFoundException;
+import com.jeniustech.funding_search_engine.mappers.PartnerMapper;
 import com.jeniustech.funding_search_engine.models.JwtModel;
-import com.jeniustech.funding_search_engine.repository.CallRepository;
-import com.jeniustech.funding_search_engine.repository.OrganisationProjectJoinRepository;
-import com.jeniustech.funding_search_engine.repository.UserDataRepository;
+import com.jeniustech.funding_search_engine.repository.*;
 import com.jeniustech.funding_search_engine.services.solr.ProjectSolrClientService;
-import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -23,22 +23,119 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-@RequiredArgsConstructor
-public class PartnerService {
+public class PartnerService extends IDataService<PartnerDTO> {
 
     private final ProjectSolrClientService projectSolrClientService;
     private final CallRepository callRepository;
-    private final UserDataRepository userDataRepository;
     private final OrganisationProjectJoinRepository organisationProjectJoinRepository;
+    private final OrganisationRepository organisationRepository;
     private final NLPService nlpService;
+    private final UserPartnerJoinRepository userPartnerJoinRepository;
 
-    public List<PartnerDTO> getSuggestedPartners(Long callId, JwtModel jwtModel) {
+    public PartnerService(
+            UserDataRepository userDataRepository,
+            ProjectSolrClientService projectSolrClientService,
+            CallRepository callRepository,
+            OrganisationProjectJoinRepository organisationProjectJoinRepository,
+            OrganisationRepository organisationRepository,
+            NLPService nlpService,
+            UserPartnerJoinRepository userPartnerJoinRepository
+    ) {
+        super(userDataRepository);
+        this.projectSolrClientService = projectSolrClientService;
+        this.callRepository = callRepository;
+        this.organisationProjectJoinRepository = organisationProjectJoinRepository;
+        this.organisationRepository = organisationRepository;
+        this.nlpService = nlpService;
+        this.userPartnerJoinRepository = userPartnerJoinRepository;
+    }
+
+
+    @Override
+    public PartnerDTO getDTOById(Long id) {
+        return PartnerMapper.map(getById(id), false);
+    }
+
+    private Organisation getById(Long id) {
+        return organisationRepository.findById(id).orElseThrow(() -> new CallNotFoundException("Call not found"));
+    }
+
+    @Override
+    public boolean isFavorite(Long id, Long userId) {
+        return userPartnerJoinRepository.findByReferenceIdAndUserIdAndType(id, userId, UserCallJoinTypeEnum.FAVORITE).isPresent();
+    }
+
+    @Override
+    public void favorite(Long id, String subjectId) {
+        UserData userData = getUserOrNotFound(subjectId);
+
+        ValidatorService.validateUserFavorite(userData.getMainActiveSubscription(), userPartnerJoinRepository.countByUserIdAndType(userData.getId(), UserCallJoinTypeEnum.FAVORITE));
+
+        Organisation organisation = getById(id);
+        if (isFavorite(organisation.getId(), userData.getId())) {
+            return;
+        }
+        UserPartnerJoin userCallJoin = UserPartnerJoin.builder()
+                .userData(userData)
+                .partnerData(organisation)
+                .type(UserCallJoinTypeEnum.FAVORITE)
+                .build();
+        userPartnerJoinRepository.save(userCallJoin);
+    }
+
+    @Override
+    public void unFavorite(Long id, String subjectId) {
+        UserData userData = getUserOrNotFound(subjectId);
+        Organisation organisation = getById(id);
+        Optional<UserPartnerJoin> userPartnerJoin = userPartnerJoinRepository.findByReferenceIdAndUserIdAndType(organisation.getId(), userData.getId(), UserCallJoinTypeEnum.FAVORITE);
+        if (userPartnerJoin.isEmpty()) {
+            return;
+        }
+        userPartnerJoinRepository.delete(userPartnerJoin.get());
+    }
+
+    @Override
+    public SearchDTO<PartnerDTO> getFavoritesByUserId(String subjectId, int pageNumber, int pageSize) {
+        UserData userData = getUserOrNotFound(subjectId);
+
+        Pageable pageable = PageRequest.of(pageNumber, pageSize, Sort.sort(UserCallJoin.class).by(UserCallJoin::getId).descending());
+
+        List<Long> ids = userPartnerJoinRepository.findByUserIdAndType(userData.getId(), UserCallJoinTypeEnum.FAVORITE, pageable);
+        List<PartnerDTO> results = organisationRepository.findAllById(ids).stream()
+                .map(organisation -> PartnerMapper.map(organisation, true))
+                .toList();
+
+        return SearchDTO.<PartnerDTO>builder()
+                .results(results)
+                .totalResults(userPartnerJoinRepository.countByUserIdAndType(userData.getId(), UserCallJoinTypeEnum.FAVORITE))
+                .build();
+    }
+
+    @Override
+    public List<Long> checkFavorites(UserData userData, List<Long> ids) {
+        return userPartnerJoinRepository.findByReferenceIdsAndType(userData.getId(), ids, UserCallJoinTypeEnum.FAVORITE);
+    }
+
+
+    public List<PartnerDTO> getSuggestedPartners(Long id, JwtModel jwtModel) {
         UserData userData = this.userDataRepository.findBySubjectId(jwtModel.getUserId()).orElseThrow(() -> new UserNotFoundException("User not found"));
         ValidatorService.validateUserSearchPartners(userData);
 
-        Call call = callRepository.findById(callId).orElseThrow(() -> new CallNotFoundException("Call " + callId + " not found"));
+        Call call = callRepository.findById(id).orElseThrow(() -> new CallNotFoundException("Call " + id + " not found"));
         String keywords = getKeywords(call);
-        SearchDTO<ProjectDTO> projectDTOSearchDTO = projectSolrClientService.search(keywords, 0, 10, null);
+        return searchItems(keywords);
+    }
+
+    public SearchDTO<PartnerDTO> search(String subjectId, String keywords) {
+        UserData userData = getUserOrNotFound(subjectId);
+        List<PartnerDTO> results = searchItems(keywords);
+        return SearchDTO.<PartnerDTO>builder()
+                .results(results)
+                .totalResults(userPartnerJoinRepository.countByUserIdAndType(userData.getId(), UserCallJoinTypeEnum.FAVORITE))
+                .build();
+    }
+    public List<PartnerDTO> searchItems(String keywords) {
+        SearchDTO<ProjectDTO> projectDTOSearchDTO = projectSolrClientService.simpleSearch(keywords, 0, 10);
 
         List<ProjectDTO> projectDTOS = projectDTOSearchDTO.getResults();
         List<Long> projectIds = projectDTOS.stream().map(ProjectDTO::getId).toList();
@@ -48,18 +145,9 @@ public class PartnerService {
         for (OrganisationProjectJoin join : organisationProjectJoins) {
             Long projectId = join.getProject().getId();
             ProjectDTO projectDTO = projectDTOS.stream().filter(p -> p.getId().equals(projectId)).findFirst().orElseThrow();
-            Optional<PartnerDTO> partner = partners.stream().filter(p -> p.getOrganisationId().equals(join.getOrganisation().getId())).findFirst();
+            Optional<PartnerDTO> partner = partners.stream().filter(p -> p.getId().equals(join.getOrganisation().getId())).findFirst();
             if (partner.isEmpty()) {
-                partners.add(
-                        PartnerDTO.builder()
-                                .organisationId(join.getOrganisation().getId())
-                                .projectId(projectId)
-                                .name(join.getOrganisation().getShortNameOrName())
-                                .type(join.getOrganisation().getType())
-                                .country(join.getOrganisation().getAddress().getCountry())
-                                .projectsMatched(1)
-                                .maxScore((int) projectDTO.getScore())
-                                .build());
+                partners.add(PartnerMapper.map(join.getOrganisation(), 1, projectDTO.getScore().intValue(), null, null, null, true));
             } else {
                 partner.get().setProjectsMatched(partner.get().getProjectsMatched() + 1);
                 partner.get().setMaxScore((int) (partner.get().getMaxScore() + projectDTO.getScore()));
@@ -84,5 +172,4 @@ public class PartnerService {
             throw new NLPException(e.getMessage());
         }
     }
-
 }

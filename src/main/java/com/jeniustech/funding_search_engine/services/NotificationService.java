@@ -1,6 +1,6 @@
 package com.jeniustech.funding_search_engine.services;
 
-import com.jeniustech.funding_search_engine.dto.CallDTO;
+import com.jeniustech.funding_search_engine.dto.search.CallDTO;
 import com.jeniustech.funding_search_engine.entities.SavedSearch;
 import com.jeniustech.funding_search_engine.enums.AdminLogType;
 import com.jeniustech.funding_search_engine.exceptions.ScraperException;

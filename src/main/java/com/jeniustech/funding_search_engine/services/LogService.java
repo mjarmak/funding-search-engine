@@ -16,8 +16,8 @@ public class LogService {
     private final LogBookRepository logBookRepository;
 
     public void addLog(UserData userData, LogTypeEnum logTypeEnum, String text) {
-        if (logTypeEnum == LogTypeEnum.SEARCH) {
-            LogBook lastLog = getLastLogByUserIdAndType(userData.getId(), LogTypeEnum.SEARCH);
+        if (logTypeEnum == LogTypeEnum.SEARCH_CALL || logTypeEnum == LogTypeEnum.SEARCH_PROJECT || logTypeEnum == LogTypeEnum.SEARCH_PARTNER) {
+            LogBook lastLog = getLastLogByUserIdAndType(userData.getId(), logTypeEnum);
             if (lastLog != null && lastLog.getLogText().equals(text)) {
                 return;
             }

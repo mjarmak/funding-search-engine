@@ -1,12 +1,17 @@
 package com.jeniustech.funding_search_engine.controllers;
 
-import com.jeniustech.funding_search_engine.dto.CallDTO;
-import com.jeniustech.funding_search_engine.dto.PartnerDTO;
-import com.jeniustech.funding_search_engine.dto.SearchDTO;
+import com.jeniustech.funding_search_engine.dto.search.CallDTO;
+import com.jeniustech.funding_search_engine.dto.search.PartnerDTO;
+import com.jeniustech.funding_search_engine.dto.search.SearchDTO;
+import com.jeniustech.funding_search_engine.enums.LogTypeEnum;
+import com.jeniustech.funding_search_engine.enums.StatusFilterEnum;
 import com.jeniustech.funding_search_engine.mappers.UserDataMapper;
 import com.jeniustech.funding_search_engine.models.JwtModel;
 import com.jeniustech.funding_search_engine.services.CallService;
 import com.jeniustech.funding_search_engine.services.PartnerService;
+import com.jeniustech.funding_search_engine.services.UserDataService;
+import com.jeniustech.funding_search_engine.services.solr.CallSolrClientService;
+import jakarta.validation.constraints.Size;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -16,37 +21,59 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
+@RequestMapping("/call")
 @RequiredArgsConstructor
-public class CallController {
+public class CallController implements IDataController<CallDTO> {
 
     private final CallService callService;
     private final PartnerService partnerService;
+    private final UserDataService userDataService;
+    private final CallSolrClientService callSolrClientService;
 
-    @GetMapping("/call/{id}")
-    public ResponseEntity<CallDTO> getCallById(@PathVariable Long id) {
-        return ResponseEntity.ok(callService.getCallDTOById(id));
+    @GetMapping("/search")
+    public ResponseEntity<SearchDTO<CallDTO>> search(
+            @RequestParam @Size(min = 2, max = 255) String query,
+            @RequestParam(required = true, defaultValue = "0") int pageNumber,
+            @RequestParam(required = true, defaultValue = "20") int pageSize,
+            @RequestParam(required = false, name = "status", defaultValue = "UPCOMING,OPEN,CLOSED"
+            ) List<StatusFilterEnum> statusFilters,
+            @AuthenticationPrincipal Jwt jwt
+    ) {
+        JwtModel jwtModel = UserDataMapper.map(jwt);
+        return ResponseEntity.ok(callSolrClientService.search(
+                query,
+                pageNumber,
+                pageSize,
+                statusFilters,
+                jwtModel
+        ));
     }
 
-    @GetMapping("/call/{id}/favorite")
-    public ResponseEntity<Void> favoriteCall(@PathVariable Long id,
-                             @AuthenticationPrincipal Jwt jwt
+    @GetMapping("/{id}")
+    public ResponseEntity<CallDTO> getById(@PathVariable Long id) {
+        return ResponseEntity.ok(callService.getDTOById(id));
+    }
+
+    @GetMapping("/{id}/favorite")
+    public ResponseEntity<Void> favorite(@PathVariable Long id,
+                                         @AuthenticationPrincipal Jwt jwt
                              ) {
         JwtModel jwtModel = UserDataMapper.map(jwt);
-        callService.favoriteCall(id, jwtModel.getUserId());
+        callService.favorite(id, jwtModel.getUserId());
         return ResponseEntity.noContent().build();
     }
 
-    @DeleteMapping("/call/{id}/favorite")
-    public ResponseEntity<Void> unFavoriteCall(@PathVariable Long id,
-                               @AuthenticationPrincipal Jwt jwt
+    @DeleteMapping("/{id}/favorite")
+    public ResponseEntity<Void> unFavorite(@PathVariable Long id,
+                                           @AuthenticationPrincipal Jwt jwt
                                ) {
         JwtModel jwtModel = UserDataMapper.map(jwt);
-        callService.unFavoriteCall(id, jwtModel.getUserId());
+        callService.unFavorite(id, jwtModel.getUserId());
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping("/call/favorites")
-    public ResponseEntity<SearchDTO<CallDTO>> getFavoriteCalls(
+    @GetMapping("/favorites")
+    public ResponseEntity<SearchDTO<CallDTO>> getFavorites(
             @RequestParam(required = true, defaultValue = "0") int pageNumber,
             @RequestParam(required = true, defaultValue = "20") int pageSize,
             @AuthenticationPrincipal Jwt jwt
@@ -55,7 +82,15 @@ public class CallController {
         return ResponseEntity.ok(callService.getFavoritesByUserId(jwtModel.getUserId(), pageNumber, pageSize));
     }
 
-    @GetMapping("/call/{id}/partners/recommended")
+    @GetMapping("/search/history")
+    public ResponseEntity<List<String>> getSearchHistory(
+            @AuthenticationPrincipal Jwt jwt
+    ) {
+        JwtModel jwtModel = UserDataMapper.map(jwt);
+        return ResponseEntity.ok(userDataService.getSearchHistory(jwtModel.getUserId(), LogTypeEnum.SEARCH_CALL));
+    }
+
+    @GetMapping("/{id}/partners/recommended")
     public ResponseEntity<List<PartnerDTO>> getSuggestedPartners(
             @PathVariable Long id,
             @AuthenticationPrincipal Jwt jwt

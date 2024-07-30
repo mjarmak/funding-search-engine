@@ -25,7 +25,7 @@ public class ExportController {
     private final ExportService exportService;
     private final ReportService reportService;
 
-    @PostMapping("/excel")
+    @PostMapping("call/excel")
     public ResponseEntity<InputStreamResource> downloadExcel(
             @RequestBody List<Long> callIds,
             @AuthenticationPrincipal Jwt jwt
@@ -43,7 +43,7 @@ public class ExportController {
                 .body(new InputStreamResource(in));
     }
 
-    @GetMapping("calls/{callId}/pdf")
+    @GetMapping("call/{callId}/pdf")
     public ResponseEntity<InputStreamResource> generatePdf(
             @PathVariable Long callId,
             @AuthenticationPrincipal Jwt jwt,
@@ -63,7 +63,7 @@ public class ExportController {
                 .body(new InputStreamResource(bis));
     }
 
-    @PostMapping("/calls/pdf")
+    @PostMapping("/call/pdf")
     public ResponseEntity<InputStreamResource> generatePdf(
             @RequestBody List<Long> callIds,
             @AuthenticationPrincipal Jwt jwt,
