@@ -130,7 +130,7 @@ public class CallScrapeService {
 
         MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
         body.add("query", queryFile);
-        body.add("language", languageFile);
+        body.add("languages", languageFile);
 
         try {
             return getSearch(pageNumber, pageSize, body);

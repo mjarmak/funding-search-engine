@@ -59,18 +59,6 @@ public class CallDataLoader {
 
     public static final int BATCH_SIZE = 1000;
 
-//    public void loadData() {
-//        String path = "C:/Projects/funding-search-engine/src/test/resources/data/calls/";
-//        List<String> csvFiles = List.of(
-//                "output_query-open_1718653202242.csv",
-//                "output_query-upcoming_1718653130808.csv",
-//                "output_query-closed_1718653220506.csv"
-//        );
-//        for (String csvFile : csvFiles) {
-//            loadFile(path, csvFile);
-//        }
-//    }
-
     public void loadFile(String file) {
         try (CSVReader reader = new CSVReader(new FileReader(file))) {
 
