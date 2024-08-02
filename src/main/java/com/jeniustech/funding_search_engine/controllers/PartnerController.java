@@ -79,7 +79,7 @@ public class PartnerController implements IDataController<PartnerDTO> {
             @AuthenticationPrincipal Jwt jwt
     ) {
         JwtModel jwtModel = UserDataMapper.map(jwt);
-        return ResponseEntity.ok(userDataService.getSearchHistory(jwtModel.getUserId(), LogTypeEnum.SEARCH_PROJECT));
+        return ResponseEntity.ok(userDataService.getSearchHistory(jwtModel.getUserId(), LogTypeEnum.SEARCH_PARTNER));
     }
 
 }

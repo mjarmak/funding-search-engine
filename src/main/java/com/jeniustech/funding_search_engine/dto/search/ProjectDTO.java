@@ -2,6 +2,7 @@ package com.jeniustech.funding_search_engine.dto.search;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.jeniustech.funding_search_engine.dto.LongTextDTO;
+import com.jeniustech.funding_search_engine.enums.OrganisationProjectJoinTypeEnum;
 import com.jeniustech.funding_search_engine.enums.ProjectStatusEnum;
 import lombok.Builder;
 import lombok.Data;
@@ -32,6 +33,9 @@ public class ProjectDTO extends SearchItemDTO {
     private String fundingScheme;
     private List<LongTextDTO> longTexts;
     private String url;
+
+    private OrganisationProjectJoinTypeEnum joinType;
+
     private Boolean favorite;
     private Float score;
 }

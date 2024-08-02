@@ -50,6 +50,9 @@ public class OrganisationProjectJoin {
         return NumberMapper.shortenNumber(fundingOrganisation, 1);
     }
     public String getFundingEUDisplayString() {
+        if (fundingEU == null || fundingEU.compareTo(BigDecimal.ZERO) == 0) {
+            return null;
+        }
         return NumberMapper.shortenNumber(fundingEU, 1);
     }
 

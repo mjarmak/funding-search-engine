@@ -4,9 +4,11 @@ import com.jeniustech.funding_search_engine.dto.search.PartnerDTO;
 import com.jeniustech.funding_search_engine.dto.search.ProjectDTO;
 import com.jeniustech.funding_search_engine.dto.search.SearchDTO;
 import com.jeniustech.funding_search_engine.entities.*;
+import com.jeniustech.funding_search_engine.enums.LogTypeEnum;
 import com.jeniustech.funding_search_engine.enums.UserCallJoinTypeEnum;
 import com.jeniustech.funding_search_engine.exceptions.CallNotFoundException;
 import com.jeniustech.funding_search_engine.exceptions.NLPException;
+import com.jeniustech.funding_search_engine.exceptions.SubscriptionPlanException;
 import com.jeniustech.funding_search_engine.exceptions.UserNotFoundException;
 import com.jeniustech.funding_search_engine.mappers.PartnerMapper;
 import com.jeniustech.funding_search_engine.models.JwtModel;
@@ -31,6 +33,7 @@ public class PartnerService extends IDataService<PartnerDTO> {
     private final OrganisationRepository organisationRepository;
     private final NLPService nlpService;
     private final UserPartnerJoinRepository userPartnerJoinRepository;
+    private final LogService logService;
 
     public PartnerService(
             UserDataRepository userDataRepository,
@@ -39,8 +42,8 @@ public class PartnerService extends IDataService<PartnerDTO> {
             OrganisationProjectJoinRepository organisationProjectJoinRepository,
             OrganisationRepository organisationRepository,
             NLPService nlpService,
-            UserPartnerJoinRepository userPartnerJoinRepository
-    ) {
+            UserPartnerJoinRepository userPartnerJoinRepository,
+            LogService logService) {
         super(userDataRepository);
         this.projectSolrClientService = projectSolrClientService;
         this.callRepository = callRepository;
@@ -48,6 +51,7 @@ public class PartnerService extends IDataService<PartnerDTO> {
         this.organisationRepository = organisationRepository;
         this.nlpService = nlpService;
         this.userPartnerJoinRepository = userPartnerJoinRepository;
+        this.logService = logService;
     }
 
 
@@ -126,14 +130,34 @@ public class PartnerService extends IDataService<PartnerDTO> {
         return searchItems(keywords);
     }
 
-    public SearchDTO<PartnerDTO> search(String subjectId, String keywords) {
+    public SearchDTO<PartnerDTO> search(String subjectId, String query) {
         UserData userData = getUserOrNotFound(subjectId);
-        List<PartnerDTO> results = searchItems(keywords);
+        ValidatorService.validateUserSearch(userData);
+
+        if (userData.getMainActiveSubscription().isTrial()) {
+            throw new SubscriptionPlanException("Trial users cannot search for partners");
+        }
+        logService.addLog(userData, LogTypeEnum.SEARCH_PARTNER, query);
+        List<PartnerDTO> results = searchItems(query);
+
+        setFavorites(userData, results);
+
         return SearchDTO.<PartnerDTO>builder()
                 .results(results)
-                .totalResults(userPartnerJoinRepository.countByUserIdAndType(userData.getId(), UserCallJoinTypeEnum.FAVORITE))
+                .totalResults((long) results.size())
                 .build();
     }
+
+    private void setFavorites(UserData userData, List<PartnerDTO> results) {
+        List<Long> ids = results.stream().map(PartnerDTO::getId).toList();
+        List<Long> favoriteIds = checkFavorites(userData, ids);
+        for (PartnerDTO partnerDTO : results) {
+            if (favoriteIds.contains(partnerDTO.getId())) {
+                partnerDTO.setFavorite(true);
+            }
+        }
+    }
+
     public List<PartnerDTO> searchItems(String keywords) {
         SearchDTO<ProjectDTO> projectDTOSearchDTO = projectSolrClientService.simpleSearch(keywords, 0, 10);
 
@@ -154,7 +178,7 @@ public class PartnerService extends IDataService<PartnerDTO> {
             }
         }
         partners.sort((p1, p2) -> Float.compare(p2.getMaxScore(), p1.getMaxScore()));
-        return partners.subList(0, Math.min(partners.size(), 10));
+        return partners;
     }
 
     private String getKeywords(Call call) {
