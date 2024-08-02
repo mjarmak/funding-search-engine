@@ -5,7 +5,7 @@ import com.jeniustech.funding_search_engine.dto.search.SearchDTO;
 import com.jeniustech.funding_search_engine.entities.Call;
 import com.jeniustech.funding_search_engine.entities.UserCallJoin;
 import com.jeniustech.funding_search_engine.entities.UserData;
-import com.jeniustech.funding_search_engine.enums.UserCallJoinTypeEnum;
+import com.jeniustech.funding_search_engine.enums.UserJoinTypeEnum;
 import com.jeniustech.funding_search_engine.exceptions.CallNotFoundException;
 import com.jeniustech.funding_search_engine.mappers.CallMapper;
 import com.jeniustech.funding_search_engine.repository.CallRepository;
@@ -31,8 +31,9 @@ public class CallService extends IDataService<CallDTO> {
         this.userCallJoinRepository = userCallJoinRepository;
     }
 
-    public CallDTO getDTOById(Long id) {
-        return CallMapper.map(getById(id), false, false, true);
+    public CallDTO getDTOById(Long id, String subjectId) {
+        UserData userData = getUserOrNotFound(subjectId);
+        return CallMapper.map(getById(id), false, isFavorite(id, userData.getId()), true);
     }
 
     private Call getById(Long callId) {
@@ -40,13 +41,13 @@ public class CallService extends IDataService<CallDTO> {
     }
 
     public boolean isFavorite(Long callId, Long userId) {
-        return userCallJoinRepository.findByReferenceIdAndUserIdAndType(callId, userId, UserCallJoinTypeEnum.FAVORITE).isPresent();
+        return userCallJoinRepository.findByReferenceIdAndUserIdAndType(callId, userId, UserJoinTypeEnum.FAVORITE).isPresent();
     }
 
     public void favorite(Long id, String subjectId) {
         UserData userData = getUserOrNotFound(subjectId);
 
-        ValidatorService.validateUserFavorite(userData.getMainActiveSubscription(), userCallJoinRepository.countByUserIdAndType(userData.getId(), UserCallJoinTypeEnum.FAVORITE));
+        ValidatorService.validateUserFavorite(userData.getMainActiveSubscription(), userCallJoinRepository.countByUserIdAndType(userData.getId(), UserJoinTypeEnum.FAVORITE));
 
         Call call = getById(id);
         if (isFavorite(call.getId(), userData.getId())) {
@@ -55,7 +56,7 @@ public class CallService extends IDataService<CallDTO> {
         UserCallJoin userCallJoin = UserCallJoin.builder()
                 .userData(userData)
                 .callData(call)
-                .type(UserCallJoinTypeEnum.FAVORITE)
+                .type(UserJoinTypeEnum.FAVORITE)
                 .build();
         userCallJoinRepository.save(userCallJoin);
     }
@@ -63,7 +64,7 @@ public class CallService extends IDataService<CallDTO> {
     public void unFavorite(Long callId, String subjectId) {
         UserData userData = getUserOrNotFound(subjectId);
         Call call = getById(callId);
-        Optional<UserCallJoin> userCallJoin = userCallJoinRepository.findByReferenceIdAndUserIdAndType(call.getId(), userData.getId(), UserCallJoinTypeEnum.FAVORITE);
+        Optional<UserCallJoin> userCallJoin = userCallJoinRepository.findByReferenceIdAndUserIdAndType(call.getId(), userData.getId(), UserJoinTypeEnum.FAVORITE);
         if (userCallJoin.isEmpty()) {
             return;
         }
@@ -75,18 +76,16 @@ public class CallService extends IDataService<CallDTO> {
 
         Pageable pageable = PageRequest.of(pageNumber, pageSize, Sort.sort(UserCallJoin.class).by(UserCallJoin::getId).descending());
 
-        List<Long> ids = userCallJoinRepository.findByUserIdAndType(userData.getId(), UserCallJoinTypeEnum.FAVORITE, pageable);
-        List<CallDTO> results = callRepository.findAllById(ids).stream()
-                .map(call -> CallMapper.map(call, true, true, false))
-                .toList();
+        List<UserCallJoin> joins = userCallJoinRepository.findByUserIdAndType(userData.getId(), UserJoinTypeEnum.FAVORITE, pageable);
+        List<CallDTO> results = CallMapper.mapJoin(joins, true, true, false);
 
         return SearchDTO.<CallDTO>builder()
                 .results(results)
-                .totalResults(userCallJoinRepository.countByUserIdAndType(userData.getId(), UserCallJoinTypeEnum.FAVORITE))
+                .totalResults(userCallJoinRepository.countByUserIdAndType(userData.getId(), UserJoinTypeEnum.FAVORITE))
                 .build();
     }
 
     public List<Long> checkFavorites(UserData userData, List<Long> ids) {
-        return userCallJoinRepository.findByReferenceIdsAndType(userData.getId(), ids, UserCallJoinTypeEnum.FAVORITE);
+        return userCallJoinRepository.findByReferenceIdsAndType(userData.getId(), ids, UserJoinTypeEnum.FAVORITE);
     }
 }

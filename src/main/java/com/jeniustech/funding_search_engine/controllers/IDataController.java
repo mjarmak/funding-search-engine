@@ -20,7 +20,8 @@ public interface IDataController<DTO> {
             ) List<StatusFilterEnum> statusFilters,
             @AuthenticationPrincipal Jwt jwt
     );
-    ResponseEntity<DTO> getById(@PathVariable Long id);
+    ResponseEntity<DTO> getById(@PathVariable Long id,
+                                @AuthenticationPrincipal Jwt jwt);
     ResponseEntity<Void> favorite(
             @PathVariable Long id,
             @AuthenticationPrincipal Jwt jwt

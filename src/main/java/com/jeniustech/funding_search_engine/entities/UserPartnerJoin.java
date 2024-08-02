@@ -1,6 +1,6 @@
 package com.jeniustech.funding_search_engine.entities;
 
-import com.jeniustech.funding_search_engine.enums.UserCallJoinTypeEnum;
+import com.jeniustech.funding_search_engine.enums.UserJoinTypeEnum;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -32,7 +32,7 @@ public class UserPartnerJoin {
     private Organisation partnerData;
 
     @Enumerated(EnumType.ORDINAL)
-    private UserCallJoinTypeEnum type;
+    private UserJoinTypeEnum type;
 
     @CreationTimestamp
     @Column(updatable = false)

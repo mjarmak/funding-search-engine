@@ -2,11 +2,24 @@ package com.jeniustech.funding_search_engine.mappers;
 
 import com.jeniustech.funding_search_engine.dto.search.ProjectDTO;
 import com.jeniustech.funding_search_engine.entities.Project;
+import com.jeniustech.funding_search_engine.entities.UserProjectJoin;
 
 import java.util.List;
 
 public interface ProjectMapper {
 
+    static List<ProjectDTO> mapJoin(List<UserProjectJoin> project, boolean isSearch, boolean isFavorite) {
+        if (project == null) {
+            return null;
+        }
+        return project.stream().map(p -> mapJoin(p, isSearch, isFavorite)).toList();
+    }
+    static ProjectDTO mapJoin(UserProjectJoin project, boolean isSearch, boolean isFavorite) {
+        if (project == null) {
+            return null;
+        }
+        return map(project.getProjectData(), isSearch, isFavorite);
+    }
     static List<ProjectDTO> map(List<Project> projects, boolean isSearch, boolean isFavorite) {
         if (projects == null) {
             return null;

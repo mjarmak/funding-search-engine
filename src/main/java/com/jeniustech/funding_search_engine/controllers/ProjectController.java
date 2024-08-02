@@ -47,8 +47,10 @@ public class ProjectController implements IDataController<ProjectDTO> {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ProjectDTO> getById(@PathVariable Long id) {
-        return ResponseEntity.ok(projectService.getDTOById(id));
+    public ResponseEntity<ProjectDTO> getById(@PathVariable Long id,
+                                              @AuthenticationPrincipal Jwt jwt) {
+        JwtModel jwtModel = UserDataMapper.map(jwt);
+        return ResponseEntity.ok(projectService.getDTOById(id, jwtModel.getUserId()));
     }
 
     @GetMapping("/{id}/favorite")

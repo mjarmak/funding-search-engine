@@ -5,7 +5,7 @@ import com.jeniustech.funding_search_engine.dto.search.ProjectDTO;
 import com.jeniustech.funding_search_engine.dto.search.SearchDTO;
 import com.jeniustech.funding_search_engine.entities.*;
 import com.jeniustech.funding_search_engine.enums.LogTypeEnum;
-import com.jeniustech.funding_search_engine.enums.UserCallJoinTypeEnum;
+import com.jeniustech.funding_search_engine.enums.UserJoinTypeEnum;
 import com.jeniustech.funding_search_engine.exceptions.CallNotFoundException;
 import com.jeniustech.funding_search_engine.exceptions.NLPException;
 import com.jeniustech.funding_search_engine.exceptions.SubscriptionPlanException;
@@ -56,8 +56,9 @@ public class PartnerService extends IDataService<PartnerDTO> {
 
 
     @Override
-    public PartnerDTO getDTOById(Long id) {
-        return PartnerMapper.map(getById(id), false);
+    public PartnerDTO getDTOById(Long id, String subjectId) {
+        UserData userData = getUserOrNotFound(subjectId);
+        return PartnerMapper.map(getById(id), false, isFavorite(id, userData.getId()));
     }
 
     private Organisation getById(Long id) {
@@ -66,14 +67,14 @@ public class PartnerService extends IDataService<PartnerDTO> {
 
     @Override
     public boolean isFavorite(Long id, Long userId) {
-        return userPartnerJoinRepository.findByReferenceIdAndUserIdAndType(id, userId, UserCallJoinTypeEnum.FAVORITE).isPresent();
+        return userPartnerJoinRepository.findByReferenceIdAndUserIdAndType(id, userId, UserJoinTypeEnum.FAVORITE).isPresent();
     }
 
     @Override
     public void favorite(Long id, String subjectId) {
         UserData userData = getUserOrNotFound(subjectId);
 
-        ValidatorService.validateUserFavorite(userData.getMainActiveSubscription(), userPartnerJoinRepository.countByUserIdAndType(userData.getId(), UserCallJoinTypeEnum.FAVORITE));
+        ValidatorService.validateUserFavorite(userData.getMainActiveSubscription(), userPartnerJoinRepository.countByUserIdAndType(userData.getId(), UserJoinTypeEnum.FAVORITE));
 
         Organisation organisation = getById(id);
         if (isFavorite(organisation.getId(), userData.getId())) {
@@ -82,7 +83,7 @@ public class PartnerService extends IDataService<PartnerDTO> {
         UserPartnerJoin userCallJoin = UserPartnerJoin.builder()
                 .userData(userData)
                 .partnerData(organisation)
-                .type(UserCallJoinTypeEnum.FAVORITE)
+                .type(UserJoinTypeEnum.FAVORITE)
                 .build();
         userPartnerJoinRepository.save(userCallJoin);
     }
@@ -91,7 +92,7 @@ public class PartnerService extends IDataService<PartnerDTO> {
     public void unFavorite(Long id, String subjectId) {
         UserData userData = getUserOrNotFound(subjectId);
         Organisation organisation = getById(id);
-        Optional<UserPartnerJoin> userPartnerJoin = userPartnerJoinRepository.findByReferenceIdAndUserIdAndType(organisation.getId(), userData.getId(), UserCallJoinTypeEnum.FAVORITE);
+        Optional<UserPartnerJoin> userPartnerJoin = userPartnerJoinRepository.findByReferenceIdAndUserIdAndType(organisation.getId(), userData.getId(), UserJoinTypeEnum.FAVORITE);
         if (userPartnerJoin.isEmpty()) {
             return;
         }
@@ -102,22 +103,20 @@ public class PartnerService extends IDataService<PartnerDTO> {
     public SearchDTO<PartnerDTO> getFavoritesByUserId(String subjectId, int pageNumber, int pageSize) {
         UserData userData = getUserOrNotFound(subjectId);
 
-        Pageable pageable = PageRequest.of(pageNumber, pageSize, Sort.sort(UserCallJoin.class).by(UserCallJoin::getId).descending());
+        Pageable pageable = PageRequest.of(pageNumber, pageSize, Sort.sort(UserPartnerJoin.class).by(UserPartnerJoin::getId).descending());
 
-        List<Long> ids = userPartnerJoinRepository.findByUserIdAndType(userData.getId(), UserCallJoinTypeEnum.FAVORITE, pageable);
-        List<PartnerDTO> results = organisationRepository.findAllById(ids).stream()
-                .map(organisation -> PartnerMapper.map(organisation, true))
-                .toList();
+        List<UserPartnerJoin> joins = userPartnerJoinRepository.findByUserIdAndType(userData.getId(), UserJoinTypeEnum.FAVORITE, pageable);
+        List<PartnerDTO> results = PartnerMapper.mapJoin(joins, true, true);
 
         return SearchDTO.<PartnerDTO>builder()
                 .results(results)
-                .totalResults(userPartnerJoinRepository.countByUserIdAndType(userData.getId(), UserCallJoinTypeEnum.FAVORITE))
+                .totalResults(userPartnerJoinRepository.countByUserIdAndType(userData.getId(), UserJoinTypeEnum.FAVORITE))
                 .build();
     }
 
     @Override
     public List<Long> checkFavorites(UserData userData, List<Long> ids) {
-        return userPartnerJoinRepository.findByReferenceIdsAndType(userData.getId(), ids, UserCallJoinTypeEnum.FAVORITE);
+        return userPartnerJoinRepository.findByReferenceIdsAndType(userData.getId(), ids, UserJoinTypeEnum.FAVORITE);
     }
 
 
@@ -171,7 +170,7 @@ public class PartnerService extends IDataService<PartnerDTO> {
             ProjectDTO projectDTO = projectDTOS.stream().filter(p -> p.getId().equals(projectId)).findFirst().orElseThrow();
             Optional<PartnerDTO> partner = partners.stream().filter(p -> p.getId().equals(join.getOrganisation().getId())).findFirst();
             if (partner.isEmpty()) {
-                partners.add(PartnerMapper.map(join.getOrganisation(), 1, projectDTO.getScore().intValue(), null, null, null, true));
+                partners.add(PartnerMapper.map(join.getOrganisation(), 1, projectDTO.getScore().intValue(), null, null, null, true, false));
             } else {
                 partner.get().setProjectsMatched(partner.get().getProjectsMatched() + 1);
                 partner.get().setMaxScore((int) (partner.get().getMaxScore() + projectDTO.getScore()));

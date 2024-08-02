@@ -42,8 +42,10 @@ public class PartnerController implements IDataController<PartnerDTO> {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<PartnerDTO> getById(@PathVariable Long id) {
-        return ResponseEntity.ok(partnerService.getDTOById(id));
+    public ResponseEntity<PartnerDTO> getById(@PathVariable Long id,
+                                              @AuthenticationPrincipal Jwt jwt) {
+        JwtModel jwtModel = UserDataMapper.map(jwt);
+        return ResponseEntity.ok(partnerService.getDTOById(id, jwtModel.getUserId()));
     }
 
     @GetMapping("/{id}/favorite")

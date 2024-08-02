@@ -4,11 +4,24 @@ import com.jeniustech.funding_search_engine.dto.LongTextDTO;
 import com.jeniustech.funding_search_engine.dto.search.CallDTO;
 import com.jeniustech.funding_search_engine.entities.Call;
 import com.jeniustech.funding_search_engine.entities.LongText;
+import com.jeniustech.funding_search_engine.entities.UserCallJoin;
 
 import java.util.List;
 
 public interface CallMapper {
 
+    static List<CallDTO> mapJoin(List<UserCallJoin> call, boolean isSearch, boolean isFavorite, boolean withLongText) {
+        if (call == null) {
+            return null;
+        }
+        return call.stream().map(c -> mapJoin(c, isSearch, isFavorite, withLongText)).toList();
+    }
+    static CallDTO mapJoin(UserCallJoin call, boolean isSearch, boolean isFavorite, boolean withLongText) {
+        if (call == null) {
+            return null;
+        }
+        return map(call.getCallData(), isSearch, isFavorite, withLongText);
+    }
     static CallDTO map(Call call, boolean isSearch, boolean isFavorite, boolean withLongText) {
         if (call == null) {
             return null;

@@ -5,6 +5,7 @@ import com.jeniustech.funding_search_engine.dto.search.ProjectDTO;
 import com.jeniustech.funding_search_engine.entities.Organisation;
 import com.jeniustech.funding_search_engine.entities.OrganisationProjectJoin;
 import com.jeniustech.funding_search_engine.entities.Project;
+import com.jeniustech.funding_search_engine.entities.UserPartnerJoin;
 import com.jeniustech.funding_search_engine.enums.OrganisationProjectJoinTypeEnum;
 
 import java.math.BigDecimal;
@@ -13,11 +14,24 @@ import java.util.List;
 
 public interface PartnerMapper {
 
-    static PartnerDTO map(Organisation organisation, boolean isSearch) {
+
+    static List<PartnerDTO> mapJoin(List<UserPartnerJoin> organisation, boolean isSearch, boolean isFavorite) {
         if (organisation == null) {
             return null;
         }
-        PartnerDTO partnerDTO = map(organisation, null, null, null, null, null, isSearch);
+        return organisation.stream().map(c -> mapJoin(c, isSearch, isFavorite)).toList();
+    }
+    static PartnerDTO mapJoin(UserPartnerJoin organisation, boolean isSearch, boolean isFavorite) {
+        if (organisation == null) {
+            return null;
+        }
+        return map(organisation.getPartnerData(), isSearch, isFavorite);
+    }
+    static PartnerDTO map(Organisation organisation, boolean isSearch, boolean isFavorite) {
+        if (organisation == null) {
+            return null;
+        }
+        PartnerDTO partnerDTO = map(organisation, null, null, null, null, null, isSearch, isFavorite);
         if (!isSearch) {
             partnerDTO.setProjects(mapToProjectsDTO(organisation.getOrganisationProjectJoins()));
             // sum of all projects funding
@@ -72,11 +86,11 @@ public interface PartnerMapper {
                         null,
                         organisationProjectJoin.getFundingOrganisationDisplayString(),
                         organisationProjectJoin.getFundingEUDisplayString(),
-                        organisationProjectJoin.getType(), true
+                        organisationProjectJoin.getType(), true, false
                 ))
                 .toList();
     }
-    static PartnerDTO map(Organisation organisation, Integer projectsMatched, Integer score, String fundingOrganisation, String fundingEU, OrganisationProjectJoinTypeEnum joinType, boolean isSearch) {
+    static PartnerDTO map(Organisation organisation, Integer projectsMatched, Integer score, String fundingOrganisation, String fundingEU, OrganisationProjectJoinTypeEnum joinType, boolean isSearch, boolean isFavorite) {
         if (organisation == null) {
             return null;
         }
@@ -96,6 +110,7 @@ public interface PartnerMapper {
                 .fundingOrganisation(fundingOrganisation)
                 .fundingEU(fundingEU)
                 .joinType(joinType)
+                .favorite(isFavorite)
                 .build();
     }
 

@@ -1,5 +1,5 @@
 package com.jeniustech.funding_search_engine.enums;
 
-public enum UserCallJoinTypeEnum {
+public enum UserJoinTypeEnum {
     FAVORITE
 }

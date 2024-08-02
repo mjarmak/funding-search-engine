@@ -50,8 +50,10 @@ public class CallController implements IDataController<CallDTO> {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<CallDTO> getById(@PathVariable Long id) {
-        return ResponseEntity.ok(callService.getDTOById(id));
+    public ResponseEntity<CallDTO> getById(@PathVariable Long id,
+                                           @AuthenticationPrincipal Jwt jwt) {
+        JwtModel jwtModel = UserDataMapper.map(jwt);
+        return ResponseEntity.ok(callService.getDTOById(id, jwtModel.getUserId()));
     }
 
     @GetMapping("/{id}/favorite")

@@ -11,7 +11,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public abstract class IDataService<DTO> {
     public final UserDataRepository userDataRepository;
-    abstract DTO getDTOById(Long id);
+    abstract DTO getDTOById(Long id, String subjectId);
     abstract boolean isFavorite(Long id, Long userId);
     abstract void favorite(Long id, String subjectId);
     abstract void unFavorite(Long id, String subjectId);

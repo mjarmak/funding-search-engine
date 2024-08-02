@@ -3,10 +3,9 @@ package com.jeniustech.funding_search_engine.services;
 import com.jeniustech.funding_search_engine.dto.search.ProjectDTO;
 import com.jeniustech.funding_search_engine.dto.search.SearchDTO;
 import com.jeniustech.funding_search_engine.entities.Project;
-import com.jeniustech.funding_search_engine.entities.UserCallJoin;
 import com.jeniustech.funding_search_engine.entities.UserData;
 import com.jeniustech.funding_search_engine.entities.UserProjectJoin;
-import com.jeniustech.funding_search_engine.enums.UserCallJoinTypeEnum;
+import com.jeniustech.funding_search_engine.enums.UserJoinTypeEnum;
 import com.jeniustech.funding_search_engine.exceptions.ProjectNotFoundException;
 import com.jeniustech.funding_search_engine.mappers.ProjectMapper;
 import com.jeniustech.funding_search_engine.repository.ProjectRepository;
@@ -32,8 +31,9 @@ public class ProjectService extends IDataService<ProjectDTO> {
         this.userProjectJoinRepository = userProjectJoinRepository;
     }
 
-    public ProjectDTO getDTOById(Long id) {
-        return ProjectMapper.map(getById(id), false, false);
+    public ProjectDTO getDTOById(Long id, String subjectId) {
+        UserData userData = getUserOrNotFound(subjectId);
+        return ProjectMapper.map(getById(id), false, isFavorite(id, userData.getId()));
     }
 
     private Project getById(Long callId) {
@@ -41,13 +41,13 @@ public class ProjectService extends IDataService<ProjectDTO> {
     }
 
     public boolean isFavorite(Long callId, Long userId) {
-        return userProjectJoinRepository.findByReferenceIdAndUserIdAndType(callId, userId, UserCallJoinTypeEnum.FAVORITE).isPresent();
+        return userProjectJoinRepository.findByReferenceIdAndUserIdAndType(callId, userId, UserJoinTypeEnum.FAVORITE).isPresent();
     }
 
     public void favorite(Long id, String subjectId) {
         UserData userData = getUserOrNotFound(subjectId);
 
-        ValidatorService.validateUserFavorite(userData.getMainActiveSubscription(), userProjectJoinRepository.countByUserIdAndType(userData.getId(), UserCallJoinTypeEnum.FAVORITE));
+        ValidatorService.validateUserFavorite(userData.getMainActiveSubscription(), userProjectJoinRepository.countByUserIdAndType(userData.getId(), UserJoinTypeEnum.FAVORITE));
 
         Project project = getById(id);
         if (isFavorite(project.getId(), userData.getId())) {
@@ -56,7 +56,7 @@ public class ProjectService extends IDataService<ProjectDTO> {
         UserProjectJoin userProjectJoin = UserProjectJoin.builder()
                 .userData(userData)
                 .projectData(project)
-                .type(UserCallJoinTypeEnum.FAVORITE)
+                .type(UserJoinTypeEnum.FAVORITE)
                 .build();
         userProjectJoinRepository.save(userProjectJoin);
     }
@@ -64,7 +64,7 @@ public class ProjectService extends IDataService<ProjectDTO> {
     public void unFavorite(Long id, String subjectId) {
         UserData userData = getUserOrNotFound(subjectId);
         Project project = getById(id);
-        Optional<UserProjectJoin> userCallJoin = userProjectJoinRepository.findByReferenceIdAndUserIdAndType(project.getId(), userData.getId(), UserCallJoinTypeEnum.FAVORITE);
+        Optional<UserProjectJoin> userCallJoin = userProjectJoinRepository.findByReferenceIdAndUserIdAndType(project.getId(), userData.getId(), UserJoinTypeEnum.FAVORITE);
         if (userCallJoin.isEmpty()) {
             return;
         }
@@ -74,20 +74,18 @@ public class ProjectService extends IDataService<ProjectDTO> {
     public SearchDTO<ProjectDTO> getFavoritesByUserId(String subjectId, int pageNumber, int pageSize) {
         UserData userData = getUserOrNotFound(subjectId);
 
-        Pageable pageable = PageRequest.of(pageNumber, pageSize, Sort.sort(UserCallJoin.class).by(UserCallJoin::getId).descending());
+        Pageable pageable = PageRequest.of(pageNumber, pageSize, Sort.sort(UserProjectJoin.class).by(UserProjectJoin::getId).descending());
 
-        List<Long> ids = userProjectJoinRepository.findByUserIdAndType(userData.getId(), UserCallJoinTypeEnum.FAVORITE, pageable);
-        List<ProjectDTO> results = projectRepository.findAllById(ids).stream()
-                .map(project -> ProjectMapper.map(project, false, false))
-                .toList();
+        List<UserProjectJoin> joins = userProjectJoinRepository.findByUserIdAndType(userData.getId(), UserJoinTypeEnum.FAVORITE, pageable);
+        List<ProjectDTO> results = ProjectMapper.mapJoin(joins, true, true);
 
         return SearchDTO.<ProjectDTO>builder()
                 .results(results)
-                .totalResults(userProjectJoinRepository.countByUserIdAndType(userData.getId(), UserCallJoinTypeEnum.FAVORITE))
+                .totalResults(userProjectJoinRepository.countByUserIdAndType(userData.getId(), UserJoinTypeEnum.FAVORITE))
                 .build();
     }
 
     public List<Long> checkFavorites(UserData userData, List<Long> ids) {
-        return userProjectJoinRepository.findByReferenceIdsAndType(userData.getId(), ids, UserCallJoinTypeEnum.FAVORITE);
+        return userProjectJoinRepository.findByReferenceIdsAndType(userData.getId(), ids, UserJoinTypeEnum.FAVORITE);
     }
 }
