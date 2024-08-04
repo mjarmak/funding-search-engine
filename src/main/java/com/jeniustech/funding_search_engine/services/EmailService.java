@@ -66,7 +66,7 @@ public class EmailService {
         builder.append("<table>");
         builder.append("<tr><th>Call Info</th><th>Proposal Submission Period (UTC)</th><th>Budget (EUR)</th></tr>");
         for (CallDTO callDTO : callDTOS) {
-            String  callUrl = uiUrl + "/call/" + callDTO.getId().toString() + "/details";
+            String  callUrl = uiUrl + "/details/call/" + callDTO.getId().toString();
             String submissionPeriod = "From: " + DateMapper.formatToDisplay(callDTO.getStartDate()) + "<br>To: " + DateMapper.formatToDisplay(callDTO.getEndDate());
             if (callDTO.getEndDate2() != null) {
                 submissionPeriod += "<br>To: " + DateMapper.formatToDisplay(callDTO.getEndDate2());
