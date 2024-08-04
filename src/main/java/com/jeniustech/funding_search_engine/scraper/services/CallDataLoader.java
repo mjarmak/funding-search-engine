@@ -59,7 +59,7 @@ public class CallDataLoader {
 
     public static final int BATCH_SIZE = 1000;
 
-    public void loadFile(String file) {
+    public void loadEntities(String file) {
         try (CSVReader reader = new CSVReader(new FileReader(file))) {
 
             // get headers

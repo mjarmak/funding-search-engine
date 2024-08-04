@@ -4,91 +4,39 @@ import com.jeniustech.funding_search_engine.dto.search.PartnerDTO;
 import com.jeniustech.funding_search_engine.dto.search.ProjectDTO;
 import com.jeniustech.funding_search_engine.entities.Organisation;
 import com.jeniustech.funding_search_engine.entities.OrganisationProjectJoin;
-import com.jeniustech.funding_search_engine.entities.Project;
 import com.jeniustech.funding_search_engine.entities.UserPartnerJoin;
 import com.jeniustech.funding_search_engine.enums.OrganisationProjectJoinTypeEnum;
+import com.jeniustech.funding_search_engine.util.StringUtil;
 
-import java.math.BigDecimal;
-import java.util.Comparator;
 import java.util.List;
 
 public interface PartnerMapper {
 
 
-    static List<PartnerDTO> mapJoin(List<UserPartnerJoin> organisation, boolean isSearch, boolean isFavorite) {
+    static List<PartnerDTO> mapjoin(List<UserPartnerJoin> organisation, boolean isSearch, boolean isFavorite) {
         if (organisation == null) {
             return null;
         }
-        return organisation.stream().map(c -> mapJoin(c, isSearch, isFavorite)).toList();
+        return organisation.stream().map(c -> mapjoin(c, isSearch, isFavorite)).toList();
     }
-    static PartnerDTO mapJoin(UserPartnerJoin organisation, boolean isSearch, boolean isFavorite) {
+    static PartnerDTO mapjoin(UserPartnerJoin organisation, boolean isSearch, boolean isFavorite) {
         if (organisation == null) {
             return null;
         }
-        return map(organisation.getPartnerData(), isSearch, isFavorite);
+        return mapToDetails(organisation.getPartnerData(), isSearch, isFavorite);
     }
-    static PartnerDTO map(Organisation organisation, boolean isSearch, boolean isFavorite) {
+    static PartnerDTO mapToDetails(Organisation organisation, boolean isSearch, boolean isFavorite) {
         if (organisation == null) {
             return null;
         }
-        PartnerDTO partnerDTO = map(organisation, null, null, null, null, null, isSearch, isFavorite);
-        if (!isSearch) {
-            partnerDTO.setProjects(mapToProjectsDTO(organisation.getOrganisationProjectJoins()));
-            // sum of all projects funding
-            partnerDTO.setFundingEU(NumberMapper.shortenNumber(organisation.getOrganisationProjectJoins().stream()
-                    .map(OrganisationProjectJoin::getFundingEU)
-                    .reduce(BigDecimal.ZERO, BigDecimal::add), 1));
-            partnerDTO.setFundingOrganisation(NumberMapper.shortenNumber(organisation.getOrganisationProjectJoins().stream()
-                    .map(OrganisationProjectJoin::getFundingOrganisation)
-                    .reduce(BigDecimal.ZERO, BigDecimal::add), 1));
-        }
-        return partnerDTO;
+        return map(organisation, null, null, null, null, null, isSearch, isFavorite);
     }
-    static List<ProjectDTO> mapToProjectsDTO(List<OrganisationProjectJoin> organisationProjectJoins) {
-        if (organisationProjectJoins == null) {
-            return null;
-        }
-        return organisationProjectJoins.stream()
-                .sorted(Comparator.comparingInt(o -> o.getType().getHierarchy()))
-                .map(PartnerMapper::mapToProjectsDTO
-                )
-                .toList();
-    }
-    static ProjectDTO mapToProjectsDTO(OrganisationProjectJoin organisationProjectJoin) {
+
+    static PartnerDTO map(OrganisationProjectJoin organisationProjectJoin, Integer projectsMatched, Integer score, String fundingOrganisation, String fundingEU, OrganisationProjectJoinTypeEnum joinType, boolean isSearch, boolean isFavorite) {
         if (organisationProjectJoin == null) {
             return null;
         }
-        Project project = organisationProjectJoin.getProject();
-        if (project == null) {
-            return null;
-        }
-        return ProjectDTO.builder()
-                .id(project.getId())
-                .title(project.getTitle())
-                .startDate(project.getStartDate().atStartOfDay())
-                .endDate(project.getEndDate().atStartOfDay())
-                .fundingOrganisation(project.getFundingOrganisationDisplayString())
-                .fundingEU(project.getFundingEUDisplayString())
-                .acronym(project.getAcronym())
-                .status(project.getStatus())
-                .joinType(organisationProjectJoin.getType())
-                .build();
-    }
-
-    static List<PartnerDTO> mapToPartnersDTO(List<OrganisationProjectJoin> organisationProjectJoins) {
-        if (organisationProjectJoins == null) {
-            return null;
-        }
-        return organisationProjectJoins.stream()
-                .sorted(Comparator.comparingInt(o -> o.getType().getHierarchy()))
-                .map(organisationProjectJoin -> map(organisationProjectJoin.getOrganisation(),
-                        null,
-                        null,
-                        organisationProjectJoin.getFundingOrganisationDisplayString(),
-                        organisationProjectJoin.getFundingEUDisplayString(),
-                        organisationProjectJoin.getType(), true, false
-                ))
-                .toList();
+        return map(organisationProjectJoin.getOrganisation(), projectsMatched, score, organisationProjectJoin.getFundingOrganisationDisplayString(), organisationProjectJoin.getFundingEUDisplayString(), joinType, isSearch, isFavorite);
     }
     static PartnerDTO map(Organisation organisation, Integer projectsMatched, Integer score, String fundingOrganisation, String fundingEU, OrganisationProjectJoinTypeEnum joinType, boolean isSearch, boolean isFavorite) {
         if (organisation == null) {
@@ -107,11 +55,25 @@ public interface PartnerMapper {
                 .contactInfos(isSearch ? null : ContactInfoMapper.mapToDTO(organisation.getContactInfos()))
                 .projectsMatched(projectsMatched)
                 .maxScore(score)
-                .fundingOrganisation(fundingOrganisation)
-                .fundingEU(fundingEU)
+                .fundingOrganisation(StringUtil.isNotEmpty(fundingOrganisation) ? fundingOrganisation : organisation.getFundingOrganisationDisplayString())
+                .fundingEU(StringUtil.isNotEmpty(fundingEU) ? fundingEU : organisation.getFundingEUDisplayString())
+                .projectNumber(organisation.getProjectNumber())
                 .joinType(joinType)
                 .favorite(isFavorite)
                 .build();
+    }
+
+
+    static List<ProjectDTO> map(List<OrganisationProjectJoin> organisationProjectJoins, boolean isSearch) {
+        if (organisationProjectJoins == null) {
+            return null;
+        }
+        return organisationProjectJoins.stream()
+                .map(organisationProjectJoin -> ProjectMapper.map(
+                        organisationProjectJoin.getProject(), isSearch, false,
+                        organisationProjectJoin.getFundingOrganisationDisplayString(),
+                        organisationProjectJoin.getFundingEUDisplayString()))
+                .toList();
     }
 
 }

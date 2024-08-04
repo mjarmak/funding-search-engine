@@ -19,7 +19,6 @@ public class CallDTO extends SearchItemDTO {
     private String title;
 
     private List<LongTextDTO> longTexts;
-    private List<ProjectDTO> projects;
 
     private String displayDescription;
 

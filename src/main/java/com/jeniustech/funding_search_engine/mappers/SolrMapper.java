@@ -141,6 +141,9 @@ public interface SolrMapper {
         if (StringUtil.isNotEmpty(project.getFundingEU())) {
             document.addField(ProjectColumns.FUNDING_EU, project.getFundingEUString());
         }
+        if (StringUtil.isNotEmpty(project.getFundingOrganisation())) {
+            document.addField(ProjectColumns.FUNDING_ORGANISATION, project.getFundingOrganisationString());
+        }
         if (StringUtil.isNotEmpty(project.getLongTextsToString())) {
             document.addField(ProjectColumns.LONG_TEXT, project.getLongTextsToString());
         }

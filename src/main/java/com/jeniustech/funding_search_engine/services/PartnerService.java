@@ -58,11 +58,11 @@ public class PartnerService extends IDataService<PartnerDTO> {
     @Override
     public PartnerDTO getDTOById(Long id, String subjectId) {
         UserData userData = getUserOrNotFound(subjectId);
-        return PartnerMapper.map(getById(id), false, isFavorite(id, userData.getId()));
+        return PartnerMapper.mapToDetails(getById(id), false, isFavorite(id, userData.getId()));
     }
 
     private Organisation getById(Long id) {
-        return organisationRepository.findById(id).orElseThrow(() -> new CallNotFoundException("Call not found"));
+        return organisationRepository.findById(id).orElseThrow(() -> new CallNotFoundException("Partner not found"));
     }
 
     @Override
@@ -106,7 +106,7 @@ public class PartnerService extends IDataService<PartnerDTO> {
         Pageable pageable = PageRequest.of(pageNumber, pageSize, Sort.sort(UserPartnerJoin.class).by(UserPartnerJoin::getId).descending());
 
         List<UserPartnerJoin> joins = userPartnerJoinRepository.findByUserIdAndType(userData.getId(), UserJoinTypeEnum.FAVORITE, pageable);
-        List<PartnerDTO> results = PartnerMapper.mapJoin(joins, true, true);
+        List<PartnerDTO> results = PartnerMapper.mapjoin(joins, true, true);
 
         return SearchDTO.<PartnerDTO>builder()
                 .results(results)
@@ -120,11 +120,11 @@ public class PartnerService extends IDataService<PartnerDTO> {
     }
 
 
-    public List<PartnerDTO> getSuggestedPartners(Long id, JwtModel jwtModel) {
+    public List<PartnerDTO> getSuggestedPartners(Long callId, JwtModel jwtModel) {
         UserData userData = this.userDataRepository.findBySubjectId(jwtModel.getUserId()).orElseThrow(() -> new UserNotFoundException("User not found"));
         ValidatorService.validateUserSearchPartners(userData);
 
-        Call call = callRepository.findById(id).orElseThrow(() -> new CallNotFoundException("Call " + id + " not found"));
+        Call call = callRepository.findById(callId).orElseThrow(() -> new CallNotFoundException("Call " + callId + " not found"));
         String keywords = getKeywords(call);
         return searchItems(keywords);
     }
@@ -170,7 +170,17 @@ public class PartnerService extends IDataService<PartnerDTO> {
             ProjectDTO projectDTO = projectDTOS.stream().filter(p -> p.getId().equals(projectId)).findFirst().orElseThrow();
             Optional<PartnerDTO> partner = partners.stream().filter(p -> p.getId().equals(join.getOrganisation().getId())).findFirst();
             if (partner.isEmpty()) {
-                partners.add(PartnerMapper.map(join.getOrganisation(), 1, projectDTO.getScore().intValue(), null, null, null, true, false));
+                partners.add(
+                        PartnerMapper.map(
+                                join.getOrganisation(),
+                                1,
+                                projectDTO.getScore().intValue(),
+                                null,
+                                null,
+                                null,
+                                true,
+                                false
+                        ));
             } else {
                 partner.get().setProjectsMatched(partner.get().getProjectsMatched() + 1);
                 partner.get().setMaxScore((int) (partner.get().getMaxScore() + projectDTO.getScore()));
@@ -194,5 +204,9 @@ public class PartnerService extends IDataService<PartnerDTO> {
         } catch (IOException e) {
             throw new NLPException(e.getMessage());
         }
+    }
+
+    public List<ProjectDTO> getProjectsByPartnerId(Long id) {
+        return PartnerMapper.map(organisationProjectJoinRepository.findAllByPartnerId(id), true);
     }
 }

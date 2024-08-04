@@ -2,6 +2,7 @@ package com.jeniustech.funding_search_engine.controllers;
 
 import com.jeniustech.funding_search_engine.dto.search.CallDTO;
 import com.jeniustech.funding_search_engine.dto.search.PartnerDTO;
+import com.jeniustech.funding_search_engine.dto.search.ProjectDTO;
 import com.jeniustech.funding_search_engine.dto.search.SearchDTO;
 import com.jeniustech.funding_search_engine.enums.LogTypeEnum;
 import com.jeniustech.funding_search_engine.enums.StatusFilterEnum;
@@ -9,6 +10,7 @@ import com.jeniustech.funding_search_engine.mappers.UserDataMapper;
 import com.jeniustech.funding_search_engine.models.JwtModel;
 import com.jeniustech.funding_search_engine.services.CallService;
 import com.jeniustech.funding_search_engine.services.PartnerService;
+import com.jeniustech.funding_search_engine.services.ProjectService;
 import com.jeniustech.funding_search_engine.services.UserDataService;
 import com.jeniustech.funding_search_engine.services.solr.CallSolrClientService;
 import jakarta.validation.constraints.Size;
@@ -27,6 +29,7 @@ public class CallController implements IDataController<CallDTO> {
 
     private final CallService callService;
     private final PartnerService partnerService;
+    private final ProjectService projectService;
     private final UserDataService userDataService;
     private final CallSolrClientService callSolrClientService;
 
@@ -99,6 +102,13 @@ public class CallController implements IDataController<CallDTO> {
     ) {
         JwtModel jwtModel = UserDataMapper.map(jwt);
         return ResponseEntity.ok(partnerService.getSuggestedPartners(id, jwtModel));
+    }
+
+    @GetMapping("/{id}/projects")
+    public ResponseEntity<List<ProjectDTO>> getProjects(
+            @PathVariable Long id
+    ) {
+        return ResponseEntity.ok(projectService.getProjectsByCallId(id));
     }
 
 }

@@ -1,5 +1,6 @@
 package com.jeniustech.funding_search_engine.controllers;
 
+import com.jeniustech.funding_search_engine.dto.search.PartnerDTO;
 import com.jeniustech.funding_search_engine.dto.search.ProjectDTO;
 import com.jeniustech.funding_search_engine.dto.search.SearchDTO;
 import com.jeniustech.funding_search_engine.enums.LogTypeEnum;
@@ -87,6 +88,13 @@ public class ProjectController implements IDataController<ProjectDTO> {
     ) {
         JwtModel jwtModel = UserDataMapper.map(jwt);
         return ResponseEntity.ok(userDataService.getSearchHistory(jwtModel.getUserId(), LogTypeEnum.SEARCH_PROJECT));
+    }
+
+    @GetMapping("/{id}/partners")
+    public ResponseEntity<List<PartnerDTO>> getPartners(
+            @PathVariable Long id
+    ) {
+        return ResponseEntity.ok(projectService.getPartnersByProjectId(id));
     }
 
 }

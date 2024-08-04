@@ -2,6 +2,7 @@ package com.jeniustech.funding_search_engine.entities;
 
 import com.jeniustech.funding_search_engine.enums.BooleanEnum;
 import com.jeniustech.funding_search_engine.enums.OrganisationTypeEnum;
+import com.jeniustech.funding_search_engine.mappers.NumberMapper;
 import com.jeniustech.funding_search_engine.util.StringUtil;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -11,6 +12,7 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
+import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.List;
 
@@ -53,6 +55,14 @@ public class Organisation {
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "organisation", fetch = FetchType.LAZY)
     private List<OrganisationProjectJoin> organisationProjectJoins;
 
+    @Column(name = "funding_organisation")
+    private BigDecimal fundingOrganisation;
+
+    @Column(name = "funding_eu")
+    private BigDecimal fundingEU;
+
+    private Short projectNumber;
+
     @CreationTimestamp
     @Column(updatable = false)
     private Timestamp createdAt;
@@ -73,5 +83,18 @@ public class Organisation {
 
     public boolean isSme() {
         return BooleanEnum.TRUE.equals(this.sme);
+    }
+
+    public String getFundingOrganisationDisplayString() {
+        if (fundingOrganisation == null || fundingOrganisation.compareTo(BigDecimal.ZERO) == 0) {
+            return null;
+        }
+        return NumberMapper.shortenNumber(fundingOrganisation, 1);
+    }
+    public String getFundingEUDisplayString() {
+        if (fundingEU == null || fundingEU.compareTo(BigDecimal.ZERO) == 0) {
+            return null;
+        }
+        return NumberMapper.shortenNumber(fundingEU, 1);
     }
 }

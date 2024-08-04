@@ -31,7 +31,6 @@ public interface CallMapper {
                 .identifier(call.getIdentifier())
                 .title(call.getTitle())
                 .longTexts(!withLongText ? null : map(call.getLongTexts()))
-                .projects(isSearch ? null : ProjectMapper.map(call.getProjects(), true, false))
                 .actionType(call.getActionType())
                 .endDate(DateMapper.map(call.getEndDate()))
                 .endDate2(isSearch ? null : DateMapper.map(call.getEndDate2()))

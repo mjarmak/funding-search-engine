@@ -89,7 +89,12 @@ public class Project {
             return null;
         }
     }
-
+    public String getFundingOrganisationString() {
+        if (fundingOrganisation == null || fundingOrganisation.compareTo(BigDecimal.ZERO) == 0) {
+            return null;
+        }
+        return fundingOrganisation.stripTrailingZeros().toPlainString();
+    }
     public String getFundingEUString() {
         if (fundingEU == null || fundingEU.compareTo(BigDecimal.ZERO) == 0) {
             return null;
