@@ -3,7 +3,8 @@ package com.jeniustech.funding_search_engine.enums;
 public enum UrlTypeEnum {
     TOPIC_DETAILS,
     PROSPECT,
-    COMPETITIVE_CALL;
+    COMPETITIVE_CALL,
+    INNOVILYSE;
 
     public String getUrl(String identifier, String urlId) {
         return getUrl(this, identifier, urlId);
@@ -16,6 +17,10 @@ public enum UrlTypeEnum {
             case COMPETITIVE_CALL -> "https://ec.europa.eu/info/funding-tenders/opportunities/portal/screen/opportunities/competitive-calls-cs/" + urlId;
             default -> null;
         };
+    }
+
+    public static String getInnovilyseUrl(String call, Long id) {
+        return "https://app.innovilyse.com/details/" + call + "/" + id;
     }
 
     public static UrlTypeEnum getType(String reference) {

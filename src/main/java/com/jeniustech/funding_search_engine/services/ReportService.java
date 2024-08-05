@@ -89,7 +89,7 @@ public class ReportService {
         Rectangle rect = new Rectangle(0, 0, 523, 10);
         Link link = new Link(call.getIdentifier(), (new PdfLinkAnnotation(rect)
                 .setHighlightMode(PdfAnnotation.HIGHLIGHT_INVERT)
-                .setAction(PdfAction.createURI(call.getUrl())
+                .setAction(PdfAction.createURI(call.getInnovilyseUrl())
                 )));
         document.add(new Paragraph().add(link.setUnderline()));
 

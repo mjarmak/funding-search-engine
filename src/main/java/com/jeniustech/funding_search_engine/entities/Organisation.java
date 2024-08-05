@@ -1,7 +1,9 @@
 package com.jeniustech.funding_search_engine.entities;
 
 import com.jeniustech.funding_search_engine.enums.BooleanEnum;
+import com.jeniustech.funding_search_engine.enums.ContactInfoTypeEnum;
 import com.jeniustech.funding_search_engine.enums.OrganisationTypeEnum;
+import com.jeniustech.funding_search_engine.enums.UrlTypeEnum;
 import com.jeniustech.funding_search_engine.mappers.NumberMapper;
 import com.jeniustech.funding_search_engine.util.StringUtil;
 import jakarta.persistence.*;
@@ -96,5 +98,39 @@ public class Organisation {
             return null;
         }
         return NumberMapper.shortenNumber(fundingEU, 1);
+    }
+    public String getInnovilyseUrl() {
+        return UrlTypeEnum.getInnovilyseUrl("partner", id);
+    }
+
+    public String getAddressString() {
+        if (address == null) {
+            return null;
+        }
+        return address.toString();
+    }
+
+    public String getCountryCode() {
+        if (address == null || address.getCountry() == null) {
+            return null;
+        }
+        return address.getCountry().name();
+    }
+
+    public String getTypeName() {
+        if (type == null) {
+            return null;
+        }
+        return type.getName();
+    }
+
+    public String getWebSiteUrl() {
+        if (contactInfos == null) {
+            return null;
+        }
+        return contactInfos.stream()
+                .filter(contactInfo -> contactInfo.getType() == ContactInfoTypeEnum.URL)
+                .findFirst().map(OrganisationContactInfo::getValue)
+                .orElse(null);
     }
 }

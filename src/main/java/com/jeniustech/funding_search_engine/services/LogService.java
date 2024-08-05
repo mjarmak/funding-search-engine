@@ -22,10 +22,17 @@ public class LogService {
                 return;
             }
         }
+        text = text.trim();
+        String textSave;
+        if (text.length() > 255) {
+            textSave = text.substring(0, 255);
+        } else {
+            textSave = text;
+        }
         logBookRepository.save(LogBook.builder()
                 .userData(userData)
                 .type(logTypeEnum)
-                .logText(text)
+                .logText(textSave)
                 .build());
     }
 

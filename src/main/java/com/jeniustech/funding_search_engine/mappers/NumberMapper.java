@@ -13,7 +13,16 @@ public interface NumberMapper {
         return shortenNumber(new BigDecimal(number), 1);
     }
 
+    static String shortenNumber(String number, int decimalPoints) {
+        if (number == null) {
+            return null;
+        }
+        return shortenNumber(new BigDecimal(number), decimalPoints);
+    }
     static String shortenNumber(BigDecimal number, int decimalPoints) {
+        if (number == null) {
+            return null;
+        }
         // check if negative number
         if (number.compareTo(BigDecimal.ZERO) < 0) {
             return "-" + shortenNumber(number.negate(), decimalPoints);
@@ -49,10 +58,16 @@ public interface NumberMapper {
     }
 
     static String formatNumberWithCommas(String number) {
+        if (number == null) {
+            return null;
+        }
         return formatNumberWithCommas(new BigDecimal(number));
     }
 
     static String formatNumberWithCommas(BigDecimal number) {
+        if (number == null) {
+            return null;
+        }
         return new DecimalFormat("#,##0.#####").format(number);
     }
 

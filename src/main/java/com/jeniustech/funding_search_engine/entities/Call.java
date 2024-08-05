@@ -156,6 +156,10 @@ public class Call {
         return urlType.getUrl(identifier, urlId);
     }
 
+    public String getInnovilyseUrl() {
+        return UrlTypeEnum.getInnovilyseUrl("call", id);
+    }
+
     public String getEndDate2Display() {
         return DateMapper.formatToDisplay(endDate2);
     }

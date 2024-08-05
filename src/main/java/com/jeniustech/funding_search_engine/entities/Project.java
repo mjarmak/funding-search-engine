@@ -2,6 +2,8 @@ package com.jeniustech.funding_search_engine.entities;
 
 import com.jeniustech.funding_search_engine.enums.FundingSchemeEnum;
 import com.jeniustech.funding_search_engine.enums.ProjectStatusEnum;
+import com.jeniustech.funding_search_engine.enums.UrlTypeEnum;
+import com.jeniustech.funding_search_engine.mappers.DateMapper;
 import com.jeniustech.funding_search_engine.mappers.NumberMapper;
 import com.jeniustech.funding_search_engine.util.StringUtil;
 import jakarta.persistence.*;
@@ -115,7 +117,28 @@ public class Project {
         return NumberMapper.shortenNumber(fundingEU, 1);
     }
 
+    public String getInnovilyseUrl() {
+        return UrlTypeEnum.getInnovilyseUrl("project", id);
+    }
     public String getUrl() {
         return "https://cordis.europa.eu/project/id/" + referenceId;
+    }
+
+    public String getStartDateDisplay() {
+        return DateMapper.formatToDisplay(startDate.atStartOfDay());
+    }
+    public String getEndDateDisplay() {
+        return DateMapper.formatToDisplay(endDate.atStartOfDay());
+    }
+    public String getSignDateDisplay() {
+        return DateMapper.formatToDisplay(signDate.atStartOfDay());
+    }
+
+    public String getStatusName() {
+        return status != null ? status.getName() : null;
+    }
+
+    public String getFundingSchemeName() {
+        return fundingScheme != null ? fundingScheme.getName() : null;
     }
 }

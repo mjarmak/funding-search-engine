@@ -26,13 +26,47 @@ public class ExportController {
     private final ReportService reportService;
 
     @PostMapping("call/excel")
-    public ResponseEntity<InputStreamResource> downloadExcel(
-            @RequestBody List<Long> callIds,
+    public ResponseEntity<InputStreamResource> downloadCallExcel(
+            @RequestBody List<Long> ids,
             @AuthenticationPrincipal Jwt jwt
     ) throws IOException {
         JwtModel jwtModel = UserDataMapper.map(jwt);
 
-        ByteArrayInputStream in = exportService.generateExcel(callIds, jwtModel.getUserId());
+        ByteArrayInputStream in = exportService.generateCallExcel(ids, jwtModel.getUserId());
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Content-Disposition", "attachment; filename=data.xlsx");
+
+        return ResponseEntity.ok()
+                .headers(headers)
+                .contentType(MediaType.parseMediaType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"))
+                .body(new InputStreamResource(in));
+    }
+    @PostMapping("project/excel")
+    public ResponseEntity<InputStreamResource> downloadProjectExcel(
+            @RequestBody List<Long> ids,
+            @AuthenticationPrincipal Jwt jwt
+    ) throws IOException {
+        JwtModel jwtModel = UserDataMapper.map(jwt);
+
+        ByteArrayInputStream in = exportService.generateProjectExcel(ids, jwtModel.getUserId());
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Content-Disposition", "attachment; filename=data.xlsx");
+
+        return ResponseEntity.ok()
+                .headers(headers)
+                .contentType(MediaType.parseMediaType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"))
+                .body(new InputStreamResource(in));
+    }
+    @PostMapping("partner/excel")
+    public ResponseEntity<InputStreamResource> downloadPartnerExcel(
+            @RequestBody List<Long> ids,
+            @AuthenticationPrincipal Jwt jwt
+    ) throws IOException {
+        JwtModel jwtModel = UserDataMapper.map(jwt);
+
+        ByteArrayInputStream in = exportService.generatePartnerExcel(ids, jwtModel.getUserId());
 
         HttpHeaders headers = new HttpHeaders();
         headers.add("Content-Disposition", "attachment; filename=data.xlsx");

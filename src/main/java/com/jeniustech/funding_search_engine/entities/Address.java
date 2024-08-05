@@ -24,4 +24,21 @@ public class Address {
     private String city;
     private CountryEnum country;
 
+    public String toString() {
+        String addressString = "";
+        if (street != null) {
+            addressString += street + ", ";
+        }
+        if (postCode != null) {
+            addressString += postCode + " ";
+        }
+        if (city != null) {
+            addressString += city + ", ";
+        }
+        if (country != null) {
+            addressString += country.getName();
+        }
+        return addressString;
+    }
+
 }

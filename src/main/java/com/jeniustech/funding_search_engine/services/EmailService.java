@@ -2,8 +2,10 @@ package com.jeniustech.funding_search_engine.services;
 
 import com.jeniustech.funding_search_engine.dto.search.CallDTO;
 import com.jeniustech.funding_search_engine.entities.SavedSearch;
+import com.jeniustech.funding_search_engine.enums.UrlTypeEnum;
 import com.jeniustech.funding_search_engine.exceptions.ScraperException;
 import com.jeniustech.funding_search_engine.mappers.DateMapper;
+import com.jeniustech.funding_search_engine.mappers.NumberMapper;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.InternetAddress;
 import jakarta.mail.internet.MimeMessage;
@@ -66,15 +68,22 @@ public class EmailService {
         builder.append("<table>");
         builder.append("<tr><th>Call Info</th><th>Proposal Submission Period (UTC)</th><th>Budget (EUR)</th></tr>");
         for (CallDTO callDTO : callDTOS) {
-            String  callUrl = uiUrl + "/details/call/" + callDTO.getId().toString();
+            String callUrl = UrlTypeEnum.getInnovilyseUrl("call", callDTO.getId());
             String submissionPeriod = "From: " + DateMapper.formatToDisplay(callDTO.getStartDate()) + "<br>To: " + DateMapper.formatToDisplay(callDTO.getEndDate());
             if (callDTO.getEndDate2() != null) {
-                submissionPeriod += "<br>To: " + DateMapper.formatToDisplay(callDTO.getEndDate2());
+                submissionPeriod += "<br>Then to: " + DateMapper.formatToDisplay(callDTO.getEndDate2());
             }
 
-            String budgetRangeString = "From: " + callDTO.getBudgetMin();
-            if (callDTO.getBudgetMax() != null && !callDTO.getBudgetMax().equals(callDTO.getBudgetMin())) {
-                budgetRangeString += " <br>To: " + callDTO.getBudgetMax();
+            String budgetRangeString;
+            if (callDTO.getBudgetMin() != null) {
+                budgetRangeString = NumberMapper.shortenNumber(callDTO.getBudgetMin(), 1);
+                if (callDTO.getBudgetMax() != null && !callDTO.getBudgetMax().equals(callDTO.getBudgetMin())) {
+                    budgetRangeString += " - " + NumberMapper.shortenNumber(callDTO.getBudgetMax(), 1);
+                }
+            } else if (callDTO.getBudgetMax() != null) {
+                budgetRangeString = "< " + NumberMapper.shortenNumber(callDTO.getBudgetMax(), 1);
+            } else {
+                budgetRangeString = "N/A";
             }
 
             builder.append("<tr>");
@@ -88,7 +97,8 @@ public class EmailService {
         }
         builder.append("</table>");
         String seeMoreUrl = uiUrl + "/search?query=" + savedSearch.getValue() + "&statusFilters=UPCOMING,OPEN";
-        builder.append("<h4 style=\"text-align:center\"><a href=\"").append(seeMoreUrl).append("\">Search more</a></h4>");
+        builder.append("<h4 style=\"text-align:center\">");
+//        builder.append("<a href=\"").append(seeMoreUrl).append("\">Search more</a></h4>");
         builder.append("</body></html>");
 
         return builder.toString();
