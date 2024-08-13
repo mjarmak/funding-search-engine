@@ -8,7 +8,6 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.util.IOUtils;
 import org.apache.poi.xssf.eventusermodel.XSSFReader;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import org.junit.jupiter.api.Test;
 import org.xml.sax.Attributes;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -36,7 +35,7 @@ public class ExcelSplitter {
     private static String path = "C:/Projects/funding-search-engine/src/test/resources/data/projects/";
     private static String inputFilePath = "organization.xlsx";
 
-    @Test
+//    @Test
     void run() throws Exception {
         IOUtils.setByteArrayMaxOverride(1_000_000_000);
 
