@@ -2,6 +2,7 @@ package com.jeniustech.funding_search_engine.scraper.services;
 
 import com.jeniustech.funding_search_engine.entities.Call;
 import com.jeniustech.funding_search_engine.entities.LongText;
+import com.jeniustech.funding_search_engine.entities.Project;
 import com.jeniustech.funding_search_engine.enums.LongTextTypeEnum;
 import com.jeniustech.funding_search_engine.enums.SubmissionProcedureEnum;
 import com.jeniustech.funding_search_engine.enums.UrlTypeEnum;
@@ -17,6 +18,9 @@ import com.opencsv.exceptions.CsvValidationException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.io.FileReader;
@@ -58,6 +62,22 @@ public class CallDataLoader {
     int furtherInformationIndex = 0;
 
     public static final int BATCH_SIZE = 1000;
+
+    public void loadSolrData() {
+        log.info("Loading calls to solr");
+        // do in batch of 1000
+        int pageNumber = 0;
+        int pageSize = 1000;
+        Sort sort = Sort.sort(Project.class).by(Project::getId).descending();
+        Pageable pageable = PageRequest.of(pageNumber, pageSize, sort);
+        List<Call> calls = callRepository.findAll(pageable).getContent();
+        while (!calls.isEmpty()) {
+            log.info("Saving batch of " + calls.size() + " items");
+            callSolrClientService.add(SolrMapper.mapCallsToSolrDocument(calls), 100_000);
+            pageNumber++;
+            calls = callRepository.findAll(PageRequest.of(pageNumber, pageSize, sort)).getContent();
+        }
+    }
 
     public void loadEntities(String file) {
         try (CSVReader reader = new CSVReader(new FileReader(file))) {
@@ -149,8 +169,7 @@ public class CallDataLoader {
         if (calls.isEmpty()) {
             return;
         }
-        List<Call> savedCalls = callRepository.saveAllAndFlush(calls);
-        callSolrClientService.add(SolrMapper.mapCallsToSolrDocument(savedCalls), 100_000);
+        callRepository.saveAllAndFlush(calls);
     }
 
     private Call getCall(String[] row) throws IOException {

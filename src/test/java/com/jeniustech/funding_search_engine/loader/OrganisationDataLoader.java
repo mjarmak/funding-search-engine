@@ -7,23 +7,23 @@ import com.jeniustech.funding_search_engine.exceptions.OrganisationNotFoundExcep
 import com.jeniustech.funding_search_engine.exceptions.ProjectNotFoundException;
 import com.jeniustech.funding_search_engine.repository.OrganisationRepository;
 import com.jeniustech.funding_search_engine.repository.ProjectRepository;
-import org.apache.poi.ss.usermodel.*;
-import org.apache.poi.util.IOUtils;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import com.opencsv.CSVParserBuilder;
+import com.opencsv.CSVReader;
+import com.opencsv.CSVReaderBuilder;
+import com.opencsv.exceptions.CsvValidationException;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.core.io.ClassPathResource;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.io.FileInputStream;
+import java.io.FileReader;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Stream;
 
 import static com.jeniustech.funding_search_engine.loader.ProjectDataLoader.getFundingOrganisation;
 import static com.jeniustech.funding_search_engine.util.StringUtil.isNotEmpty;
@@ -63,57 +63,42 @@ public class OrganisationDataLoader {
     int NET_EC_CONTRIBUTION_INDEX = -1;
     int TOTAL_COST_INDEX = -1;
 
-//    @Test
-    void loadData() {
-        IOUtils.setByteArrayMaxOverride(1_000_000_000);
-
-        String path = "data/projects/split/";
-        String fileName = "organization";
-        int startFile = 79;
-        int fileCount = 3;
-
-        Stream.iterate(startFile, i -> i + 1).limit(fileCount)
-                .forEach(i -> {
-                    String excelFilePath = path + fileName + "_" + i + ".xlsx";
-                    System.out.println("Loading file " + excelFilePath);
-                    loadFile(excelFilePath);
-                });
-    }
-
-    private void loadFile(String fileName) {
-        try (
-                FileInputStream fis = new FileInputStream(new ClassPathResource(fileName).getFile());
-                Workbook workbook = new XSSFWorkbook(fis)
+    @Test
+    void loadFile() {
+        String file = "C:\\Projects\\funding-search-engine\\src\\test\\resources\\data\\projects\\organization_2021.csv";
+        try (CSVReader reader = new CSVReaderBuilder(new FileReader(file))
+                .withCSVParser(new CSVParserBuilder()
+                        .withSeparator(';')
+                        .build()
+                ).build()
         ) {
-
-            Sheet sheet = workbook.getSheetAt(0); // Get the first sheet
-
-            // get headers
-            var headers = sheet.getRow(0);
-            for (Cell cell : headers) {
-                switch (cell.getStringCellValue()) {
-                    case OrganisationColumns.PROJECT_ID -> PROJECT_ID_INDEX = cell.getColumnIndex();
-                    case OrganisationColumns.ORGANISATION_ID -> ORGANISATION_ID_INDEX = cell.getColumnIndex();
-                    case OrganisationColumns.VAT_NUMBER -> VAT_NUMBER_INDEX = cell.getColumnIndex();
-                    case OrganisationColumns.NAME -> NAME_INDEX = cell.getColumnIndex();
-                    case OrganisationColumns.SHORT_NAME -> SHORT_NAME_INDEX = cell.getColumnIndex();
-                    case OrganisationColumns.SME -> SME_INDEX = cell.getColumnIndex();
-                    case OrganisationColumns.ACTIVITY_TYPE -> ACTIVITY_TYPE_INDEX = cell.getColumnIndex();
-                    case OrganisationColumns.STREET -> STREET_INDEX = cell.getColumnIndex();
-                    case OrganisationColumns.POSTCODE -> POSTCODE_INDEX = cell.getColumnIndex();
-                    case OrganisationColumns.CITY -> CITY_INDEX = cell.getColumnIndex();
-                    case OrganisationColumns.COUNTRY -> COUNTRY_INDEX = cell.getColumnIndex();
-                    case OrganisationColumns.NUTS_CODE -> NUTS_CODE_INDEX = cell.getColumnIndex();
-                    case OrganisationColumns.GEO_LOCATION -> GEO_LOCATION_INDEX = cell.getColumnIndex();
-                    case OrganisationColumns.ORGANIZATION_URL -> ORGANIZATION_URL_INDEX = cell.getColumnIndex();
-                    case OrganisationColumns.CONTACT_FORM -> CONTACT_FORM_INDEX = cell.getColumnIndex();
-                    case OrganisationColumns.CONTENT_UPDATE_DATE -> CONTENT_UPDATE_DATE_INDEX = cell.getColumnIndex();
-                    case OrganisationColumns.RCN -> RCN_INDEX = cell.getColumnIndex();
-                    case OrganisationColumns.ORDER -> ORDER_INDEX = cell.getColumnIndex();
-                    case OrganisationColumns.ROLE -> ROLE_INDEX = cell.getColumnIndex();
-                    case OrganisationColumns.NET_EC_CONTRIBUTION -> NET_EC_CONTRIBUTION_INDEX = cell.getColumnIndex();
-                    case OrganisationColumns.TOTAL_COST -> TOTAL_COST_INDEX = cell.getColumnIndex();
+            var headers = reader.readNext();
+            int index = 0;
+            for (String cell : headers) {
+                switch (cell) {
+                    case OrganisationColumns.PROJECT_ID -> PROJECT_ID_INDEX = index;
+                    case OrganisationColumns.ORGANISATION_ID -> ORGANISATION_ID_INDEX = index;
+                    case OrganisationColumns.VAT_NUMBER -> VAT_NUMBER_INDEX = index;
+                    case OrganisationColumns.NAME -> NAME_INDEX = index;
+                    case OrganisationColumns.SHORT_NAME -> SHORT_NAME_INDEX = index;
+                    case OrganisationColumns.SME -> SME_INDEX = index;
+                    case OrganisationColumns.ACTIVITY_TYPE -> ACTIVITY_TYPE_INDEX = index;
+                    case OrganisationColumns.STREET -> STREET_INDEX = index;
+                    case OrganisationColumns.POSTCODE -> POSTCODE_INDEX = index;
+                    case OrganisationColumns.CITY -> CITY_INDEX = index;
+                    case OrganisationColumns.COUNTRY -> COUNTRY_INDEX = index;
+                    case OrganisationColumns.NUTS_CODE -> NUTS_CODE_INDEX = index;
+                    case OrganisationColumns.GEO_LOCATION -> GEO_LOCATION_INDEX = index;
+                    case OrganisationColumns.ORGANIZATION_URL -> ORGANIZATION_URL_INDEX = index;
+                    case OrganisationColumns.CONTACT_FORM -> CONTACT_FORM_INDEX = index;
+                    case OrganisationColumns.CONTENT_UPDATE_DATE -> CONTENT_UPDATE_DATE_INDEX = index;
+                    case OrganisationColumns.RCN -> RCN_INDEX = index;
+                    case OrganisationColumns.ORDER -> ORDER_INDEX = index;
+                    case OrganisationColumns.ROLE -> ROLE_INDEX = index;
+                    case OrganisationColumns.NET_EC_CONTRIBUTION -> NET_EC_CONTRIBUTION_INDEX = index;
+                    case OrganisationColumns.TOTAL_COST -> TOTAL_COST_INDEX = index;
                 }
+                index++;
             }
 
             if (
@@ -147,22 +132,20 @@ public class OrganisationDataLoader {
 
             // save in batches of 1000
             List<Organisation> organisations = new ArrayList<>();
-            for (Row row : sheet) {
-//                System.out.println(row.getRowNum() + ", ");
+            String[] row;
+            while ((row = reader.readNext()) != null) {
                 Organisation organisation = getOrganisation(row);
-                processSave(sheet, organisations, row, organisation);
+                processSave(organisations, organisation);
             }
-            if (!organisations.isEmpty()) {
-                System.out.println("Saving last batch of " + organisations.size() + " items");
-                save(organisations);
-            }
-        } catch (IOException | DataIntegrityViolationException e) {
+            System.out.println("Saving last batch of " + organisations.size() + " items");
+            save(organisations);
+        } catch (IOException | DataIntegrityViolationException | CsvValidationException e) {
             e.printStackTrace();
             fail();
         }
     }
 
-    private void processSave(Sheet sheet, List<Organisation> items, Row row, Organisation item) {
+    private void processSave(List<Organisation> items, Organisation item) {
         if (item != null) {
             Optional<Organisation> existingItem = items.stream()
                     .filter(i -> i.getReferenceId().equals(item.getReferenceId()))
@@ -185,33 +168,26 @@ public class OrganisationDataLoader {
             save(items);
             items.clear();
         }
-        if (row.getRowNum() == sheet.getLastRowNum() && !items.isEmpty()) {
-            logSaveBatch(items);
-            save(items);
-            items.clear();
-        }
     }
 
     private static void logSaveBatch(List<Organisation> items) {
         System.out.println("Saving batch of " + items.size() + " items, less than " + BATCH_SIZE + " due to duplicate item skipping\n");
     }
 
-    private Organisation getOrganisation(Row row) {
-        if (row.getRowNum() == 0) {
-            return null; // skip headers
-        } else if (row.getCell(ORGANISATION_ID_INDEX) == null) {
+    private Organisation getOrganisation(String[] row) {
+        if (row[ORGANISATION_ID_INDEX] == null) {
             return null; // skip empty rows
         }
 
         Organisation organisation = Organisation.builder()
-                .referenceId(Long.parseLong(row.getCell(ORGANISATION_ID_INDEX).getStringCellValue()))
-                .vatNumber(row.getCell(VAT_NUMBER_INDEX).getStringCellValue())
-                .name(row.getCell(NAME_INDEX).getStringCellValue())
-                .shortName(row.getCell(SHORT_NAME_INDEX).getStringCellValue())
-                .sme(BooleanEnum.fromBoolean(row.getCell(SME_INDEX).getStringCellValue()))
-                .nutsCode(row.getCell(NUTS_CODE_INDEX).getStringCellValue())
-                .rcn(row.getCell(RCN_INDEX).getStringCellValue())
-                .type(OrganisationTypeEnum.of(row.getCell(ACTIVITY_TYPE_INDEX).getStringCellValue()))
+                .referenceId(Long.parseLong(row[ORGANISATION_ID_INDEX]))
+                .vatNumber(row[VAT_NUMBER_INDEX])
+                .name(row[NAME_INDEX])
+                .shortName(row[SHORT_NAME_INDEX])
+                .sme(BooleanEnum.fromBoolean(row[SME_INDEX]))
+                .nutsCode(row[NUTS_CODE_INDEX])
+                .rcn(row[RCN_INDEX])
+                .type(OrganisationTypeEnum.of(row[ACTIVITY_TYPE_INDEX]))
                 .build();
 
         // set project, organisationProjectJoins
@@ -219,7 +195,7 @@ public class OrganisationDataLoader {
                 PROJECT_ID_INDEX,
                 row,
                 organisation,
-                OrganisationProjectJoinTypeEnum.valueOfName(row.getCell(ROLE_INDEX).getStringCellValue()),
+                OrganisationProjectJoinTypeEnum.valueOfName(row[ROLE_INDEX]),
                 getFundingOrganisation(TOTAL_COST_INDEX, NET_EC_CONTRIBUTION_INDEX, row),
                 getBudget(row, NET_EC_CONTRIBUTION_INDEX)
         );
@@ -272,8 +248,8 @@ public class OrganisationDataLoader {
         }
     }
 
-    private void setContactInfo(Row row, Organisation organisation) {
-        String url = row.getCell(ORGANIZATION_URL_INDEX).getStringCellValue();
+    private void setContactInfo(String[] row, Organisation organisation) {
+        String url = row[ORGANIZATION_URL_INDEX];
         if (isNotEmpty(url)) {
             OrganisationContactInfo urlContactInfo = OrganisationContactInfo.builder()
                     .type(ContactInfoTypeEnum.URL)
@@ -285,8 +261,8 @@ public class OrganisationDataLoader {
         }
     }
 
-    private void setLocationCoordinates(Row row, Organisation organisation) {
-        String longitudeLatitude = row.getCell(GEO_LOCATION_INDEX).getStringCellValue();
+    private void setLocationCoordinates(String[] row, Organisation organisation) {
+        String longitudeLatitude = row[GEO_LOCATION_INDEX];
         if (isNotEmpty(longitudeLatitude)) {
             String[] coordinates = longitudeLatitude.split(",");
             LocationCoordinates locationCoordinates = LocationCoordinates.builder()
@@ -297,11 +273,11 @@ public class OrganisationDataLoader {
         }
     }
 
-    private void setAddress(Row row, Organisation organisation) {
-        String street = row.getCell(STREET_INDEX).getStringCellValue();
-        String postCode = row.getCell(POSTCODE_INDEX).getStringCellValue();
-        String city = row.getCell(CITY_INDEX).getStringCellValue();
-        String country = row.getCell(COUNTRY_INDEX).getStringCellValue();
+    private void setAddress(String[] row, Organisation organisation) {
+        String street = row[STREET_INDEX];
+        String postCode = row[POSTCODE_INDEX];
+        String city = row[CITY_INDEX];
+        String country = row[COUNTRY_INDEX];
         Address address = Address.builder()
                 .street(street)
                 .postCode(postCode)
@@ -408,13 +384,13 @@ public class OrganisationDataLoader {
 
     private void setProjectLink(
             int PROJECT_ID_INDEX,
-            Row row,
+            String[] row,
             Organisation organisation,
             OrganisationProjectJoinTypeEnum role,
             BigDecimal fundingOrganisation,
             BigDecimal fundingEU
     ) {
-        long projectReferenceId = Long.parseLong(row.getCell(PROJECT_ID_INDEX).getStringCellValue());
+        long projectReferenceId = Long.parseLong(row[PROJECT_ID_INDEX]);
         Project existingProject = projectRepository.findByReferenceId(projectReferenceId).orElseThrow(() -> new ProjectNotFoundException("Project not found with referenceId: " + projectReferenceId));
         OrganisationProjectJoin projectLink = OrganisationProjectJoin.builder()
                 .project(existingProject)
@@ -426,20 +402,16 @@ public class OrganisationDataLoader {
         organisation.setOrganisationProjectJoins(new ArrayList<>(List.of(projectLink)));
     }
 
-    public static BigDecimal getBudget(Row row, int index) {
+    public static BigDecimal getBudget(String[] row, int index) {
         return new BigDecimal(getBudgetString(index, row)).stripTrailingZeros();
     }
-    public static String getBudgetString(int budgetIndex, Row row) {
+    public static String getBudgetString(int budgetIndex, String[] row) {
         String budget;
-        Cell budgetCell = row.getCell(budgetIndex);
-        if (budgetCell == null || !isNotEmpty(budgetCell.getStringCellValue())) {
+        String budgetCell = row[budgetIndex];
+        if (!isNotEmpty(budgetCell)) {
             return "0";
         }
-        if (budgetCell.getCellType() == CellType.NUMERIC) {
-            budget = String.valueOf(budgetCell.getNumericCellValue());
-        } else {
-            budget = budgetCell.getStringCellValue().replace(",", ".");
-        }
+        budget = budgetCell.replace(",", ".");
         return budget;
     }
 }

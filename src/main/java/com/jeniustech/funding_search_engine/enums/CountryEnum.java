@@ -261,13 +261,4 @@ public enum CountryEnum {
         return name;
     }
 
-//    public static CountryEnum of(String name) {
-//        for (CountryEnum country : CountryEnum.values()) {
-//            if (country.name().equals(name)) {
-//                return country;
-//            }
-//        }
-//        throw new EnumException("Invalid country name: " + name);
-//    }
-
 }

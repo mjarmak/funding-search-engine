@@ -19,10 +19,10 @@ public enum OrganisationTypeEnum {
         return name;
     }
 
-    public static OrganisationTypeEnum of(String stringCellValue) {
-        if (!StringUtil.isNotEmpty(stringCellValue)) {
+    public static OrganisationTypeEnum of(String name) {
+        if (!StringUtil.isNotEmpty(name)) {
             return null;
         }
-        return valueOf(stringCellValue.toUpperCase());
+        return valueOf(name.toUpperCase());
     }
 }

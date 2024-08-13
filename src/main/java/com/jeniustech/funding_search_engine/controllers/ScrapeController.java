@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
@@ -30,11 +29,17 @@ public class ScrapeController {
     @PreAuthorize("hasRole('admin-server')")
     @GetMapping("/calls/scrape")
     public void scrapeCalls(
-            @RequestParam(value = "query") List<String> queries,
+            @RequestParam(value = "query", required = false) List<String> queries,
+            @RequestParam(value = "files") List<String> files,
             @RequestParam(value = "destination")
             String destination
     ) {
-        scrapeAndNotify(queries, destination);
+        scrapeAndNotify(queries, files, destination);
+    }
+    @PreAuthorize("hasRole('admin-server')")
+    @GetMapping("/calls/solr")
+    public void loadCallSolr() {
+        callDataLoader.loadSolrData();
     }
 
     @PreAuthorize("hasRole('admin-server')")
@@ -43,18 +48,18 @@ public class ScrapeController {
         scraperPartners();
     }
 
-    public void scrapeAndNotify(List<String> queries, String destination) {
-        final List<String> files = new ArrayList<>();
-        for (String query : queries) {
-            log.info("Scraping query: {}", query);
-            final String file = scrapeService.scrapeCalls(query, destination);
-            files.add(file);
+    public void scrapeAndNotify(List<String> queries, List<String> files, String destination) {
+        if (files.isEmpty()) {
+            for (String query : queries) {
+                log.info("Scraping query: {}", query);
+                final String file = scrapeService.scrapeCalls(query, destination);
+                files.add(file);
+            }
         }
         for (String file : files) {
             log.info("Loading file: {}", file);
             callDataLoader.loadEntities(file);
-            // TODO split entities and solr load
-//            callDataLoader.loadSolr(file);
+            callDataLoader.loadSolrData();
         }
         notificationService.sendAllNotifications();
         adminLogService.addLog(AdminLogType.SCRAPE_SUCCESS, String.join(",", queries));

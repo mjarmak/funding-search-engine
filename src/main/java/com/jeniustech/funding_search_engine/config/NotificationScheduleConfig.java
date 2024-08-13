@@ -7,6 +7,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -25,7 +26,7 @@ public class NotificationScheduleConfig {
         System.out.println("Task executed at 5 AM");
         scrapeController.scrapeAndNotify(
                 List.of("query-upcoming"),
-                directory
+                new ArrayList<>(), directory
         );
     }
 }

@@ -1,5 +1,7 @@
 package com.jeniustech.funding_search_engine.enums;
 
+import com.jeniustech.funding_search_engine.util.StringUtil;
+
 public enum OrganisationProjectJoinTypeEnum {
     PARTICIPANT("participant", 3),
     COORDINATOR("coordinator", 2),
@@ -18,9 +20,12 @@ public enum OrganisationProjectJoinTypeEnum {
         this.hierarchy = hierarchy;
     }
 
-    public static OrganisationProjectJoinTypeEnum valueOfName(String stringCellValue) {
+    public static OrganisationProjectJoinTypeEnum valueOfName(String name) {
+        if (!StringUtil.isNotEmpty(name)) {
+            return null;
+        }
         for (OrganisationProjectJoinTypeEnum organisationProjectJoinTypeEnum : OrganisationProjectJoinTypeEnum.values()) {
-            if (organisationProjectJoinTypeEnum.name.equals(stringCellValue)) {
+            if (organisationProjectJoinTypeEnum.name.equals(name)) {
                 return organisationProjectJoinTypeEnum;
             }
         }
