@@ -7,7 +7,8 @@ import com.jeniustech.funding_search_engine.enums.FundingSchemeEnum;
 import com.jeniustech.funding_search_engine.enums.LongTextTypeEnum;
 import com.jeniustech.funding_search_engine.enums.ProjectStatusEnum;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -15,9 +16,10 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+@SpringBootTest
 public class CSVServiceTest {
 
-    @InjectMocks
+    @Autowired
     private CSVService csvService;
 
 

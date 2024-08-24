@@ -58,6 +58,16 @@ public class ScrapeController {
         log.info("Updating funding information");
         partnerScraperService.updateFundingInformation();
         adminLogService.addLog(AdminLogType.PARTNER_FUNDING_UPDATE, "Funding information updated");
+        log.info("Funding information updated");
+    }
+
+    @PreAuthorize("hasRole('admin-server')")
+    @GetMapping("/partners/scrape/updateFundingInformation")
+    public void scrapePartners() {
+        log.info("Updating funding information");
+        partnerScraperService.updateFundingInformation();
+        adminLogService.addLog(AdminLogType.PARTNER_FUNDING_UPDATE, "Funding information updated");
+        log.info("Funding information updated");
     }
 
 

@@ -34,7 +34,7 @@ public class EmailService {
         if (callDTOS.isEmpty()) {
             return;
         }
-        String subject = "New Calls Available on INNOVILYSE for \"" + savedSearch.getName() + "\"";
+        String subject = callDTOS.size() + " New Calls Available on INNOVILYSE for \"" + savedSearch.getName() + "\"";
         String text = getEmailBody(subject, callDTOS, savedSearch);
 
         MimeMessage message = mailSender.createMimeMessage();

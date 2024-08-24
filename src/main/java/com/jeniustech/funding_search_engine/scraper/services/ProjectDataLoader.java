@@ -70,7 +70,7 @@ public class ProjectDataLoader {
     int RCN_INDEX = -1;
 
     public void loadSolrData() {
-        log.info("Loading calls to solr");
+        log.info("Loading projects to solr");
         // do in batch of 1000
         int pageNumber = 0;
         int pageSize = BATCH_SIZE;
