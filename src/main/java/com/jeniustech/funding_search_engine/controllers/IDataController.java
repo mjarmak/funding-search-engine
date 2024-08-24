@@ -12,6 +12,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import java.util.List;
 
 public interface IDataController<DTO> {
+
+    ResponseEntity<DTO> getGraphMesh(@PathVariable Long id);
+
     ResponseEntity<SearchDTO<DTO>> search(
             @RequestParam @Size(min = 2, max = 255) String query,
             @RequestParam(required = true, defaultValue = "0") int pageNumber,

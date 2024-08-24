@@ -88,4 +88,8 @@ public class CallService extends IDataService<CallDTO> {
     public List<Long> checkFavorites(UserData userData, List<Long> ids) {
         return userCallJoinRepository.findByReferenceIdsAndType(userData.getId(), ids, UserJoinTypeEnum.FAVORITE);
     }
+
+    public CallDTO getGraphMesh(Long id) {
+        return CallMapper.mapToGraphMesh(getById(id));
+    }
 }

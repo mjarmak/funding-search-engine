@@ -55,4 +55,28 @@ public interface CallMapper {
                 .build();
     }
 
+    static CallDTO mapToGraphMesh(Call call) {
+        if (call == null) {
+            return null;
+        }
+        CallDTO callDTO = mapToGraphMeshChild(call);
+        callDTO.setProjects(ProjectMapper.mapToGraphMeshChild(call.getProjects()));
+        return callDTO;
+    }
+    static CallDTO mapToGraphMeshChild(Call call) {
+        if (call == null) {
+            return null;
+        }
+        return CallDTO.builder()
+                .id(call.getId())
+                .identifier(call.getIdentifier())
+                .title(call.getTitle())
+                .endDate(DateMapper.map(call.getEndDate()))
+                .endDate2(DateMapper.map(call.getEndDate2()))
+                .startDate(DateMapper.map(call.getStartDate()))
+                .budgetMin(call.getBudgetMinDisplayString())
+                .budgetMax(call.getBudgetMaxDisplayString())
+                .projectNumber(call.getProjectNumber())
+                .build();
+    }
 }

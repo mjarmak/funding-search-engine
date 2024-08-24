@@ -43,6 +43,7 @@ public class Project {
     @Column(name = "funding_eu")
     private BigDecimal fundingEU;
 
+    @Enumerated(EnumType.ORDINAL)
     private ProjectStatusEnum status;
 
     private LocalDate signDate;
@@ -76,7 +77,8 @@ public class Project {
     private Integer version;
 
     public String toString() {
-        return "Project(id=" + this.getId() + ", title=" + this.getTitle() + ")";
+        return "Project(id=" + this.getId() + ", title=" + this.getTitle() + ", referenceId=" + this.getReferenceId() + ", rcn=" + this.getRcn() + ", acronym=" + this.getAcronym()
+                + ")";
     }
 
     public String getLongTextsToString() {

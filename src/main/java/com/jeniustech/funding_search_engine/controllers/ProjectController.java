@@ -28,6 +28,11 @@ public class ProjectController implements IDataController<ProjectDTO> {
     private final UserDataService userDataService;
     private final ProjectSolrClientService projectSolrClientService;
 
+    @GetMapping("/{id}/graph/network")
+    public ResponseEntity<ProjectDTO> getGraphMesh(
+            @PathVariable Long id) {
+        return ResponseEntity.ok(projectService.getGraphMesh(id));
+    }
     @GetMapping("/search")
     public ResponseEntity<SearchDTO<ProjectDTO>> search(
             @RequestParam @Size(min = 2, max = 255) String query,

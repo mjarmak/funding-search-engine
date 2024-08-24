@@ -26,6 +26,14 @@ public class PartnerController implements IDataController<PartnerDTO> {
     private final PartnerService partnerService;
     private final UserDataService userDataService;
 
+
+    @GetMapping("/{id}/graph/network")
+    public ResponseEntity<PartnerDTO> getGraphMesh(
+            @PathVariable Long id
+    ) {
+        return ResponseEntity.ok(partnerService.getGraphMesh(id));
+    }
+
     @GetMapping("/search")
     public ResponseEntity<SearchDTO<PartnerDTO>> search(
             @RequestParam @Size(min = 2, max = 255) String query,

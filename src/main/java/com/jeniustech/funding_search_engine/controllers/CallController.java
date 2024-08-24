@@ -33,6 +33,11 @@ public class CallController implements IDataController<CallDTO> {
     private final UserDataService userDataService;
     private final CallSolrClientService callSolrClientService;
 
+    @GetMapping("/{id}/graph/network")
+    public ResponseEntity<CallDTO> getGraphMesh(@PathVariable Long id) {
+        return ResponseEntity.ok(callService.getGraphMesh(id));
+    }
+
     @GetMapping("/search")
     public ResponseEntity<SearchDTO<CallDTO>> search(
             @RequestParam @Size(min = 2, max = 255) String query,

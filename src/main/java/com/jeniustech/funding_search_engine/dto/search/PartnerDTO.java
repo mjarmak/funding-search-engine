@@ -26,12 +26,16 @@ public class PartnerDTO extends SearchItemDTO {
     private Boolean sme;
     private String typeName;
     private List<ContactInfoDTO> contactInfos;
+    private List<ProjectDTO> projects;
 
     private Integer projectsMatched;
     private Integer maxScore;
 
     private String fundingOrganisation;
     private String fundingEU;
+    private String totalFundingOrganisation;
+    private String totalFundingEU;
+
     private Short projectNumber;
     private OrganisationProjectJoinTypeEnum joinType;
 

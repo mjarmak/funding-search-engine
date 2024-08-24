@@ -11,6 +11,7 @@ import com.jeniustech.funding_search_engine.mappers.DateMapper;
 import com.jeniustech.funding_search_engine.mappers.SolrMapper;
 import com.jeniustech.funding_search_engine.repository.CallRepository;
 import com.jeniustech.funding_search_engine.scraper.constants.excel.CallCSVColumns;
+import com.jeniustech.funding_search_engine.services.CSVService;
 import com.jeniustech.funding_search_engine.services.NLPService;
 import com.jeniustech.funding_search_engine.services.solr.CallSolrClientService;
 import com.opencsv.CSVReader;
@@ -40,6 +41,10 @@ public class CallDataLoader {
     private final CallRepository callRepository;
     private final CallSolrClientService callSolrClientService;
     private final NLPService nlpService;
+    private final CSVService csvService;
+
+    public static final int BATCH_SIZE = 1000;
+    private int total = 0;
 
     int identifierIndex = 0;
     int titleIndex = 0;
@@ -61,8 +66,6 @@ public class CallDataLoader {
     int durationIndex = 0;
     int furtherInformationIndex = 0;
 
-    public static final int BATCH_SIZE = 1000;
-
     public void loadSolrData() {
         log.info("Loading calls to solr");
         // do in batch of 1000
@@ -79,8 +82,9 @@ public class CallDataLoader {
         }
     }
 
-    public void loadEntities(String file) {
-        try (CSVReader reader = new CSVReader(new FileReader(file))) {
+    public void loadData(String fileName) {
+        total = 0;
+        try (CSVReader reader = new CSVReader(new FileReader(fileName))) {
 
             // get headers
             var headers = reader.readNext();
@@ -141,35 +145,41 @@ public class CallDataLoader {
             String[] row;
             while ((row = reader.readNext()) != null) {
                 Call call = getCall(row);
-                processSave(calls, call);
+                processSave(calls, call, fileName);
             }
             log.info("Saving last batch of " + calls.size() + " items");
-            save(calls);
+            save(calls, fileName);
         } catch (IOException | ArrayIndexOutOfBoundsException | CsvValidationException e) {
             e.printStackTrace();
             throw new ScraperException(e.getMessage());
         }
     }
 
-    private void processSave(List<Call> items, Call item) {
+    private void processSave(List<Call> items, Call item, String fileName) {
+        total++;
         if (item != null) {
             items.add(item);
             if (items.size() == BATCH_SIZE) {
-                log.info("Saving batch of " + items.size() + " items");
-                save(items);
+                log.info("Saving batch of " + items.size() + " items, total: " + total);
+                save(items, fileName);
                 items.clear();
             }
         } else if (!items.isEmpty()) {
-            log.info("Saving batch of " + items.size() + " items");
-            save(items);
+            log.info("Saving batch of " + items.size() + " items, total: " + total);
+            save(items, fileName);
             items.clear();
         }
     }
-    private void save(List<Call> calls) {
+    private void save(List<Call> calls, String fileName) {
         if (calls.isEmpty()) {
             return;
         }
-        callRepository.saveAllAndFlush(calls);
+        try {
+            callRepository.saveAll(calls);
+        } catch (Exception e) {
+            e.printStackTrace();
+            csvService.writeCallsCSV(calls, fileName);
+        }
     }
 
     private Call getCall(String[] row) throws IOException {

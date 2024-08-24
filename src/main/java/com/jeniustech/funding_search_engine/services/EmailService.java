@@ -5,7 +5,6 @@ import com.jeniustech.funding_search_engine.entities.SavedSearch;
 import com.jeniustech.funding_search_engine.enums.UrlTypeEnum;
 import com.jeniustech.funding_search_engine.exceptions.ScraperException;
 import com.jeniustech.funding_search_engine.mappers.DateMapper;
-import com.jeniustech.funding_search_engine.mappers.NumberMapper;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.InternetAddress;
 import jakarta.mail.internet.MimeMessage;
@@ -76,12 +75,12 @@ public class EmailService {
 
             String budgetRangeString;
             if (callDTO.getBudgetMin() != null) {
-                budgetRangeString = NumberMapper.shortenNumber(callDTO.getBudgetMin(), 1);
+                budgetRangeString = callDTO.getBudgetMin();
                 if (callDTO.getBudgetMax() != null && !callDTO.getBudgetMax().equals(callDTO.getBudgetMin())) {
-                    budgetRangeString += " - " + NumberMapper.shortenNumber(callDTO.getBudgetMax(), 1);
+                    budgetRangeString += " - " + callDTO.getBudgetMax();
                 }
             } else if (callDTO.getBudgetMax() != null) {
-                budgetRangeString = "< " + NumberMapper.shortenNumber(callDTO.getBudgetMax(), 1);
+                budgetRangeString = "< " + callDTO.getBudgetMax();
             } else {
                 budgetRangeString = "N/A";
             }

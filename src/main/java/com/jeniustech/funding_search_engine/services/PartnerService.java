@@ -35,6 +35,10 @@ public class PartnerService extends IDataService<PartnerDTO> {
     private final UserPartnerJoinRepository userPartnerJoinRepository;
     private final LogService logService;
 
+    public PartnerDTO getGraphMesh(Long id) {
+        return PartnerMapper.mapToGraphMesh(getById(id));
+    }
+
     public PartnerService(
             UserDataRepository userDataRepository,
             ProjectSolrClientService projectSolrClientService,

@@ -17,6 +17,7 @@ public abstract class IDataService<DTO> {
     abstract void unFavorite(Long id, String subjectId);
     abstract SearchDTO<DTO> getFavoritesByUserId(String subjectId, int pageNumber, int pageSize);
     abstract List<Long> checkFavorites(UserData userData, List<Long> ids);
+    abstract DTO getGraphMesh(Long id);
 
 
     public UserData getUserOrNotFound(String subjectId) {

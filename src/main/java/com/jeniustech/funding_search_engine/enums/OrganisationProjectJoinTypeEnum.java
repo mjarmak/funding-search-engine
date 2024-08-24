@@ -6,7 +6,8 @@ public enum OrganisationProjectJoinTypeEnum {
     PARTICIPANT("participant", 3),
     COORDINATOR("coordinator", 2),
     THIRD_PARTY("thirdParty", 4),
-    ASSOCIATED_PARTNER("associatedPartner", 1);
+    ASSOCIATED_PARTNER("associatedPartner", 1),
+    UNKNOWN(null, 99);
 
     private final String name;
     private final int hierarchy;

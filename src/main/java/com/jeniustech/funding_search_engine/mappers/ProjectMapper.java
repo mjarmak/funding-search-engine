@@ -36,13 +36,15 @@ public interface ProjectMapper {
                 .id(project.getId())
                 .title(project.getTitle())
                 .call(isSearch ? null : CallMapper.map(project.getCall(), false, false, false))
-                .startDate(project.getStartDate().atStartOfDay())
-                .endDate(project.getEndDate().atStartOfDay())
+                .startDate(project.getStartDate() == null ? null : project.getStartDate().atStartOfDay())
+                .endDate(project.getEndDate() == null ? null : project.getEndDate().atStartOfDay())
                 .fundingOrganisation(fundingOrganisationDisplayString)
                 .fundingEU(fundingEUDisplayString)
+                .totalFundingEU(project.getFundingEUDisplayString())
+                .totalFundingOrganisation(project.getFundingOrganisationDisplayString())
                 .acronym(project.getAcronym())
                 .status(isSearch ? null : project.getStatus())
-                .signDate(isSearch ? null : project.getSignDate().atStartOfDay())
+                .signDate(isSearch ? null : project.getSignDate() == null ? null : project.getSignDate().atStartOfDay())
                 .masterCallIdentifier(isSearch ? null : project.getMasterCallIdentifier())
                 .legalBasis(isSearch ? null : project.getLegalBasis())
                 .fundingScheme(isSearch ? null : project.getFundingScheme().getName())
@@ -57,10 +59,33 @@ public interface ProjectMapper {
             return null;
         }
         return organisationProjectJoins.stream()
-                .map(organisationProjectJoin -> PartnerMapper.map(organisationProjectJoin, null, null,
-                        organisationProjectJoin.getFundingOrganisationDisplayString(),
-                        organisationProjectJoin.getFundingEUDisplayString(),
-                        null, isSearch, false))
+                .map(organisationProjectJoin -> PartnerMapper.map(organisationProjectJoin, isSearch, false))
                 .toList();
+    }
+
+    static ProjectDTO mapToGraphMesh(Project project) {
+        ProjectDTO projectDTO = mapToGraphMeshChild(project);
+        projectDTO.setPartners(PartnerMapper.mapToGraphMeshChild(project.getOrganisationProjectJoins()));
+        return projectDTO;
+    }
+
+    static ProjectDTO mapToGraphMeshChild(Project project) {
+        if (project == null) {
+            return null;
+        }
+        return ProjectDTO.builder()
+                .id(project.getId())
+                .title(project.getTitle())
+                .totalFundingOrganisation(project.getFundingOrganisationDisplayString())
+                .totalFundingEU(project.getFundingEUDisplayString())
+                .acronym(project.getAcronym())
+                .status(project.getStatus())
+                .build();
+    }
+    static List<ProjectDTO> mapToGraphMeshChild(List<Project> projects) {
+        if (projects == null) {
+            return null;
+        }
+        return projects.stream().map(ProjectMapper::mapToGraphMeshChild).toList();
     }
 }

@@ -6,7 +6,6 @@ import com.jeniustech.funding_search_engine.entities.Organisation;
 import com.jeniustech.funding_search_engine.entities.OrganisationProjectJoin;
 import com.jeniustech.funding_search_engine.entities.UserPartnerJoin;
 import com.jeniustech.funding_search_engine.enums.OrganisationProjectJoinTypeEnum;
-import com.jeniustech.funding_search_engine.util.StringUtil;
 
 import java.util.List;
 
@@ -32,11 +31,11 @@ public interface PartnerMapper {
         return map(organisation, null, null, null, null, null, isSearch, isFavorite);
     }
 
-    static PartnerDTO map(OrganisationProjectJoin organisationProjectJoin, Integer projectsMatched, Integer score, String fundingOrganisation, String fundingEU, OrganisationProjectJoinTypeEnum joinType, boolean isSearch, boolean isFavorite) {
+    static PartnerDTO map(OrganisationProjectJoin organisationProjectJoin, boolean isSearch, boolean isFavorite) {
         if (organisationProjectJoin == null) {
             return null;
         }
-        return map(organisationProjectJoin.getOrganisation(), projectsMatched, score, organisationProjectJoin.getFundingOrganisationDisplayString(), organisationProjectJoin.getFundingEUDisplayString(), joinType, isSearch, isFavorite);
+        return map(organisationProjectJoin.getOrganisation(), null, null, organisationProjectJoin.getFundingOrganisationDisplayString(), organisationProjectJoin.getFundingEUDisplayString(), organisationProjectJoin.getType(), isSearch, isFavorite);
     }
     static PartnerDTO map(Organisation organisation, Integer projectsMatched, Integer score, String fundingOrganisation, String fundingEU, OrganisationProjectJoinTypeEnum joinType, boolean isSearch, boolean isFavorite) {
         if (organisation == null) {
@@ -55,8 +54,10 @@ public interface PartnerMapper {
                 .contactInfos(isSearch ? null : ContactInfoMapper.mapToDTO(organisation.getContactInfos()))
                 .projectsMatched(projectsMatched)
                 .maxScore(score)
-                .fundingOrganisation(StringUtil.isNotEmpty(fundingOrganisation) ? fundingOrganisation : organisation.getFundingOrganisationDisplayString())
-                .fundingEU(StringUtil.isNotEmpty(fundingEU) ? fundingEU : organisation.getFundingEUDisplayString())
+                .fundingOrganisation(fundingOrganisation)
+                .fundingEU(fundingEU)
+                .totalFundingEU(organisation.getFundingEUDisplayString())
+                .totalFundingOrganisation(organisation.getFundingOrganisationDisplayString())
                 .projectNumber(organisation.getProjectNumber())
                 .joinType(joinType)
                 .favorite(isFavorite)
@@ -76,4 +77,74 @@ public interface PartnerMapper {
                 .toList();
     }
 
+    static PartnerDTO mapToGraphMesh(Organisation partner) {
+        PartnerDTO partnerDTO = mapToGraphMeshChild(partner);
+        partnerDTO.setProjects(PartnerMapper.mapToProjectGraphMeshChild(partner.getOrganisationProjectJoins()));
+        return partnerDTO;
+    }
+
+    static PartnerDTO mapToGraphMeshChild(Organisation partner) {
+        if (partner == null) {
+            return null;
+        }
+        return PartnerDTO.builder()
+                .id(partner.getId())
+                .name(partner.getName())
+                .shortName(partner.getShortName())
+                .totalFundingOrganisation(partner.getFundingOrganisationDisplayString())
+                .totalFundingEU(partner.getFundingEUDisplayString())
+                .build();
+    }
+
+    static List<ProjectDTO> mapToProjectGraphMeshChild(List<OrganisationProjectJoin> organisationProjectJoins) {
+        if (organisationProjectJoins == null) {
+            return null;
+        }
+        return organisationProjectJoins.stream()
+                .map(PartnerMapper::mapToProjectGraphMeshChild)
+                .toList();
+    }
+
+    static ProjectDTO mapToProjectGraphMeshChild(OrganisationProjectJoin organisationProjectJoin) {
+        if (organisationProjectJoin == null) {
+            return null;
+        }
+        return ProjectDTO.builder()
+                .id(organisationProjectJoin.getProject().getId())
+                .title(organisationProjectJoin.getProject().getTitle())
+                .acronym(organisationProjectJoin.getProject().getAcronym())
+                .startDate(organisationProjectJoin.getProject().getStartDate().atStartOfDay())
+                .endDate(organisationProjectJoin.getProject().getEndDate().atStartOfDay())
+                .fundingOrganisation(organisationProjectJoin.getFundingOrganisationDisplayString())
+                .fundingEU(organisationProjectJoin.getFundingEUDisplayString())
+                .status(organisationProjectJoin.getProject().getStatus())
+                .build();
+    }
+
+    static List<PartnerDTO> mapToGraphMeshChild(List<OrganisationProjectJoin> organisationProjectJoins) {
+        if (organisationProjectJoins == null) {
+            return null;
+        }
+        return organisationProjectJoins.stream()
+                .map(organisationProjectJoin -> PartnerMapper.mapToGraphMeshChild(
+                        organisationProjectJoin.getOrganisation(),
+                        organisationProjectJoin.getType(),
+                        organisationProjectJoin.getFundingOrganisationDisplayString(),
+                        organisationProjectJoin.getFundingEUDisplayString()))
+                .toList();
+    }
+
+    static PartnerDTO mapToGraphMeshChild(Organisation partner, OrganisationProjectJoinTypeEnum type, String fundingOrganisationDisplayString, String fundingEUDisplayString) {
+        if (partner == null) {
+            return null;
+        }
+        return PartnerDTO.builder()
+                .id(partner.getId())
+                .name(partner.getName())
+                .shortName(partner.getShortName())
+                .fundingOrganisation(fundingOrganisationDisplayString)
+                .fundingEU(fundingEUDisplayString)
+                .joinType(type)
+                .build();
+    }
 }

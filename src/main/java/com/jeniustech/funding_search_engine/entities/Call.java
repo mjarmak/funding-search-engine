@@ -171,4 +171,18 @@ public class Call {
     public String getEndDateDisplay() {
         return DateMapper.formatToDisplay(endDate);
     }
+
+    public LongText getLongTextByType(LongTextTypeEnum type) {
+        if (longTexts != null) {
+            return longTexts.stream().filter(longText -> longText.getType() == type).findFirst().orElse(null);
+        }
+        return null;
+    }
+    public String getLongTextByTypeAsString(LongTextTypeEnum type) {
+        LongText longText = getLongTextByType(type);
+        if (longText != null) {
+            return longText.getText();
+        }
+        return null;
+    }
 }

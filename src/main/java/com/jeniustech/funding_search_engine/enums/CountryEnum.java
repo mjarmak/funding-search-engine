@@ -241,8 +241,10 @@ public enum CountryEnum {
     YE(237, "Yemen", "+967", "🇾🇪"),
     ZM(238, "Zambia", "+260", "🇿🇲"),
     ZW(239, "Zimbabwe", "+263", "🇿🇼"),
-    XK(239, "Kosovo", null, null),
-    BQ(239, "Bonaire", null, null);
+    XK(240, "Kosovo", null, null),
+    BQ(241, "Bonaire", null, null),
+    UM(242, "United States Minor Outlying Islands", null, null),
+    ZZ(243, "Unknown", null, null);
 
 
     private final Integer hierarchy;

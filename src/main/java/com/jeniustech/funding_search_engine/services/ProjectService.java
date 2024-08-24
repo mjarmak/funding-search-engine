@@ -37,7 +37,7 @@ public class ProjectService extends IDataService<ProjectDTO> {
 
     public ProjectDTO getDTOById(Long id, String subjectId) {
         UserData userData = getUserOrNotFound(subjectId);
-        return ProjectMapper.map(getById(id), false, isFavorite(id, userData.getId()), getById(id).getFundingOrganisationDisplayString(), getById(id).getFundingEUDisplayString());
+        return ProjectMapper.map(getById(id), false, isFavorite(id, userData.getId()), null, null);
     }
 
     private Project getById(Long callId) {
@@ -91,6 +91,10 @@ public class ProjectService extends IDataService<ProjectDTO> {
 
     public List<Long> checkFavorites(UserData userData, List<Long> ids) {
         return userProjectJoinRepository.findByReferenceIdsAndType(userData.getId(), ids, UserJoinTypeEnum.FAVORITE);
+    }
+
+    public ProjectDTO getGraphMesh(Long id) {
+        return ProjectMapper.mapToGraphMesh(getById(id));
     }
 
     public List<PartnerDTO> getPartnersByProjectId(Long id) {

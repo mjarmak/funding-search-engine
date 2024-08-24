@@ -24,6 +24,9 @@ public class ProjectDTO extends SearchItemDTO {
     private String title;
     private String fundingOrganisation;
     private String fundingEU;
+    private String totalFundingOrganisation;
+    private String totalFundingEU;
+
     private ProjectStatusEnum status;
     private LocalDateTime signDate;
     private LocalDateTime startDate;
