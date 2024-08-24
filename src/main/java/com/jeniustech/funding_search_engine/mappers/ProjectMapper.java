@@ -6,6 +6,7 @@ import com.jeniustech.funding_search_engine.entities.OrganisationProjectJoin;
 import com.jeniustech.funding_search_engine.entities.Project;
 import com.jeniustech.funding_search_engine.entities.UserProjectJoin;
 
+import java.util.Comparator;
 import java.util.List;
 
 public interface ProjectMapper {
@@ -60,6 +61,7 @@ public interface ProjectMapper {
         }
         return organisationProjectJoins.stream()
                 .map(organisationProjectJoin -> PartnerMapper.map(organisationProjectJoin, isSearch, false))
+                .sorted(Comparator.comparingInt(o -> o.getJoinType().getHierarchy()))
                 .toList();
     }
 
