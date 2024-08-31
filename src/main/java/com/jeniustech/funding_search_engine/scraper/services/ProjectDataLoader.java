@@ -120,26 +120,27 @@ public class ProjectDataLoader {
                 index++;
             }
 
+            final List<Integer> headerIndexes = List.of(
+                    ID_INDEX,
+                    ACRONYM_INDEX,
+                    STATUS_INDEX,
+                    TITLE_INDEX,
+                    START_DATE_INDEX,
+                    END_DATE_INDEX,
+                    TOTAL_COST_INDEX,
+                    EC_MAX_CONTRIBUTION_INDEX,
+                    LEGAL_BASIS_INDEX,
+                    CALL_IDENTIFIER_INDEX,
+                    EC_SIGNATURE_DATE_INDEX,
+                    MASTER_CALL_INDEX,
+                    FUNDING_SCHEME_INDEX,
+                    OBJECTIVE_INDEX,
+                    RCN_INDEX
+            );
             if (
-                    List.of(
-                            ID_INDEX,
-                            ACRONYM_INDEX,
-                            STATUS_INDEX,
-                            TITLE_INDEX,
-                            START_DATE_INDEX,
-                            END_DATE_INDEX,
-                            TOTAL_COST_INDEX,
-                            EC_MAX_CONTRIBUTION_INDEX,
-                            LEGAL_BASIS_INDEX,
-                            CALL_IDENTIFIER_INDEX,
-                            EC_SIGNATURE_DATE_INDEX,
-                            MASTER_CALL_INDEX,
-                            FUNDING_SCHEME_INDEX,
-                            OBJECTIVE_INDEX,
-                            RCN_INDEX
-                    ).contains(-1)
+                    headerIndexes.contains(-1)
             ) {
-                log.error("Header not found");
+                log.error("Header not found " + String.join(", ", headerIndexes.stream().filter(i -> i == -1).map(String::valueOf).toList()) + " missing");
                 throw new ScraperException("Header not found");
             }
 

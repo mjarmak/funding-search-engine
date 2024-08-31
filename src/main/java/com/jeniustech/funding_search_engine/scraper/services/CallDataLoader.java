@@ -114,29 +114,30 @@ public class CallDataLoader {
                 index++;
             }
 
+            final List<Integer> headerIndexes = List.of(
+                    titleIndex,
+                    submissionDLIndex,
+                    submissionDL2Index,
+                    actionTypeIndex,
+                    openDateIndex,
+                    budgetMinIndex,
+                    budgetMaxIndex,
+                    descriptionIndex,
+                    destinationDetailsIndex,
+                    missionDetailsIndex,
+                    numberOfProjectsIndex,
+                    pathIdIndex,
+                    referenceIndex,
+                    typeOfMGADescriptionIndex,
+                    submissionProcedureIndex,
+                    beneficiaryAdministrationIndex,
+                    durationIndex,
+                    furtherInformationIndex
+            );
             if (
-                    List.of(
-                            titleIndex,
-                            submissionDLIndex,
-                            submissionDL2Index,
-                            actionTypeIndex,
-                            openDateIndex,
-                            budgetMinIndex,
-                            budgetMaxIndex,
-                            descriptionIndex,
-                            destinationDetailsIndex,
-                            missionDetailsIndex,
-                            numberOfProjectsIndex,
-                            pathIdIndex,
-                            referenceIndex,
-                            typeOfMGADescriptionIndex,
-                            submissionProcedureIndex,
-                            beneficiaryAdministrationIndex,
-                            durationIndex,
-                            furtherInformationIndex
-                    ).contains(-1)
+                    headerIndexes.contains(-1)
             ) {
-                log.error("Header not found");
+                log.error("Header not found " + String.join(", ", headerIndexes.stream().filter(i -> i == -1).map(String::valueOf).toList()) + " missing");
                 throw new ScraperException("Header not found");
             }
 

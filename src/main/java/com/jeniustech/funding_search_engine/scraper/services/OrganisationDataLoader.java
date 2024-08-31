@@ -106,32 +106,33 @@ public class OrganisationDataLoader {
                 index++;
             }
 
+            final List<Integer> headerIndexes = List.of(
+                    PROJECT_ID_INDEX,
+                    ORGANISATION_ID_INDEX,
+                    VAT_NUMBER_INDEX,
+                    NAME_INDEX,
+                    SHORT_NAME_INDEX,
+                    SME_INDEX,
+                    ACTIVITY_TYPE_INDEX,
+                    STREET_INDEX,
+                    POSTCODE_INDEX,
+                    CITY_INDEX,
+                    COUNTRY_INDEX,
+                    NUTS_CODE_INDEX,
+                    GEO_LOCATION_INDEX,
+                    ORGANIZATION_URL_INDEX,
+                    CONTACT_FORM_INDEX,
+                    CONTENT_UPDATE_DATE_INDEX,
+                    RCN_INDEX,
+                    ORDER_INDEX,
+                    ROLE_INDEX,
+                    NET_EC_CONTRIBUTION_INDEX,
+                    TOTAL_COST_INDEX
+            );
             if (
-                    List.of(
-                            PROJECT_ID_INDEX,
-                            ORGANISATION_ID_INDEX,
-                            VAT_NUMBER_INDEX,
-                            NAME_INDEX,
-                            SHORT_NAME_INDEX,
-                            SME_INDEX,
-                            ACTIVITY_TYPE_INDEX,
-                            STREET_INDEX,
-                            POSTCODE_INDEX,
-                            CITY_INDEX,
-                            COUNTRY_INDEX,
-                            NUTS_CODE_INDEX,
-                            GEO_LOCATION_INDEX,
-                            ORGANIZATION_URL_INDEX,
-                            CONTACT_FORM_INDEX,
-                            CONTENT_UPDATE_DATE_INDEX,
-                            RCN_INDEX,
-                            ORDER_INDEX,
-                            ROLE_INDEX,
-                            NET_EC_CONTRIBUTION_INDEX,
-                            TOTAL_COST_INDEX
-                    ).contains(-1)
+                    headerIndexes.contains(-1)
             ) {
-                log.error("Header not found");
+                log.error("Header not found " + String.join(", ", headerIndexes.stream().filter(i -> i == -1).map(String::valueOf).toList()) + " missing");
                 throw new ScraperException("Header not found");
             }
 
