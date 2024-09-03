@@ -54,7 +54,8 @@ public class ExportService {
             headerRow.createCell(5).setCellValue("Action Type");
             headerRow.createCell(6).setCellValue("Budget (EUR)");
             headerRow.createCell(7).setCellValue("Type Of MGA");
-            headerRow.createCell(8).setCellValue("URL");
+            headerRow.createCell(8).setCellValue("EU Portal URL");
+            headerRow.createCell(9).setCellValue("URL");
 
             for (int i = 0; i < calls.size(); i++) {
                 Row dataRow = sheet.createRow(i + 1);
@@ -67,7 +68,8 @@ public class ExportService {
                 dataRow.createCell(5).setCellValue(call.getActionType());
                 dataRow.createCell(6).setCellValue(call.getBudgetRangeString());
                 dataRow.createCell(7).setCellValue(StringUtil.valueOrDefault(call.getTypeOfMGADescription(), ""));
-                dataRow.createCell(8).setCellValue(StringUtil.valueOrDefault(call.getInnovilyseUrl(), ""));
+                dataRow.createCell(8).setCellValue(StringUtil.valueOrDefault(call.getUrl(), ""));
+                dataRow.createCell(9).setCellValue(StringUtil.valueOrDefault(call.getInnovilyseUrl(), ""));
             }
 
             workbook.write(out);
@@ -99,7 +101,8 @@ public class ExportService {
             headerRow.createCell(9).setCellValue("Status");
             headerRow.createCell(10).setCellValue("Funding Scheme");
             headerRow.createCell(11).setCellValue("Legal Basis");
-            headerRow.createCell(12).setCellValue("URL");
+            headerRow.createCell(12).setCellValue("EU Portal URL");
+            headerRow.createCell(13).setCellValue("URL");
 
             for (int i = 0; i < items.size(); i++) {
                 Project project = items.get(i);
@@ -120,7 +123,8 @@ public class ExportService {
                 dataRow.createCell(9).setCellValue(StringUtil.valueOrDefault(project.getStatusName(), ""));
                 dataRow.createCell(10).setCellValue(StringUtil.valueOrDefault(project.getFundingSchemeName(), ""));
                 dataRow.createCell(11).setCellValue(StringUtil.valueOrDefault(project.getLegalBasis(), ""));
-                dataRow.createCell(12).setCellValue(StringUtil.valueOrDefault(project.getInnovilyseUrl(), ""));
+                dataRow.createCell(12).setCellValue(StringUtil.valueOrDefault(project.getUrl(), ""));
+                dataRow.createCell(13).setCellValue(StringUtil.valueOrDefault(project.getInnovilyseUrl(), ""));
             }
 
             workbook.write(out);

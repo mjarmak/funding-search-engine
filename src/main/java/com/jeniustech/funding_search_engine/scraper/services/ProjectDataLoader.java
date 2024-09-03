@@ -188,7 +188,7 @@ public class ProjectDataLoader {
                 .title(row[TITLE_INDEX])
                 .fundingOrganisation(getFundingOrganisation(TOTAL_COST_INDEX, EC_MAX_CONTRIBUTION_INDEX, row))
                 .fundingEU(getBudget(row, EC_MAX_CONTRIBUTION_INDEX))
-                .status(ProjectStatusEnum.valueOf(row[STATUS_INDEX]))
+                .status(ProjectStatusEnum.valueFrom(row[STATUS_INDEX]))
                 .signDate(getDate(EC_SIGNATURE_DATE_INDEX, row))
                 .startDate(getDate(START_DATE_INDEX, row))
                 .endDate(getDate(END_DATE_INDEX, row))
