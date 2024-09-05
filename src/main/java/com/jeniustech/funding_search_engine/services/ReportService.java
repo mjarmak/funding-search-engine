@@ -121,8 +121,8 @@ public class ReportService {
         SolidBorder solidBorder = new SolidBorder(1);
         solidBorder.setColor(PRIMARY_COLOR);
 
-        addButton(document, rect, solidBorder, "View on EU Portal", call.getUrl());
         addButton(document, rect, solidBorder, "View on INNOVILYSE", call.getInnovilyseUrl());
+        addButton(document, rect, solidBorder, "View on EU Portal", call.getUrl());
 
         addInfoField(document, call.getTitle(), "Topic");
         addInfoField(document, call.getProjectNumber(), "Number of Projects");
