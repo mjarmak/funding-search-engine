@@ -16,6 +16,7 @@ import com.itextpdf.kernel.pdf.annot.PdfLinkAnnotation;
 import com.itextpdf.kernel.pdf.canvas.draw.SolidLine;
 import com.itextpdf.layout.Canvas;
 import com.itextpdf.layout.Document;
+import com.itextpdf.layout.borders.SolidBorder;
 import com.itextpdf.layout.element.*;
 import com.itextpdf.layout.property.TextAlignment;
 import com.jeniustech.funding_search_engine.entities.Call;
@@ -43,6 +44,7 @@ import static com.jeniustech.funding_search_engine.enums.LogTypeEnum.EXPORT_PDF;
 @RequiredArgsConstructor
 public class ReportService {
 
+    public static final DeviceRgb PRIMARY_COLOR = new DeviceRgb(78, 85, 243);
     private final CallRepository callRepository;
     private final UserDataRepository userDataRepository;
     private final LogService logService;
@@ -74,6 +76,18 @@ public class ReportService {
             if (calls.isEmpty()) {
                 throw new CallNotFoundException("Calls not found");
             }
+
+            // add table of content
+            if (calls.size() > 1) {
+                document.add(new Paragraph("Table of Contents").setBold().setFontColor(PRIMARY_COLOR));
+                for (Call call : calls) {
+                    document.add(new Paragraph(new Text(call.getIdentifier()).setBold()).add(new Text(" - ".concat(call.getTitle())))
+                            .setAction(PdfAction.createGoTo(call.getId().toString()))
+                    );
+                }
+                newPage(document);
+            }
+
             for (Call call : calls) {
                 writeCall(document, call);
                 if (calls.indexOf(call) != calls.size() - 1) {
@@ -98,13 +112,17 @@ public class ReportService {
 
     private void writeCall(Document document, Call call) {
 
-        document.add(getTitle("Call Identifier"));
+        document.add(getTitle("Call Identifier").setDestination(call.getId().toString()));
         Rectangle rect = new Rectangle(0, 0, 523, 10);
-        Link link = new Link(call.getIdentifier(), (new PdfLinkAnnotation(rect)
-                .setAction(PdfAction.createURI(call.getUrl())
-                )));
-        document.add(new Paragraph().add(link).setFontColor(new DeviceRgb(78, 85, 243)).setBold().setUnderline());
+        Link euPortalLink = new Link(call.getIdentifier(), (new PdfLinkAnnotation(rect)
+                .setAction(PdfAction.createURI(call.getUrl()))));
+        document.add(new Paragraph().add(euPortalLink).setFontColor(PRIMARY_COLOR).setBold().setUnderline());
 
+        SolidBorder solidBorder = new SolidBorder(1);
+        solidBorder.setColor(PRIMARY_COLOR);
+
+        addButton(document, rect, solidBorder, "View on EU Portal", call.getUrl());
+        addButton(document, rect, solidBorder, "View on INNOVILYSE", call.getInnovilyseUrl());
 
         addInfoField(document, call.getTitle(), "Topic");
         addInfoField(document, call.getProjectNumber(), "Number of Projects");
@@ -123,11 +141,20 @@ public class ReportService {
 
             document.add(new Paragraph(longText.getType().getDisplayName())
                     .setBold()
-                    .setFontColor(new DeviceRgb(78, 85, 243)));
+                    .setFontColor(PRIMARY_COLOR));
 
             document.add(new Paragraph(
                     DetailFormatter.format(longText.getText(), DetailFormatter.FormatTypeEnum.TEXT)));
         }
+    }
+
+    private static void addButton(Document document, Rectangle rect, SolidBorder solidBorder, String label, String url) {
+        Link detailsLink = new Link(label, (new PdfLinkAnnotation(rect)
+                .setAction(PdfAction.createURI(url))));
+        document.add(
+                new Paragraph().add(detailsLink).setFontColor(PRIMARY_COLOR).setTextAlignment(TextAlignment.CENTER).setBold().setWidth(150)
+                        .setBorder(solidBorder).setPadding(5)
+        );
     }
 
     private void addDateRange(Document document, String startDateDisplay, String endDateDisplay, String endDate2Display, String label) {
@@ -195,8 +222,7 @@ public class ReportService {
 
     private static void addInfoField(Document document, Number value, String sectionTitle) {
         if (value != null) {
-            document.add(getTitle(sectionTitle));
-            document.add(new Paragraph(value.toString()));
+            addInfoField(document, value.toString(), sectionTitle);
         }
     }
 
