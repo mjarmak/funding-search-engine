@@ -3,11 +3,11 @@ package com.jeniustech.funding_search_engine.services;
 import com.itextpdf.io.image.ImageDataFactory;
 import com.itextpdf.kernel.colors.ColorConstants;
 import com.itextpdf.kernel.colors.DeviceRgb;
+import com.itextpdf.kernel.geom.PageSize;
 import com.itextpdf.kernel.geom.Rectangle;
 import com.itextpdf.kernel.pdf.PdfDocument;
 import com.itextpdf.kernel.pdf.PdfWriter;
 import com.itextpdf.kernel.pdf.action.PdfAction;
-import com.itextpdf.kernel.pdf.annot.PdfAnnotation;
 import com.itextpdf.kernel.pdf.annot.PdfLinkAnnotation;
 import com.itextpdf.kernel.pdf.canvas.draw.SolidLine;
 import com.itextpdf.layout.Document;
@@ -24,6 +24,7 @@ import com.jeniustech.funding_search_engine.repository.UserDataRepository;
 import com.jeniustech.funding_search_engine.util.DetailFormatter;
 import com.jeniustech.funding_search_engine.util.StringUtil;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.io.ByteArrayInputStream;
@@ -42,6 +43,9 @@ public class ReportService {
     private final LogService logService;
     static final int paddingSmall = 10;
 
+    @Value("${ui.url}")
+    private String uiUrl;
+
     public ByteArrayInputStream generatePdf(List<Long> callIds, String subjectId, String path) throws ReportException {
         UserData userData = userDataRepository.findBySubjectId(subjectId).orElseThrow(() -> new UserNotFoundException("User not found"));
         ValidatorService.validateUserPDFExport(userData, logService.getCountByUserIdAndType(userData.getId(), EXPORT_PDF));
@@ -54,6 +58,7 @@ public class ReportService {
         try (ByteArrayOutputStream out = new ByteArrayOutputStream()) {
             PdfWriter writer = new PdfWriter(out);
             PdfDocument pdfDoc = new PdfDocument(writer);
+            pdfDoc.setDefaultPageSize(PageSize.A4);
             Document document = new Document(pdfDoc);
             addHeader(document, path);
 
@@ -88,10 +93,9 @@ public class ReportService {
         document.add(getTitle("Call Identifier"));
         Rectangle rect = new Rectangle(0, 0, 523, 10);
         Link link = new Link(call.getIdentifier(), (new PdfLinkAnnotation(rect)
-                .setHighlightMode(PdfAnnotation.HIGHLIGHT_INVERT)
-                .setAction(PdfAction.createURI(call.getInnovilyseUrl())
+                .setAction(PdfAction.createURI(call.getUrl())
                 )));
-        document.add(new Paragraph().add(link.setUnderline()));
+        document.add(new Paragraph().add(link).setFontColor(new DeviceRgb(78, 85, 243)).setBold().setUnderline());
 
 
         addInfoField(document, call.getTitle(), "Topic");
@@ -146,12 +150,17 @@ public class ReportService {
         document.add(new LineSeparator(new SolidLine(width)));
     }
 
-    private static void addHeader(Document document, String path) throws IOException {
+    private void addHeader(Document document, String path) throws IOException {
         String largeText = "INNOVILYSE";
-        Paragraph paragraph = new Paragraph(largeText)
+        Rectangle rect = new Rectangle(0, 0, 523, 10);
+        Link link = new Link(largeText, (new PdfLinkAnnotation(rect)
+                .setAction(PdfAction.createURI(uiUrl))
+        ));
+        Paragraph paragraph = new Paragraph()
                 .setFontSize(50)
                 .setBold()
-                .setTextAlignment(TextAlignment.LEFT);
+                .setTextAlignment(TextAlignment.LEFT)
+                .add(link);
 
         // Load image from resources
         Image img = new Image(ImageDataFactory.create(path))
