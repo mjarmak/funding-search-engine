@@ -1,24 +1,31 @@
 package com.jeniustech.funding_search_engine.enums;
 
-import com.jeniustech.funding_search_engine.exceptions.EnumException;
+import java.util.List;
 
 public enum ProjectStatusEnum {
-    SIGNED("Signed"),
-    TERMINATED("Terminated"),
-    CLOSED("Closed");
+    SIGNED("Signed", List.of("SIGNED", "ONG")),
+    TERMINATED("Terminated", List.of("TERMINATED")),
+    CLOSED("Closed", List.of("CLOSED", "CLO"));
 
     private final String name;
+    private final List<String> codes;
 
-    ProjectStatusEnum(String name) {
+    ProjectStatusEnum(String name, List<String> codes) {
         this.name = name;
+        this.codes = codes;
     }
 
     public static ProjectStatusEnum valueFrom(String value) {
         try {
-            return ProjectStatusEnum.valueOf(value.toUpperCase());
+            for (ProjectStatusEnum projectStatusEnum : ProjectStatusEnum.values()) {
+                if (projectStatusEnum.codes.contains(value)) {
+                    return projectStatusEnum;
+                }
+            }
         } catch (IllegalArgumentException e) {
-            throw new EnumException("Invalid project status: " + value);
+            return CLOSED;
         }
+        return CLOSED;
     }
 
     public String getName() {

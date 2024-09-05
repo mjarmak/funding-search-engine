@@ -14,7 +14,8 @@ public interface ProjectCSVColumns {
     String EC_SIGNATURE_DATE = "ecSignatureDate";
     //    String FRAMEWORK_PROGRAMME = "frameworkProgramme";
     String MASTER_CALL = "masterCall";
-    //    String SUB_CALL = "subCall";
+    String SUB_CALL = "subCall";
+    String CALL = "call";
     String FUNDING_SCHEME = "fundingScheme";
     String NATURE = "nature";
     String OBJECTIVE = "objective";

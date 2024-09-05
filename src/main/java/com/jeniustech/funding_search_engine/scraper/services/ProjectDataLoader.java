@@ -38,6 +38,7 @@ import java.util.Optional;
 
 import static com.jeniustech.funding_search_engine.scraper.services.OrganisationDataLoader.getBudget;
 import static com.jeniustech.funding_search_engine.scraper.services.OrganisationDataLoader.getBudgetString;
+import static com.jeniustech.funding_search_engine.util.StringUtil.isEmpty;
 import static com.jeniustech.funding_search_engine.util.StringUtil.isNotEmpty;
 
 @Service
@@ -65,6 +66,7 @@ public class ProjectDataLoader {
     int CALL_IDENTIFIER_INDEX = -1;
     int EC_SIGNATURE_DATE_INDEX = -1;
     int MASTER_CALL_INDEX = -1;
+    int SUB_CALL_INDEX = -1;
     int FUNDING_SCHEME_INDEX = -1;
     int OBJECTIVE_INDEX = -1;
     int RCN_INDEX = -1;
@@ -112,7 +114,10 @@ public class ProjectDataLoader {
                     case ProjectCSVColumns.LEGAL_BASIS -> LEGAL_BASIS_INDEX = index;
                     case ProjectCSVColumns.CALL_IDENTIFIER -> CALL_IDENTIFIER_INDEX = index;
                     case ProjectCSVColumns.EC_SIGNATURE_DATE -> EC_SIGNATURE_DATE_INDEX = index;
-                    case ProjectCSVColumns.MASTER_CALL -> MASTER_CALL_INDEX = index;
+
+                    case ProjectCSVColumns.MASTER_CALL, ProjectCSVColumns.CALL -> MASTER_CALL_INDEX = index;
+
+                    case ProjectCSVColumns.SUB_CALL -> SUB_CALL_INDEX = index;
                     case ProjectCSVColumns.FUNDING_SCHEME -> FUNDING_SCHEME_INDEX = index;
                     case ProjectCSVColumns.OBJECTIVE -> OBJECTIVE_INDEX = index;
                     case ProjectCSVColumns.RCN -> RCN_INDEX = index;
@@ -129,18 +134,18 @@ public class ProjectDataLoader {
                     END_DATE_INDEX,
                     TOTAL_COST_INDEX,
                     EC_MAX_CONTRIBUTION_INDEX,
-                    LEGAL_BASIS_INDEX,
+//                    LEGAL_BASIS_INDEX,
                     CALL_IDENTIFIER_INDEX,
-                    EC_SIGNATURE_DATE_INDEX,
-                    MASTER_CALL_INDEX,
+//                    EC_SIGNATURE_DATE_INDEX,
                     FUNDING_SCHEME_INDEX,
                     OBJECTIVE_INDEX,
                     RCN_INDEX
             );
             if (
-                    headerIndexes.contains(-1)
+                    headerIndexes.contains(-1) ||
+                            (MASTER_CALL_INDEX == -1 && SUB_CALL_INDEX == -1)
             ) {
-                log.error("Header not found " + String.join(", ", headerIndexes.stream().filter(i -> i == -1).map(String::valueOf).toList()) + " missing");
+                log.error("Header not found, " + headerIndexes.stream().filter(i -> i == -1).map(String::valueOf).count() + " missing");
                 throw new ScraperException("Header not found");
             }
 
@@ -182,7 +187,7 @@ public class ProjectDataLoader {
         }
 
         Project project = Project.builder()
-                .referenceId(Long.parseLong(row[ID_INDEX]))
+                .referenceId(Long.parseLong(getReferenceId(row)))
                 .rcn(row[RCN_INDEX])
                 .acronym(row[ACRONYM_INDEX])
                 .title(row[TITLE_INDEX])
@@ -192,7 +197,7 @@ public class ProjectDataLoader {
                 .signDate(getDate(EC_SIGNATURE_DATE_INDEX, row))
                 .startDate(getDate(START_DATE_INDEX, row))
                 .endDate(getDate(END_DATE_INDEX, row))
-                .masterCallIdentifier(row[MASTER_CALL_INDEX])
+                .masterCallIdentifier(getMasterCallIdentifier(row))
                 .legalBasis(row[LEGAL_BASIS_INDEX])
                 .fundingScheme(FundingSchemeEnum.valueOfName(row[FUNDING_SCHEME_INDEX]))
                 .build();
@@ -270,6 +275,26 @@ public class ProjectDataLoader {
         } else {
             return project;
         }
+    }
+
+    private String getReferenceId(String[] row) {
+        String referenceId = row[ID_INDEX];
+        if (isEmpty(referenceId)) {
+            throw new ScraperException("Reference ID is empty");
+        } else if (referenceId.contains("-")) {
+            referenceId = referenceId.substring(0, referenceId.indexOf("-"));
+        }
+        return referenceId;
+    }
+
+    private String getMasterCallIdentifier(String[] row) {
+        String masterCallIdentifier;
+        if (isEmpty(row[MASTER_CALL_INDEX])) {
+            masterCallIdentifier = row[SUB_CALL_INDEX];
+        } else {
+            masterCallIdentifier = row[MASTER_CALL_INDEX];
+        }
+        return masterCallIdentifier;
     }
 
     private void save(List<Project> projects, String fileName) {

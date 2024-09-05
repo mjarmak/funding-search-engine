@@ -137,7 +137,7 @@ public class CallDataLoader {
             if (
                     headerIndexes.contains(-1)
             ) {
-                log.error("Header not found " + String.join(", ", headerIndexes.stream().filter(i -> i == -1).map(String::valueOf).toList()) + " missing");
+                log.error("Header not found, " + headerIndexes.stream().filter(i -> i == -1).map(String::valueOf).count() + " missing");
                 throw new ScraperException("Header not found");
             }
 
