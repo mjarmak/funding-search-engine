@@ -3,13 +3,18 @@ package com.jeniustech.funding_search_engine.services;
 import com.itextpdf.io.image.ImageDataFactory;
 import com.itextpdf.kernel.colors.ColorConstants;
 import com.itextpdf.kernel.colors.DeviceRgb;
+import com.itextpdf.kernel.events.Event;
+import com.itextpdf.kernel.events.IEventHandler;
+import com.itextpdf.kernel.events.PdfDocumentEvent;
 import com.itextpdf.kernel.geom.PageSize;
 import com.itextpdf.kernel.geom.Rectangle;
 import com.itextpdf.kernel.pdf.PdfDocument;
+import com.itextpdf.kernel.pdf.PdfPage;
 import com.itextpdf.kernel.pdf.PdfWriter;
 import com.itextpdf.kernel.pdf.action.PdfAction;
 import com.itextpdf.kernel.pdf.annot.PdfLinkAnnotation;
 import com.itextpdf.kernel.pdf.canvas.draw.SolidLine;
+import com.itextpdf.layout.Canvas;
 import com.itextpdf.layout.Document;
 import com.itextpdf.layout.element.*;
 import com.itextpdf.layout.property.TextAlignment;
@@ -58,6 +63,9 @@ public class ReportService {
         try (ByteArrayOutputStream out = new ByteArrayOutputStream()) {
             PdfWriter writer = new PdfWriter(out);
             PdfDocument pdfDoc = new PdfDocument(writer);
+
+            pdfDoc.addEventHandler(PdfDocumentEvent.START_PAGE, new PageNumberHandler());
+
             pdfDoc.setDefaultPageSize(PageSize.A4);
             Document document = new Document(pdfDoc);
             addHeader(document, path);
@@ -122,10 +130,13 @@ public class ReportService {
         }
     }
 
-    private void addDateRange(Document document, String startDateDisplay, String endDateDisplay, String endDate2Display, String proposalSubmissionPeriod) {
-        document.add(getTitle(proposalSubmissionPeriod));
-        Paragraph row = new Paragraph()
-                .add(startDateDisplay);
+    private void addDateRange(Document document, String startDateDisplay, String endDateDisplay, String endDate2Display, String label) {
+        document.add(getTitle(label));
+        Paragraph row = new Paragraph();
+
+        if (startDateDisplay != null) {
+            row.add(startDateDisplay);
+        }
 
         if (endDateDisplay != null) {
             row.add(" > " + endDateDisplay);
@@ -202,5 +213,29 @@ public class ReportService {
                 .setMarginBottom(0)
                 .setFontColor(ColorConstants.GRAY)
                 .setTextAlignment(TextAlignment.LEFT);
+    }
+}
+
+class PageNumberHandler implements IEventHandler {
+
+    @Override
+    public void handleEvent(Event event) {
+        PdfDocumentEvent docEvent = (PdfDocumentEvent) event;
+        PdfDocument pdfDoc = docEvent.getDocument();
+        PdfPage page = docEvent.getPage();
+        int pageNumber = pdfDoc.getPageNumber(page);
+
+        // Create a paragraph for the page number
+        Paragraph pageNumberParagraph = new Paragraph(String.format("%d", pageNumber))
+                .setFontSize(10)
+                .setTextAlignment(TextAlignment.CENTER);
+
+        // Position the page number in the footer (bottom center)
+        float x = pdfDoc.getDefaultPageSize().getWidth() / 2;
+        float y = pdfDoc.getDefaultPageSize().getBottom() + 15;
+
+        // Add the page number at the specified location
+        new Canvas(page, pdfDoc.getDefaultPageSize())
+                .showTextAligned(pageNumberParagraph, x, y, TextAlignment.CENTER);
     }
 }
