@@ -38,8 +38,7 @@ import java.util.Optional;
 
 import static com.jeniustech.funding_search_engine.scraper.services.OrganisationDataLoader.getBudget;
 import static com.jeniustech.funding_search_engine.scraper.services.OrganisationDataLoader.getBudgetString;
-import static com.jeniustech.funding_search_engine.util.StringUtil.isEmpty;
-import static com.jeniustech.funding_search_engine.util.StringUtil.isNotEmpty;
+import static com.jeniustech.funding_search_engine.util.StringUtil.*;
 
 @Service
 @Slf4j
@@ -187,6 +186,7 @@ public class ProjectDataLoader {
         if (row[ID_INDEX] == null) {
             return null; // skip empty rows
         }
+        String callIdentifier = row[CALL_IDENTIFIER_INDEX];
 
         Project project = Project.builder()
                 .referenceId(getReferenceId(row))
@@ -199,13 +199,13 @@ public class ProjectDataLoader {
                 .signDate(EC_SIGNATURE_DATE_INDEX == -1 ? null : getDate(EC_SIGNATURE_DATE_INDEX, row))
                 .startDate(getDate(START_DATE_INDEX, row))
                 .endDate(getDate(END_DATE_INDEX, row))
-                .masterCallIdentifier(getMasterCallIdentifier(row))
+                .callIdentifier(valueOrDefault(callIdentifier, null))
+                .masterCallIdentifier(valueOrDefault(getMasterCallIdentifier(row), null))
                 .legalBasis(LEGAL_BASIS_INDEX == -1 ? null : row[LEGAL_BASIS_INDEX])
                 .fundingScheme(FundingSchemeEnum.valueOfName(row[FUNDING_SCHEME_INDEX]))
                 .build();
 
         // set call
-        String callIdentifier = row[CALL_IDENTIFIER_INDEX];
         setMainCall(project, callIdentifier);
 
         // set long text
@@ -272,6 +272,9 @@ public class ProjectDataLoader {
             }
             if (isNotEmpty(project.getFundingScheme())) {
                 existingProject.setFundingScheme(project.getFundingScheme());
+            }
+            if (isNotEmpty(project.getCallIdentifier())) {
+                existingProject.setCallIdentifier(project.getCallIdentifier());
             }
             return existingProject;
         } else {

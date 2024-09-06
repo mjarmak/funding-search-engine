@@ -31,6 +31,7 @@ public class ProjectDTO extends SearchItemDTO {
     private LocalDateTime signDate;
     private LocalDateTime startDate;
     private LocalDateTime endDate;
+    private String callIdentifier;
     private String masterCallIdentifier;
     private String legalBasis;
     private String fundingScheme;

@@ -46,6 +46,7 @@ public interface ProjectMapper {
                 .acronym(project.getAcronym())
                 .status(isSearch ? null : project.getStatus())
                 .signDate(isSearch ? null : project.getSignDate() == null ? null : project.getSignDate().atStartOfDay())
+                .callIdentifier(isSearch ? null : project.getCallIdentifier())
                 .masterCallIdentifier(isSearch ? null : project.getMasterCallIdentifier())
                 .legalBasis(isSearch ? null : project.getLegalBasis())
                 .fundingScheme(isSearch ? null : project.getFundingScheme().getName())

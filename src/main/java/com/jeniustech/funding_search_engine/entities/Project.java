@@ -53,6 +53,7 @@ public class Project {
     @ManyToOne(fetch = FetchType.LAZY)
     private Call call;
 
+    private String callIdentifier;
     private String masterCallIdentifier;
 
     private String legalBasis;
