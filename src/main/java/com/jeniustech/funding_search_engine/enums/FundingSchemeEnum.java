@@ -174,7 +174,22 @@ public enum FundingSchemeEnum {
     DS_SSA("DS-SSA"),
     LCF("LCF"),
     JRC("JRC"),
-    TALI("TALI");
+
+    TALI("TALI"),
+    NET("NET"),
+    THN("THN"),
+    ACM("ACM"),
+    CON("CON"),
+    LFC("LFC"),
+    RGI("RGI"),
+    EAW("EAW"),
+    DEM("DEM"),
+    BUR("BUR"),
+    SC("SC"),
+    EAT("EAT"),
+    TA("TA"),
+    TN("TN"),;
+
 
     private final List<String> name;
 

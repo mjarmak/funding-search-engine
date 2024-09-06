@@ -1,0 +1,6 @@
+ALTER TABLE projects ALTER COLUMN sign_date DROP NOT NULL;
+
+ALTER TABLE projects ALTER COLUMN reference_id TYPE VARCHAR(63);
+ALTER TABLE organisations ALTER COLUMN reference_id TYPE VARCHAR(63);
+
+ALTER TABLE projects ALTER COLUMN legal_basis DROP NOT NULL;
