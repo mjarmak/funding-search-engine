@@ -87,9 +87,9 @@ public class ProjectDataLoader {
         }
     }
 
-    public void loadData(String fileName) {
+    public void loadData(String fileName, boolean oldFormat) {
         total = 0;
-        fileName = csvService.preprocessCSV(fileName);
+        fileName = csvService.preprocessCSV(fileName, oldFormat);
 
         try (CSVReader reader = new CSVReaderBuilder(new FileReader(fileName))
                 .withCSVParser(new CSVParserBuilder()
@@ -125,7 +125,7 @@ public class ProjectDataLoader {
                 index++;
             }
 
-            final List<Integer> headerIndexes = List.of(
+            final List<Integer> headerIndexes = new ArrayList<>(List.of(
                     ID_INDEX,
                     ACRONYM_INDEX,
                     STATUS_INDEX,
@@ -134,13 +134,15 @@ public class ProjectDataLoader {
                     END_DATE_INDEX,
                     TOTAL_COST_INDEX,
                     EC_MAX_CONTRIBUTION_INDEX,
-//                    LEGAL_BASIS_INDEX,
                     CALL_IDENTIFIER_INDEX,
-//                    EC_SIGNATURE_DATE_INDEX,
                     FUNDING_SCHEME_INDEX,
                     OBJECTIVE_INDEX,
                     RCN_INDEX
-            );
+            ));
+            if (!oldFormat) {
+                headerIndexes.add(LEGAL_BASIS_INDEX);
+                headerIndexes.add(EC_SIGNATURE_DATE_INDEX);
+            }
             if (
                     headerIndexes.contains(-1) ||
                             (MASTER_CALL_INDEX == -1 && SUB_CALL_INDEX == -1)
@@ -187,18 +189,18 @@ public class ProjectDataLoader {
         }
 
         Project project = Project.builder()
-                .referenceId(Long.parseLong(getReferenceId(row)))
+                .referenceId(getReferenceId(row))
                 .rcn(row[RCN_INDEX])
                 .acronym(row[ACRONYM_INDEX])
                 .title(row[TITLE_INDEX])
                 .fundingOrganisation(getFundingOrganisation(TOTAL_COST_INDEX, EC_MAX_CONTRIBUTION_INDEX, row))
                 .fundingEU(getBudget(row, EC_MAX_CONTRIBUTION_INDEX))
                 .status(ProjectStatusEnum.valueFrom(row[STATUS_INDEX]))
-                .signDate(getDate(EC_SIGNATURE_DATE_INDEX, row))
+                .signDate(EC_SIGNATURE_DATE_INDEX == -1 ? null : getDate(EC_SIGNATURE_DATE_INDEX, row))
                 .startDate(getDate(START_DATE_INDEX, row))
                 .endDate(getDate(END_DATE_INDEX, row))
                 .masterCallIdentifier(getMasterCallIdentifier(row))
-                .legalBasis(row[LEGAL_BASIS_INDEX])
+                .legalBasis(LEGAL_BASIS_INDEX == -1 ? null : row[LEGAL_BASIS_INDEX])
                 .fundingScheme(FundingSchemeEnum.valueOfName(row[FUNDING_SCHEME_INDEX]))
                 .build();
 
@@ -210,7 +212,7 @@ public class ProjectDataLoader {
         project.setLongTexts(new ArrayList<>());
         addDescriptionIfPresent(row, OBJECTIVE_INDEX, project, LongTextTypeEnum.PROJECT_OBJECTIVE);
 
-        Optional<Project> existingProjectOptional = projectRepository.findByReferenceId(project.getReferenceId());
+        Optional<Project> existingProjectOptional = findProject(row);
         if (existingProjectOptional.isPresent()) {
             Project existingProject = existingProjectOptional.get();
 
@@ -277,19 +279,26 @@ public class ProjectDataLoader {
         }
     }
 
+    private Optional<Project> findProject(String[] row) {
+        String referenceId = row[ID_INDEX];
+        Optional<Project> existingProject = projectRepository.findByReferenceId(referenceId);
+        if (existingProject.isEmpty()) {
+            String rcn = row[RCN_INDEX];
+            return projectRepository.findByRcn(rcn);
+        }
+        return existingProject;
+    }
     private String getReferenceId(String[] row) {
         String referenceId = row[ID_INDEX];
         if (isEmpty(referenceId)) {
             throw new ScraperException("Reference ID is empty");
-        } else if (referenceId.contains("-")) {
-            referenceId = referenceId.substring(0, referenceId.indexOf("-"));
         }
         return referenceId;
     }
 
     private String getMasterCallIdentifier(String[] row) {
         String masterCallIdentifier;
-        if (isEmpty(row[MASTER_CALL_INDEX])) {
+        if (isEmpty(row[MASTER_CALL_INDEX]) && SUB_CALL_INDEX != -1 && isNotEmpty(row[SUB_CALL_INDEX])) {
             masterCallIdentifier = row[SUB_CALL_INDEX];
         } else {
             masterCallIdentifier = row[MASTER_CALL_INDEX];
@@ -306,6 +315,7 @@ public class ProjectDataLoader {
         } catch (Exception e) {
             e.printStackTrace();
             csvService.writeProjectsCSV(projects, fileName);
+            throw new ScraperException(e.getMessage());
         }
     }
 

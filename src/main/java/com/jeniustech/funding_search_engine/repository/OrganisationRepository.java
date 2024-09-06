@@ -11,5 +11,9 @@ import java.util.Optional;
 public interface OrganisationRepository extends JpaRepository<Organisation, Long> {
 
     @Query("SELECT o FROM Organisation o WHERE o.referenceId = :referenceId")
-    Optional<Organisation> findByReferenceId(Long referenceId);
+    Optional<Organisation> findByReferenceId(String referenceId);
+
+    Optional<Organisation> findByName(String vatNumber);
+
+    Optional<Organisation> findByShortName(String shortName);
 }

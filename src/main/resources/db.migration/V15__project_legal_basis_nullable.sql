@@ -1,0 +1,1 @@
+ALTER TABLE projects ALTER COLUMN legal_basis DROP NOT NULL;

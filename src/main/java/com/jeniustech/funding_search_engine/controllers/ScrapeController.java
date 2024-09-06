@@ -48,11 +48,12 @@ public class ScrapeController {
     @PreAuthorize("hasRole('admin-server')")
     @GetMapping("/partners/scrape")
     public void scrapePartners(
-            @RequestParam(value = "files") List<String> files
+            @RequestParam(value = "files") List<String> files,
+            @RequestParam(value = "oldFormat", required = false, defaultValue = "false") boolean oldFormat
             ) {
         log.info("Scraping partners");
         for (String file : files) {
-            organisationDataLoader.loadData(file);
+            organisationDataLoader.loadData(file, oldFormat);
             adminLogService.addLog(AdminLogType.SCRAPE_SUCCESS, file);
         }
         log.info("Updating funding information");
@@ -74,11 +75,12 @@ public class ScrapeController {
     @PreAuthorize("hasRole('admin-server')")
     @GetMapping("/projects/scrape")
     public void scrapeProjects(
-            @RequestParam(value = "files") List<String> files
+            @RequestParam(value = "files") List<String> files,
+            @RequestParam(value = "oldFormat", required = false, defaultValue = "false") boolean oldFormat
             ) {
         log.info("Scraping projects");
         for (String file : files) {
-            projectDataLoader.loadData(file);
+            projectDataLoader.loadData(file, oldFormat);
             adminLogService.addLog(AdminLogType.SCRAPE_SUCCESS, file);
         }
     }

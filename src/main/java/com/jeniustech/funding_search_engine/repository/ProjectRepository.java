@@ -12,7 +12,9 @@ import java.util.Optional;
 public interface ProjectRepository extends JpaRepository<Project, Long> {
 
     @Query("SELECT p FROM Project p WHERE p.referenceId = :referenceId")
-    Optional<Project> findByReferenceId(Long referenceId);
+    Optional<Project> findByReferenceId(String referenceId);
+
+    Optional<Project> findByRcn(String referenceId);
 
     @Query("SELECT p FROM Project p WHERE p.call.id = :id")
     List<Project> findAllByCallId(Long id);

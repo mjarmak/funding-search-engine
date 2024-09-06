@@ -29,7 +29,7 @@ public class Organisation {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private Long referenceId;
+    private String referenceId;
     private String rcn;
 
     private String name;

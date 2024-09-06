@@ -63,8 +63,8 @@ public class OrganisationDataLoader {
     int NET_EC_CONTRIBUTION_INDEX = -1;
     int TOTAL_COST_INDEX = -1;
 
-    public void loadData(String fileName) {
-        fileName = csvService.preprocessCSV(fileName);
+    public void loadData(String fileName, boolean oldFormat) {
+        fileName = csvService.preprocessCSV(fileName, oldFormat);
 
         duplicates = 0;
         total = 0;
@@ -185,7 +185,7 @@ public class OrganisationDataLoader {
         }
 
         Organisation organisation = Organisation.builder()
-                .referenceId(Long.parseLong(row[ORGANISATION_ID_INDEX]))
+                .referenceId(row[ORGANISATION_ID_INDEX])
                 .vatNumber(row[VAT_NUMBER_INDEX])
                 .name(row[NAME_INDEX])
                 .shortName(row[SHORT_NAME_INDEX])
@@ -197,7 +197,6 @@ public class OrganisationDataLoader {
 
         // set project, organisationProjectJoins
         setProjectLink(
-                PROJECT_ID_INDEX,
                 row,
                 organisation,
                 OrganisationProjectJoinTypeEnum.valueOfName(row[ROLE_INDEX]),
@@ -214,7 +213,7 @@ public class OrganisationDataLoader {
         // set contactInfo
         setContactInfo(row, organisation);
 
-        Optional<Organisation> existingOrganisationOptional = organisationRepository.findByReferenceId(organisation.getReferenceId());
+        Optional<Organisation> existingOrganisationOptional = findOrganisation(organisation);
         if (existingOrganisationOptional.isPresent()) {
             Organisation existingOrganisation = existingOrganisationOptional.get();
 
@@ -250,6 +249,18 @@ public class OrganisationDataLoader {
             return existingOrganisation;
         } else {
             return organisation;
+        }
+    }
+
+    private Optional<Organisation> findOrganisation(Organisation organisation) {
+        if (organisation.getReferenceId() != null) {
+            return organisationRepository.findByReferenceId(organisation.getReferenceId());
+        } else if (organisation.getName() != null) {
+            return organisationRepository.findByName(organisation.getVatNumber());
+        } else if (organisation.getShortName() != null) {
+            return organisationRepository.findByShortName(organisation.getShortName());
+        } else {
+            return Optional.empty();
         }
     }
 
@@ -399,7 +410,6 @@ public class OrganisationDataLoader {
     }
 
     private void setProjectLink(
-            int PROJECT_ID_INDEX,
             String[] row,
             Organisation organisation,
             OrganisationProjectJoinTypeEnum role,
@@ -409,8 +419,7 @@ public class OrganisationDataLoader {
         if (role == null) {
             role = OrganisationProjectJoinTypeEnum.UNKNOWN;
         }
-        long projectReferenceId = Long.parseLong(row[PROJECT_ID_INDEX]);
-        Project existingProject = projectRepository.findByReferenceId(projectReferenceId).orElseThrow(() -> new ProjectNotFoundException("Project not found with referenceId: " + projectReferenceId));
+        Project existingProject = findProject(row);
         OrganisationProjectJoin projectLink = OrganisationProjectJoin.builder()
                 .project(existingProject)
                 .organisation(organisation)
@@ -419,6 +428,17 @@ public class OrganisationDataLoader {
                 .fundingEU(fundingEU)
                 .build();
         organisation.setOrganisationProjectJoins(new ArrayList<>(List.of(projectLink)));
+    }
+
+    private Project findProject(String[] row) {
+        String referenceId = row[PROJECT_ID_INDEX];
+        Optional<Project> existingProject = projectRepository.findByReferenceId(referenceId);
+        if (existingProject.isEmpty()) {
+            String rcn = row[RCN_INDEX];
+            existingProject = projectRepository.findByRcn(rcn);
+            return existingProject.orElseThrow(() -> new ProjectNotFoundException("Project not found with referenceId: " + referenceId + " or rcn: " + rcn));
+        }
+        return existingProject.get();
     }
 
     public static BigDecimal getBudget(String[] row, int index) {
@@ -430,7 +450,10 @@ public class OrganisationDataLoader {
         if (!isNotEmpty(budgetCell)) {
             return "0";
         }
-        budget = budgetCell.replace(",", ".");
+        budget = budgetCell
+                .replace(" ", "")
+                .replace(",", ".")
+                .trim();
         return budget;
     }
 }

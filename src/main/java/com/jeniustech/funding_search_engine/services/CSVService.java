@@ -23,20 +23,31 @@ public class CSVService {
     public static final char DELIMITER = ';';
     public static final char QUOTE = '\"';
 
-    public String preprocessCSV(String inputFilePath) {
+    public String preprocessCSV(String inputFilePath, boolean oldFormat) {
         log.info("Preprocessing CSV file: " + inputFilePath);
         String outputFilePath = inputFilePath.replace(".csv", "_cleaned.csv");
         try (BufferedReader br = new BufferedReader(new FileReader(inputFilePath));
              BufferedWriter bw = new BufferedWriter(new FileWriter(outputFilePath))
         ) {
+            int currentQuoteCount = 0;
             String line;
             while ((line = br.readLine()) != null) {
                 // Replace triple quotes with single quotes
-                line = processCSVLine(line);
 
-                // Write the cleaned line to the output file
-                bw.write(line);
-                bw.newLine();
+                if (!oldFormat) {
+                    bw.write(processCSVLine(line));
+                    bw.newLine();
+                } else {
+                    // Check if the line contains an odd number of quotes
+                    currentQuoteCount += line.length() - line.replace("\"", "").length();
+                    if (currentQuoteCount % 2 != 0) {
+                        bw.write(line + "<br>");
+                    } else {
+                        bw.write(line);
+                        bw.newLine();
+                        currentQuoteCount = 0;
+                    }
+                }
             }
 
             log.info("CSV file has been preprocessed and saved as: " + outputFilePath);

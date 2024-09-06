@@ -2,6 +2,8 @@ package com.jeniustech.funding_search_engine.enums;
 
 import com.jeniustech.funding_search_engine.exceptions.EnumException;
 
+import java.util.List;
+
 // =UNIQUE(O:O)
 public enum FundingSchemeEnum {
     HORIZON_AG("HORIZON-AG"),
@@ -145,19 +147,46 @@ public enum FundingSchemeEnum {
     CP_SoU("CP-SoU"),
     CSA_ERANET("CSA-ERANET"),
     NoE("NoE"),
-    JTI_CP_ARTEMIS("JTI-CP-ARTEMIS");
 
+    JTI_CP_ARTEMIS("JTI-CP-ARTEMIS"),
+    STREP("STREP"),
+    IP("IP"),
+    SSA("SSA"),
+    CA("CA"),
+    I3("I3"),
+    IA_I3("IA-I3"),
+    AM_SSA("AM-SSA"),
+    COOPERATIVE(List.of("COOPERATIVE", "Cooperative")),
+    COLLECTIVE(List.of("COLLECTIVE", "Collective")),
+    EST("EST"),
+    EIF("EIF"),
+    RTN("RTN"),
+    EXT("EXT"),
+    IIF("IIF"),
+    SCF("SCF"),
+    TOK("TOK"),
+    EXC("EXC"),
+    CRS("CRS"),
+    IA_CA("IA-CA"),
+    TA_SSA("TA-SSA"),
+    CNI_SSA("CNI-SSA"),
+    STIP("STIP"),
+    DS_SSA("DS-SSA"),
+    LCF("LCF"),
+    JRC("JRC"),
+    TALI("TALI");
 
-
-
-
-    private final String name;
+    private final List<String> name;
 
     public String getName() {
-        return name;
+        return name.get(0);
     }
 
     FundingSchemeEnum(final String name) {
+        this.name = List.of(name);
+    }
+
+    FundingSchemeEnum(final List<String> name) {
         this.name = name;
     }
 
@@ -166,7 +195,7 @@ public enum FundingSchemeEnum {
             return null;
         }
         for (FundingSchemeEnum fundingSchemeEnum : FundingSchemeEnum.values()) {
-            if (fundingSchemeEnum.name.equals(name)) {
+            if (fundingSchemeEnum.name.contains(name)) {
                 return fundingSchemeEnum;
             }
         }
