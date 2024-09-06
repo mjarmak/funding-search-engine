@@ -442,7 +442,11 @@ public class OrganisationDataLoader {
     }
 
     public static BigDecimal getBudget(String[] row, int index) {
-        return new BigDecimal(getBudgetString(index, row)).stripTrailingZeros();
+        BigDecimal budget = new BigDecimal(getBudgetString(index, row)).stripTrailingZeros();
+        if (budget.compareTo(BigDecimal.ZERO) == 0) {
+            return null;
+        }
+        return budget;
     }
     public static String getBudgetString(int budgetIndex, String[] row) {
         String budget;

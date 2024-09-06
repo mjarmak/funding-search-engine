@@ -188,7 +188,12 @@ public enum FundingSchemeEnum {
     SC("SC"),
     EAT("EAT"),
     TA("TA"),
-    TN("TN"),;
+    TN("TN"),
+
+    STU("STU"),
+    EAD("EAD"),
+
+    ;
 
 
     private final List<String> name;

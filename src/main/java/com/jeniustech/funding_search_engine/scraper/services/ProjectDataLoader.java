@@ -345,9 +345,9 @@ public class ProjectDataLoader {
         BigDecimal totalCost = new BigDecimal(getBudgetString(TOTAL_COST_INDEX, row));
         BigDecimal ecMaxContribution = new BigDecimal(getBudgetString(EC_MAX_CONTRIBUTION_INDEX, row));
         if (totalCost.compareTo(BigDecimal.ZERO) == 0) {
-            return BigDecimal.ZERO.stripTrailingZeros();
+            return null;
         } else if (ecMaxContribution.compareTo(totalCost) == 0) {
-            return BigDecimal.ZERO.stripTrailingZeros();
+            return null;
         } else {
             return totalCost.subtract(ecMaxContribution).stripTrailingZeros();
         }
