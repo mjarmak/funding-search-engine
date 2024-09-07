@@ -70,6 +70,7 @@ public class ReportService {
 
             pdfDoc.setDefaultPageSize(PageSize.A4);
             Document document = new Document(pdfDoc);
+            document.setFontSize(10);
             addHeader(document, path);
 
             List<Call> calls = callRepository.findAllById(callIds);

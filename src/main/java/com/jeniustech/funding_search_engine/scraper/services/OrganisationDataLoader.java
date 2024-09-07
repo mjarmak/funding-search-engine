@@ -5,6 +5,7 @@ import com.jeniustech.funding_search_engine.enums.*;
 import com.jeniustech.funding_search_engine.exceptions.OrganisationNotFoundException;
 import com.jeniustech.funding_search_engine.exceptions.ProjectNotFoundException;
 import com.jeniustech.funding_search_engine.exceptions.ScraperException;
+import com.jeniustech.funding_search_engine.mappers.DateMapper;
 import com.jeniustech.funding_search_engine.repository.OrganisationRepository;
 import com.jeniustech.funding_search_engine.repository.ProjectRepository;
 import com.jeniustech.funding_search_engine.scraper.constants.excel.OrganisationCSVColumns;
@@ -21,6 +22,7 @@ import org.springframework.stereotype.Service;
 import java.io.FileReader;
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -246,6 +248,7 @@ public class OrganisationDataLoader {
             if (isNotEmpty(organisation.getType())) {
                 existingOrganisation.setType(organisation.getType());
             }
+            existingOrganisation.setUpdatedAt(DateMapper.map(LocalDateTime.now()));
             return existingOrganisation;
         } else {
             return organisation;

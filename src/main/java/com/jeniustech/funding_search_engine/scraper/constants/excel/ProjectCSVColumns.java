@@ -8,6 +8,7 @@ public interface ProjectCSVColumns {
     String START_DATE = "startDate";
     String END_DATE = "endDate";
     String TOTAL_COST = "totalCost";
+    String FRAMEWORK_PROGRAM = "frameworkProgramme";
     String EC_MAX_CONTRIBUTION = "ecMaxContribution";
     String LEGAL_BASIS = "legalBasis";
     String CALL_IDENTIFIER = "topics";

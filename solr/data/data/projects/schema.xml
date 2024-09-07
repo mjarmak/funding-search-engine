@@ -8,6 +8,7 @@
     <field name="id" type="tlong" indexed="true" stored="true" required="true" multiValued="false"/>
     <field name="call_id" type="tlong" indexed="false" stored="true" multiValued="false"/>
     <field name="call_identifier" type="text_en" indexed="true" stored="false" multiValued="false"/>
+    <field name="framework_program" type="string" indexed="true" stored="false" multiValued="false"/>
     <field name="acronym" type="text_en_splitting" indexed="true" stored="true" multiValued="false"/>
     <field name="title" type="text_en_splitting" indexed="true" stored="true" multiValued="false"/>
     <field name="long_text" type="text_en_splitting" indexed="true" stored="false" multiValued="false"/>

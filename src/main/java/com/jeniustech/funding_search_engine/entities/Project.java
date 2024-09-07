@@ -1,5 +1,6 @@
 package com.jeniustech.funding_search_engine.entities;
 
+import com.jeniustech.funding_search_engine.enums.FrameworkProgramEnum;
 import com.jeniustech.funding_search_engine.enums.FundingSchemeEnum;
 import com.jeniustech.funding_search_engine.enums.ProjectStatusEnum;
 import com.jeniustech.funding_search_engine.enums.UrlTypeEnum;
@@ -45,6 +46,9 @@ public class Project {
 
     @Enumerated(EnumType.ORDINAL)
     private ProjectStatusEnum status;
+
+    @Enumerated(EnumType.ORDINAL)
+    private FrameworkProgramEnum frameworkProgram;
 
     private LocalDate signDate;
     private LocalDate startDate;

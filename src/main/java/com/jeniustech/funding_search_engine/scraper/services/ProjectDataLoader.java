@@ -3,10 +3,7 @@ package com.jeniustech.funding_search_engine.scraper.services;
 import com.jeniustech.funding_search_engine.entities.Call;
 import com.jeniustech.funding_search_engine.entities.LongText;
 import com.jeniustech.funding_search_engine.entities.Project;
-import com.jeniustech.funding_search_engine.enums.FundingSchemeEnum;
-import com.jeniustech.funding_search_engine.enums.LongTextTypeEnum;
-import com.jeniustech.funding_search_engine.enums.ProjectStatusEnum;
-import com.jeniustech.funding_search_engine.enums.UrlTypeEnum;
+import com.jeniustech.funding_search_engine.enums.*;
 import com.jeniustech.funding_search_engine.exceptions.ScraperException;
 import com.jeniustech.funding_search_engine.mappers.DateMapper;
 import com.jeniustech.funding_search_engine.mappers.SolrMapper;
@@ -32,6 +29,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -65,6 +63,7 @@ public class ProjectDataLoader {
     int CALL_IDENTIFIER_INDEX = -1;
     int EC_SIGNATURE_DATE_INDEX = -1;
     int MASTER_CALL_INDEX = -1;
+    int FRAMEWORK_PROGRAM_INDEX = -1;
     int SUB_CALL_INDEX = -1;
     int FUNDING_SCHEME_INDEX = -1;
     int OBJECTIVE_INDEX = -1;
@@ -115,6 +114,7 @@ public class ProjectDataLoader {
                     case ProjectCSVColumns.EC_SIGNATURE_DATE -> EC_SIGNATURE_DATE_INDEX = index;
 
                     case ProjectCSVColumns.MASTER_CALL, ProjectCSVColumns.CALL -> MASTER_CALL_INDEX = index;
+                    case ProjectCSVColumns.FRAMEWORK_PROGRAM -> FRAMEWORK_PROGRAM_INDEX = index;
 
                     case ProjectCSVColumns.SUB_CALL -> SUB_CALL_INDEX = index;
                     case ProjectCSVColumns.FUNDING_SCHEME -> FUNDING_SCHEME_INDEX = index;
@@ -135,6 +135,7 @@ public class ProjectDataLoader {
                     EC_MAX_CONTRIBUTION_INDEX,
                     CALL_IDENTIFIER_INDEX,
                     FUNDING_SCHEME_INDEX,
+                    FRAMEWORK_PROGRAM_INDEX,
                     OBJECTIVE_INDEX,
                     RCN_INDEX
             ));
@@ -195,6 +196,7 @@ public class ProjectDataLoader {
                 .title(row[TITLE_INDEX])
                 .fundingOrganisation(getFundingOrganisation(TOTAL_COST_INDEX, EC_MAX_CONTRIBUTION_INDEX, row))
                 .fundingEU(getBudget(row, EC_MAX_CONTRIBUTION_INDEX))
+                .frameworkProgram(FrameworkProgramEnum.valueFrom(row[FRAMEWORK_PROGRAM_INDEX]))
                 .status(ProjectStatusEnum.valueFrom(row[STATUS_INDEX]))
                 .signDate(EC_SIGNATURE_DATE_INDEX == -1 ? null : getDate(EC_SIGNATURE_DATE_INDEX, row))
                 .startDate(getDate(START_DATE_INDEX, row))
@@ -276,6 +278,10 @@ public class ProjectDataLoader {
             if (isNotEmpty(project.getCallIdentifier())) {
                 existingProject.setCallIdentifier(project.getCallIdentifier());
             }
+            if (project.getFrameworkProgram() != null) {
+                existingProject.setFrameworkProgram(project.getFrameworkProgram());
+            }
+            existingProject.setUpdatedAt(DateMapper.map(LocalDateTime.now()));
             return existingProject;
         } else {
             return project;

@@ -27,6 +27,7 @@ import org.springframework.stereotype.Service;
 import java.io.FileReader;
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -287,6 +288,7 @@ public class CallDataLoader {
                 if (isEmpty(existingCall.getKeywords())) {
                     setKeywords(existingCall);
                 }
+                existingCall.setUpdatedAt(DateMapper.map(LocalDateTime.now()));
                 return existingCall;
             } else {
                 log.debug("Adding call: " + call.getIdentifier());

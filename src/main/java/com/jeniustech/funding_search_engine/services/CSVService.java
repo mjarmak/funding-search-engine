@@ -95,7 +95,7 @@ public class CSVService {
                     .append(QUOTE).append(valueOrDefault(project.getTitle(), "")).append(QUOTE).append(DELIMITER)
                     .append(QUOTE).append(project.getStartDate() == null ? "" : project.getStartDate()).append(QUOTE).append(DELIMITER)
                     .append(QUOTE).append(project.getEndDate() == null ? "" : project.getEndDate()).append(QUOTE).append(DELIMITER)
-                    .append(QUOTE).append(project.getFundingEU().add(project.getFundingOrganisation()).toPlainString()).append(QUOTE).append(DELIMITER)
+                    .append(QUOTE).append(project.getFundingEU() != null ? project.getFundingEU().add(project.getFundingOrganisation()).toPlainString() : project.getFundingOrganisation()).append(QUOTE).append(DELIMITER)
                     .append(QUOTE).append(project.getFundingEU().toPlainString()).append(QUOTE).append(DELIMITER)
                     .append(QUOTE).append(valueOrDefault(project.getLegalBasis(), "")).append(QUOTE).append(DELIMITER)
                     .append(QUOTE).append(project.getCall() == null ? "" : project.getCall().getIdentifier()).append(QUOTE).append(DELIMITER)

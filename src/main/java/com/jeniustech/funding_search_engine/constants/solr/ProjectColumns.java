@@ -12,6 +12,7 @@ public interface ProjectColumns {
     String END_DATE = "end_date";
     String FUNDING_EU = "funding_eu";
     String FUNDING_ORGANISATION = "funding_organisation";
+    String FRAMEWORK_PROGRAM = "framework_program";
     String SCORE = "score";
 
 }
