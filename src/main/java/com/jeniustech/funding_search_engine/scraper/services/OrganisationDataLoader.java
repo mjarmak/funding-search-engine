@@ -71,6 +71,8 @@ public class OrganisationDataLoader {
         duplicates = 0;
         total = 0;
 
+        resetIndexes();
+
         try (CSVReader reader = new CSVReaderBuilder(new FileReader(fileName))
                 .withCSVParser(new CSVParserBuilder()
                         .withSeparator(CSVService.DELIMITER)
@@ -151,6 +153,30 @@ public class OrganisationDataLoader {
             e.printStackTrace();
             throw new ScraperException(e.getMessage());
         }
+    }
+
+    private void resetIndexes() {
+        PROJECT_ID_INDEX = -1;
+        ORGANISATION_ID_INDEX = -1;
+        VAT_NUMBER_INDEX = -1;
+        NAME_INDEX = -1;
+        SHORT_NAME_INDEX = -1;
+        SME_INDEX = -1;
+        ACTIVITY_TYPE_INDEX = -1;
+        STREET_INDEX = -1;
+        POSTCODE_INDEX = -1;
+        CITY_INDEX = -1;
+        COUNTRY_INDEX = -1;
+        NUTS_CODE_INDEX = -1;
+        GEO_LOCATION_INDEX = -1;
+        ORGANIZATION_URL_INDEX = -1;
+        CONTACT_FORM_INDEX = -1;
+        CONTENT_UPDATE_DATE_INDEX = -1;
+        RCN_INDEX = -1;
+        ORDER_INDEX = -1;
+        ROLE_INDEX = -1;
+        NET_EC_CONTRIBUTION_INDEX = -1;
+        TOTAL_COST_INDEX = -1;
     }
 
     private void processSave(List<Organisation> items, Organisation item, String fileName) {

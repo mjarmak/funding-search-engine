@@ -5,15 +5,15 @@ import com.jeniustech.funding_search_engine.exceptions.EnumException;
 import java.util.List;
 
 public enum FrameworkProgramEnum {
-    HORIZON("HORIZON"),
-    H2020("H2020"),
-    FP1("FP1"),
-    FP2("FP1"),
-    FP3("FP1"),
-    FP4("FP1"),
-    FP5("FP1"),
-    FP6("FP1"),
-    FP7("FP1"),
+    HORIZON("HORIZON"), // 0
+    H2020("H2020"), // 1
+    FP1("FP1"), // 2
+    FP2("FP2"), // 3
+    FP3("FP3"), // 4
+    FP4("FP4"), // 5
+    FP5("FP5"), // 6
+    FP6("FP6"), // 7
+    FP7("FP7"), // 8
     ;
 
     private final List<String> codes;

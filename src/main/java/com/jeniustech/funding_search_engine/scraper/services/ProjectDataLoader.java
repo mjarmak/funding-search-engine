@@ -87,6 +87,9 @@ public class ProjectDataLoader {
 
     public void loadData(String fileName, boolean oldFormat) {
         total = 0;
+
+        resetIndexes();
+
         fileName = csvService.preprocessCSV(fileName, oldFormat);
 
         try (CSVReader reader = new CSVReaderBuilder(new FileReader(fileName))
@@ -164,6 +167,26 @@ public class ProjectDataLoader {
             e.printStackTrace();
             throw new ScraperException(e.getMessage());
         }
+    }
+
+    private void resetIndexes() {
+        ID_INDEX = -1;
+        ACRONYM_INDEX = -1;
+        STATUS_INDEX = -1;
+        TITLE_INDEX = -1;
+        START_DATE_INDEX = -1;
+        END_DATE_INDEX = -1;
+        TOTAL_COST_INDEX = -1;
+        EC_MAX_CONTRIBUTION_INDEX = -1;
+        LEGAL_BASIS_INDEX = -1;
+        CALL_IDENTIFIER_INDEX = -1;
+        EC_SIGNATURE_DATE_INDEX = -1;
+        MASTER_CALL_INDEX = -1;
+        FRAMEWORK_PROGRAM_INDEX = -1;
+        SUB_CALL_INDEX = -1;
+        FUNDING_SCHEME_INDEX = -1;
+        OBJECTIVE_INDEX = -1;
+        RCN_INDEX = -1;
     }
 
 

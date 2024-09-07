@@ -85,6 +85,9 @@ public class CallDataLoader {
 
     public void loadData(String fileName) {
         total = 0;
+
+        resetIndexes();
+
         try (CSVReader reader = new CSVReader(new FileReader(fileName))) {
 
             // get headers
@@ -155,6 +158,28 @@ public class CallDataLoader {
             e.printStackTrace();
             throw new ScraperException(e.getMessage());
         }
+    }
+
+    private void resetIndexes() {
+        identifierIndex = 0;
+        titleIndex = 0;
+        submissionDLIndex = 0;
+        submissionDL2Index = 0;
+        actionTypeIndex = 0;
+        openDateIndex = 0;
+        budgetMinIndex = 0;
+        budgetMaxIndex = 0;
+        descriptionIndex = 0;
+        destinationDetailsIndex = 0;
+        missionDetailsIndex = 0;
+        numberOfProjectsIndex = 0;
+        pathIdIndex = 0;
+        referenceIndex = 0;
+        typeOfMGADescriptionIndex = 0;
+        submissionProcedureIndex = 0;
+        beneficiaryAdministrationIndex = 0;
+        durationIndex = 0;
+        furtherInformationIndex = 0;
     }
 
     private void processSave(List<Call> items, Call item, String fileName) {

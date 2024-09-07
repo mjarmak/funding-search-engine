@@ -192,7 +192,7 @@ public enum FundingSchemeEnum {
 
     STU("STU"),
     EAD("EAD"),
-
+    CSA_LS("CSA-LS"),
     ;
 
 

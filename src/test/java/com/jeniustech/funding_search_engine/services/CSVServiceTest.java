@@ -27,7 +27,7 @@ public class CSVServiceTest {
     void writeCSV() {
         List<Project> projects = List.of(
                 Project.builder()
-                        .referenceId(725172L)
+                        .referenceId("725172L")
                         .acronym("SIRFUNCT")
                         .status(ProjectStatusEnum.CLOSED)
                         .title("Chemical Tools for Unravelling Sirtuin Function")
