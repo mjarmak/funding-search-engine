@@ -3,6 +3,7 @@ package com.jeniustech.funding_search_engine.controllers;
 import com.jeniustech.funding_search_engine.dto.search.PartnerDTO;
 import com.jeniustech.funding_search_engine.dto.search.ProjectDTO;
 import com.jeniustech.funding_search_engine.dto.search.SearchDTO;
+import com.jeniustech.funding_search_engine.enums.FrameworkProgramEnum;
 import com.jeniustech.funding_search_engine.enums.LogTypeEnum;
 import com.jeniustech.funding_search_engine.enums.StatusFilterEnum;
 import com.jeniustech.funding_search_engine.mappers.UserDataMapper;
@@ -40,6 +41,17 @@ public class ProjectController implements IDataController<ProjectDTO> {
             @RequestParam(required = true, defaultValue = "20") int pageSize,
             @RequestParam(required = false, name = "status", defaultValue = "UPCOMING,OPEN,CLOSED"
             ) List<StatusFilterEnum> statusFilters,
+            @RequestParam(required = false, name = "program", defaultValue =
+                    "HORIZON," +
+                            "H2020," +
+                            "FP1," +
+                            "FP2," +
+                            "FP3," +
+                            "FP4," +
+                            "FP5," +
+                            "FP6," +
+                            "FP7"
+            ) List<FrameworkProgramEnum> programFilters,
             @AuthenticationPrincipal Jwt jwt
     ) {
         JwtModel jwtModel = UserDataMapper.map(jwt);
@@ -48,6 +60,7 @@ public class ProjectController implements IDataController<ProjectDTO> {
                 pageNumber,
                 pageSize,
                 statusFilters,
+                programFilters,
                 jwtModel
         ));
     }

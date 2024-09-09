@@ -120,7 +120,6 @@ public class CallSolrClientService implements ISolrClientService<CallDTO> {
                 }
                 // join with 'OR'
                 solrQuery.addFilterQuery(String.join(" OR ", filters));
-
             }
 
             QueryResponse response = this.solrClient.query(solrQuery);

@@ -3,6 +3,7 @@ package com.jeniustech.funding_search_engine.services.solr;
 import com.jeniustech.funding_search_engine.dto.search.ProjectDTO;
 import com.jeniustech.funding_search_engine.dto.search.SearchDTO;
 import com.jeniustech.funding_search_engine.entities.UserData;
+import com.jeniustech.funding_search_engine.enums.FrameworkProgramEnum;
 import com.jeniustech.funding_search_engine.enums.LogTypeEnum;
 import com.jeniustech.funding_search_engine.enums.StatusFilterEnum;
 import com.jeniustech.funding_search_engine.exceptions.DocumentSaveException;
@@ -28,6 +29,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 @Service
 public class ProjectSolrClientService implements ISolrClientService<ProjectDTO> {
@@ -89,7 +91,14 @@ public class ProjectSolrClientService implements ISolrClientService<ProjectDTO> 
         }
     }
 
-    public SearchDTO<ProjectDTO> search(String query, int pageNumber, int pageSize, @NotNull List<StatusFilterEnum> statusFilters, JwtModel jwtModel) throws SearchException {
+    public SearchDTO<ProjectDTO> search(
+            String query,
+            int pageNumber,
+            int pageSize,
+            @NotNull List<StatusFilterEnum> statusFilters,
+            @NotNull List<FrameworkProgramEnum> programFilters,
+            JwtModel jwtModel
+    ) throws SearchException {
         UserData userData = this.userDataRepository.findBySubjectId(jwtModel.getUserId()).orElseThrow(() -> new UserNotFoundException("User not found"));
 
         ValidatorService.validateUserSearch(userData);
@@ -124,7 +133,10 @@ public class ProjectSolrClientService implements ISolrClientService<ProjectDTO> 
                 }
                 // join with 'OR'
                 solrQuery.addFilterQuery(String.join(" OR ", filters));
+            }
 
+            if (!programFilters.isEmpty() && programFilters.size() < 9) {
+                solrQuery.addFilterQuery("framework_program:(" + programFilters.stream().map(FrameworkProgramEnum::getName).collect(Collectors.joining(" ")) + ")");
             }
 
             QueryResponse response = this.solrClient.query(solrQuery);
