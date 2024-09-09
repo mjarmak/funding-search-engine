@@ -2,7 +2,6 @@ package com.jeniustech.funding_search_engine.dto.search;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.jeniustech.funding_search_engine.dto.LongTextDTO;
-import com.jeniustech.funding_search_engine.enums.FrameworkProgramEnum;
 import com.jeniustech.funding_search_engine.enums.OrganisationProjectJoinTypeEnum;
 import com.jeniustech.funding_search_engine.enums.ProjectStatusEnum;
 import lombok.Builder;
@@ -30,7 +29,7 @@ public class ProjectDTO extends SearchItemDTO {
 
     private ProjectStatusEnum status;
     private LocalDateTime signDate;
-    private FrameworkProgramEnum frameworkProgram;
+    private String frameworkProgram;
     private LocalDateTime startDate;
     private LocalDateTime endDate;
     private String callIdentifier;
