@@ -9,27 +9,31 @@ public enum OrganisationProjectJoinTypeEnum {
     ASSOCIATED_PARTNER("associatedPartner", 1),
     UNKNOWN("", 99);
 
-    private final String name;
+    private final String csvName;
     private final int hierarchy;
 
 
     public int getHierarchy() {
         return hierarchy;
     }
-    OrganisationProjectJoinTypeEnum(final String name, final int hierarchy) {
-        this.name = name;
+    OrganisationProjectJoinTypeEnum(final String csvName, final int hierarchy) {
+        this.csvName = csvName;
         this.hierarchy = hierarchy;
     }
 
-    public static OrganisationProjectJoinTypeEnum valueOfName(String name) {
-        if (!StringUtil.isNotEmpty(name)) {
+    public static OrganisationProjectJoinTypeEnum valueOfName(String csvName) {
+        if (!StringUtil.isNotEmpty(csvName)) {
             return null;
         }
         for (OrganisationProjectJoinTypeEnum organisationProjectJoinTypeEnum : OrganisationProjectJoinTypeEnum.values()) {
-            if (organisationProjectJoinTypeEnum.name.equals(name)) {
+            if (organisationProjectJoinTypeEnum.csvName.equals(csvName)) {
                 return organisationProjectJoinTypeEnum;
             }
         }
         return null;
+    }
+
+    public String getName() {
+        return name();
     }
 }

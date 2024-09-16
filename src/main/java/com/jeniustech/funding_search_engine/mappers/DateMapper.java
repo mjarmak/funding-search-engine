@@ -81,6 +81,13 @@ public interface DateMapper {
         return utcZonedDateTime.format(csvFormatter);
     }
 
+    static String formatToDisplay(LocalDate localDate) {
+        if (localDate == null) {
+            return null;
+        }
+        return localDate.atStartOfDay().format(displayFormatter);
+    }
+
     static String formatToDisplay(LocalDateTime localDateTime) {
         if (localDateTime == null) {
             return null;

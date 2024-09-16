@@ -132,13 +132,13 @@ public class Project {
     }
 
     public String getStartDateDisplay() {
-        return DateMapper.formatToDisplay(startDate.atStartOfDay());
+        return DateMapper.formatToDisplay(startDate);
     }
     public String getEndDateDisplay() {
-        return DateMapper.formatToDisplay(endDate.atStartOfDay());
+        return DateMapper.formatToDisplay(endDate);
     }
     public String getSignDateDisplay() {
-        return DateMapper.formatToDisplay(signDate.atStartOfDay());
+        return DateMapper.formatToDisplay(signDate);
     }
 
     public String getStatusName() {

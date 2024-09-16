@@ -113,10 +113,16 @@ public class Call {
     }
 
     public String getBudgetMinString() {
+        if (budgetMin == null) {
+            return null;
+        }
         return budgetMin.stripTrailingZeros().toPlainString();
     }
 
     public String getBudgetMaxString() {
+        if (budgetMax == null) {
+            return null;
+        }
         return budgetMax.stripTrailingZeros().toPlainString();
     }
 

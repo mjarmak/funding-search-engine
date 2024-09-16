@@ -56,4 +56,20 @@ public class OrganisationProjectJoin {
         return NumberMapper.shortenNumber(fundingEU, 1);
     }
 
+    public String getFundingOrganisationString() {
+        if (fundingOrganisation == null) {
+            return null;
+        }
+        return fundingOrganisation.stripTrailingZeros().toPlainString();
+    }
+    public String getFundingEUString() {
+        if (fundingEU == null) {
+            return null;
+        }
+        return fundingEU.stripTrailingZeros().toPlainString();
+    }
+
+    public String getTypeName() {
+        return type == null ? null : type.getName();
+    }
 }

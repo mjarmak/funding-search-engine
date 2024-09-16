@@ -50,7 +50,7 @@ public interface ProjectMapper {
                 .callIdentifier(isSearch ? null : project.getCallIdentifier())
                 .masterCallIdentifier(isSearch ? null : project.getMasterCallIdentifier())
                 .legalBasis(isSearch ? null : project.getLegalBasis())
-                .fundingScheme(isSearch ? null : project.getFundingScheme() == null ? null : project.getFundingScheme().getName())
+                .fundingScheme(isSearch ? null : project.getFundingSchemeName())
                 .longTexts(isSearch ? null : CallMapper.map(project.getLongTexts()))
                 .favorite(isFavorite)
                 .url(isSearch ? null : project.getUrl())
