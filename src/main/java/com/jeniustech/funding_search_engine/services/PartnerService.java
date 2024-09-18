@@ -110,7 +110,7 @@ public class PartnerService extends IDataService<PartnerDTO> {
         Pageable pageable = PageRequest.of(pageNumber, pageSize, Sort.sort(UserPartnerJoin.class).by(UserPartnerJoin::getId).descending());
 
         List<UserPartnerJoin> joins = userPartnerJoinRepository.findByUserIdAndType(userData.getId(), UserJoinTypeEnum.FAVORITE, pageable);
-        List<PartnerDTO> results = PartnerMapper.mapjoin(joins, true, true);
+        List<PartnerDTO> results = PartnerMapper.mapForFavorites(joins, true, true);
 
         return SearchDTO.<PartnerDTO>builder()
                 .results(results)
@@ -211,6 +211,6 @@ public class PartnerService extends IDataService<PartnerDTO> {
     }
 
     public List<ProjectDTO> getProjectsByPartnerId(Long id) {
-        return PartnerMapper.map(organisationProjectJoinRepository.findAllByPartnerId(id), true);
+        return PartnerMapper.mapForPartnerDetails(organisationProjectJoinRepository.findAllByPartnerId(id), true);
     }
 }

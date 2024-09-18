@@ -84,6 +84,28 @@ public class ExportService {
 
         List<Project> items = projectRepository.findAllById(ids);
 
+        return generateProjectExcel(userData, items);
+    }
+
+    public ByteArrayInputStream generatePartnerProjectExcel(Long id, String subjectId) throws IOException {
+        UserData userData = userDataRepository.findBySubjectId(subjectId).orElseThrow(() -> new UserNotFoundException("User not found"));
+        ValidatorService.validateUserExcelExport(userData, logService.getCountByUserIdAndType(userData.getId(), EXPORT_EXCEL));
+
+        Organisation organisation = partnerRepository.findById(id).orElseThrow(() -> new UserNotFoundException("Organisation not found"));
+
+        return generateProjectExcel(userData, organisation.getProjects());
+    }
+
+    public ByteArrayInputStream generateCallProjectExcel(Long id, String subjectId) throws IOException {
+        UserData userData = userDataRepository.findBySubjectId(subjectId).orElseThrow(() -> new UserNotFoundException("User not found"));
+        ValidatorService.validateUserExcelExport(userData, logService.getCountByUserIdAndType(userData.getId(), EXPORT_EXCEL));
+
+        Call call = callRepository.findById(id).orElseThrow(() -> new UserNotFoundException("Call not found"));
+
+        return generateProjectExcel(userData, call.getProjects());
+    }
+
+    private ByteArrayInputStream generateProjectExcel(UserData userData, List<Project> items) throws IOException {
         try (Workbook workbook = new XSSFWorkbook(); ByteArrayOutputStream out = new ByteArrayOutputStream()) {
             Sheet sheet = workbook.createSheet("PROJECTS");
 
@@ -131,7 +153,6 @@ public class ExportService {
             logService.addLog(userData, EXPORT_EXCEL, items.size() + "project");
             return new ByteArrayInputStream(out.toByteArray());
         }
-
     }
 
     public ByteArrayInputStream generatePartnerExcel(List<Long> ids, String subjectId) throws IOException {

@@ -133,4 +133,13 @@ public class Organisation {
                 .findFirst().map(OrganisationContactInfo::getValue)
                 .orElse(null);
     }
+
+    public List<Project> getProjects() {
+        if (organisationProjectJoins == null || organisationProjectJoins.isEmpty()) {
+            return null;
+        }
+        return organisationProjectJoins.stream()
+                .map(OrganisationProjectJoin::getProject)
+                .toList();
+    }
 }

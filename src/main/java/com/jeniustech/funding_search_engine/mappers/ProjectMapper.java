@@ -5,6 +5,7 @@ import com.jeniustech.funding_search_engine.dto.search.ProjectDTO;
 import com.jeniustech.funding_search_engine.entities.OrganisationProjectJoin;
 import com.jeniustech.funding_search_engine.entities.Project;
 import com.jeniustech.funding_search_engine.entities.UserProjectJoin;
+import com.jeniustech.funding_search_engine.enums.OrganisationProjectJoinTypeEnum;
 
 import java.util.Comparator;
 import java.util.List;
@@ -21,15 +22,15 @@ public interface ProjectMapper {
         if (project == null) {
             return null;
         }
-        return map(project.getProjectData(), isSearch, isFavorite, project.getProjectData().getFundingOrganisationDisplayString(), project.getProjectData().getFundingEUDisplayString());
+        return map(project.getProjectData(), isSearch, isFavorite, project.getProjectData().getFundingOrganisationDisplayString(), project.getProjectData().getFundingEUDisplayString(), null);
     }
     static List<ProjectDTO> map(List<Project> projects, boolean isSearch, boolean isFavorite) {
         if (projects == null) {
             return null;
         }
-        return projects.stream().map(project -> map(project, isSearch, isFavorite, project.getFundingOrganisationDisplayString(), project.getFundingEUDisplayString())).toList();
+        return projects.stream().map(project -> map(project, isSearch, isFavorite, project.getFundingOrganisationDisplayString(), project.getFundingEUDisplayString(), null)).toList();
     }
-    static ProjectDTO map(Project project, boolean isSearch, boolean isFavorite, String fundingOrganisationDisplayString, String fundingEUDisplayString) {
+    static ProjectDTO map(Project project, boolean isSearch, boolean isFavorite, String fundingOrganisationDisplayString, String fundingEUDisplayString, OrganisationProjectJoinTypeEnum joinType) {
         if (project == null) {
             return null;
         }
@@ -45,7 +46,7 @@ public interface ProjectMapper {
                 .totalFundingOrganisation(project.getFundingOrganisationDisplayString())
                 .acronym(project.getAcronym())
                 .status(isSearch ? null : project.getStatus())
-                .frameworkProgram(isSearch ? null : project.getFrameworkProgram() == null ? null : project.getFrameworkProgram().getName())
+                .frameworkProgram(project.getFrameworkProgram() == null ? null : project.getFrameworkProgram().getName())
                 .signDate(isSearch ? null : project.getSignDate() == null ? null : project.getSignDate().atStartOfDay())
                 .callIdentifier(isSearch ? null : project.getCallIdentifier())
                 .masterCallIdentifier(isSearch ? null : project.getMasterCallIdentifier())
@@ -54,6 +55,7 @@ public interface ProjectMapper {
                 .longTexts(isSearch ? null : CallMapper.map(project.getLongTexts()))
                 .favorite(isFavorite)
                 .url(isSearch ? null : project.getUrl())
+                .joinType(joinType)
                 .build();
     }
 

@@ -7,18 +7,19 @@ import com.jeniustech.funding_search_engine.entities.OrganisationProjectJoin;
 import com.jeniustech.funding_search_engine.entities.UserPartnerJoin;
 import com.jeniustech.funding_search_engine.enums.OrganisationProjectJoinTypeEnum;
 
+import java.util.Comparator;
 import java.util.List;
 
 public interface PartnerMapper {
 
 
-    static List<PartnerDTO> mapjoin(List<UserPartnerJoin> organisation, boolean isSearch, boolean isFavorite) {
+    static List<PartnerDTO> mapForFavorites(List<UserPartnerJoin> organisation, boolean isSearch, boolean isFavorite) {
         if (organisation == null) {
             return null;
         }
-        return organisation.stream().map(c -> mapjoin(c, isSearch, isFavorite)).toList();
+        return organisation.stream().map(c -> mapForFavorites(c, isSearch, isFavorite)).toList();
     }
-    static PartnerDTO mapjoin(UserPartnerJoin organisation, boolean isSearch, boolean isFavorite) {
+    static PartnerDTO mapForFavorites(UserPartnerJoin organisation, boolean isSearch, boolean isFavorite) {
         if (organisation == null) {
             return null;
         }
@@ -65,7 +66,7 @@ public interface PartnerMapper {
     }
 
 
-    static List<ProjectDTO> map(List<OrganisationProjectJoin> organisationProjectJoins, boolean isSearch) {
+    static List<ProjectDTO> mapForPartnerDetails(List<OrganisationProjectJoin> organisationProjectJoins, boolean isSearch) {
         if (organisationProjectJoins == null) {
             return null;
         }
@@ -73,7 +74,9 @@ public interface PartnerMapper {
                 .map(organisationProjectJoin -> ProjectMapper.map(
                         organisationProjectJoin.getProject(), isSearch, false,
                         organisationProjectJoin.getFundingOrganisationDisplayString(),
-                        organisationProjectJoin.getFundingEUDisplayString()))
+                        organisationProjectJoin.getFundingEUDisplayString(),
+                        organisationProjectJoin.getType()))
+                .sorted(Comparator.comparing(ProjectDTO::getStartDate).reversed())
                 .toList();
     }
 

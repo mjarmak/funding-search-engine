@@ -37,7 +37,7 @@ public class ProjectService extends IDataService<ProjectDTO> {
 
     public ProjectDTO getDTOById(Long id, String subjectId) {
         UserData userData = getUserOrNotFound(subjectId);
-        return ProjectMapper.map(getById(id), false, isFavorite(id, userData.getId()), null, null);
+        return ProjectMapper.map(getById(id), false, isFavorite(id, userData.getId()), null, null, null);
     }
 
     private Project getById(Long callId) {

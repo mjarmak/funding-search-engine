@@ -7,15 +7,21 @@ import com.jeniustech.funding_search_engine.enums.LogTypeEnum;
 import com.jeniustech.funding_search_engine.enums.StatusFilterEnum;
 import com.jeniustech.funding_search_engine.mappers.UserDataMapper;
 import com.jeniustech.funding_search_engine.models.JwtModel;
+import com.jeniustech.funding_search_engine.services.ExportService;
 import com.jeniustech.funding_search_engine.services.PartnerService;
 import com.jeniustech.funding_search_engine.services.UserDataService;
 import jakarta.validation.constraints.Size;
 import lombok.RequiredArgsConstructor;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -25,7 +31,7 @@ public class PartnerController implements IDataController<PartnerDTO> {
 
     private final PartnerService partnerService;
     private final UserDataService userDataService;
-
+    private final ExportService exportService;
 
     @GetMapping("/{id}/graph/network")
     public ResponseEntity<PartnerDTO> getGraphMesh(
@@ -98,6 +104,42 @@ public class PartnerController implements IDataController<PartnerDTO> {
             @PathVariable Long id
     ) {
         return ResponseEntity.ok(partnerService.getProjectsByPartnerId(id));
+    }
+
+    @PostMapping("/excel")
+    public ResponseEntity<InputStreamResource> downloadPartnerExcel(
+            @RequestBody List<Long> ids,
+            @AuthenticationPrincipal Jwt jwt
+    ) throws IOException {
+        JwtModel jwtModel = UserDataMapper.map(jwt);
+
+        ByteArrayInputStream in = exportService.generatePartnerExcel(ids, jwtModel.getUserId());
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Content-Disposition", "attachment; filename=data.xlsx");
+
+        return ResponseEntity.ok()
+                .headers(headers)
+                .contentType(MediaType.parseMediaType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"))
+                .body(new InputStreamResource(in));
+    }
+
+    @GetMapping("/{id}/projects/excel")
+    public ResponseEntity<InputStreamResource> getProjectsExcel(
+            @PathVariable Long id,
+            @AuthenticationPrincipal Jwt jwt
+    ) throws IOException {
+        JwtModel jwtModel = UserDataMapper.map(jwt);
+
+        ByteArrayInputStream in = exportService.generatePartnerProjectExcel(id, jwtModel.getUserId());
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Content-Disposition", "attachment; filename=data.xlsx");
+
+        return ResponseEntity.ok()
+                .headers(headers)
+                .contentType(MediaType.parseMediaType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"))
+                .body(new InputStreamResource(in));
     }
 
 }
