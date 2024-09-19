@@ -30,6 +30,7 @@ public class OrganisationProjectJoin {
     @ManyToOne(fetch = FetchType.LAZY)
     private Project project;
 
+    @Column(nullable = false)
     @Enumerated(EnumType.ORDINAL)
     private OrganisationProjectJoinTypeEnum type;
 
