@@ -89,9 +89,10 @@ public class StripeService {
             subscription.setNextType(subscriptionType);
             subscriptionRepository.save(subscription);
 
+            log.info("Checkout session created: " + session.getId());
             return sessionDTO;
         } catch (StripeException e) {
-            System.out.println("Error creating checkout session: " + e.getMessage());
+            log.error("Error creating checkout session: " + e.getMessage());
             throw new StripeRequestException("Error creating checkout session");
         }
     }
@@ -103,7 +104,7 @@ public class StripeService {
             event = ApiResource.GSON.fromJson(payload, Event.class);
         } catch (JsonSyntaxException e) {
             // Invalid payload
-            System.out.println("⚠️  Webhook error while parsing basic request.");
+            log.error("⚠️  Webhook error while parsing basic request.");
             throw new StripeWebhookException("Invalid payload");
         }
         if (endpointSecret != null && sigHeader != null) {
@@ -111,7 +112,8 @@ public class StripeService {
                 event = Webhook.constructEvent(payload, sigHeader, endpointSecret);
             } catch (SignatureVerificationException e) {
                 // Invalid signature
-                System.out.println("⚠️  Webhook error while validating signature.");
+                log.error("⚠️  Webhook error while validating signature.");
+                e.printStackTrace();
                 throw new StripeWebhookException("Invalid signature");
             }
         }
