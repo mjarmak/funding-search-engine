@@ -76,7 +76,7 @@ public interface PartnerMapper {
                         organisationProjectJoin.getFundingOrganisationDisplayString(),
                         organisationProjectJoin.getFundingEUDisplayString(),
                         organisationProjectJoin.getType()))
-                .sorted(Comparator.comparing(ProjectDTO::getStartDate, Comparator.nullsLast(Comparator.naturalOrder())
+                .sorted(Comparator.comparing(ProjectDTO::getStartDate, Comparator.nullsFirst(Comparator.naturalOrder())
                 ).reversed())
                 .toList();
     }
