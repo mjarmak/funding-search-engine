@@ -9,6 +9,7 @@ import com.jeniustech.funding_search_engine.mappers.DateMapper;
 import com.jeniustech.funding_search_engine.repository.OrganisationRepository;
 import com.jeniustech.funding_search_engine.repository.ProjectRepository;
 import com.jeniustech.funding_search_engine.scraper.constants.excel.OrganisationCSVColumns;
+import com.jeniustech.funding_search_engine.scraper.util.CSVSplitter;
 import com.jeniustech.funding_search_engine.services.CSVService;
 import com.opencsv.CSVParserBuilder;
 import com.opencsv.CSVReader;
@@ -29,6 +30,7 @@ import java.util.Optional;
 
 import static com.jeniustech.funding_search_engine.scraper.services.ProjectDataLoader.getFundingOrganisation;
 import static com.jeniustech.funding_search_engine.util.StringUtil.isNotEmpty;
+import static com.jeniustech.funding_search_engine.util.StringUtil.valueOrDefault;
 
 @Service
 @Slf4j
@@ -68,6 +70,15 @@ public class OrganisationDataLoader {
     public void loadData(String fileName, boolean oldFormat) {
         fileName = csvService.preprocessCSV(fileName, oldFormat);
 
+        List<String> splitFileNames = CSVSplitter.splitCSVFile(fileName);
+
+        for (String splitFileName : splitFileNames) {
+            log.info("Loading data from " + splitFileName);
+            loadData(splitFileName);
+        }
+    }
+
+    private void loadData(String fileName) {
         duplicates = 0;
         total = 0;
 
@@ -75,7 +86,7 @@ public class OrganisationDataLoader {
 
         try (CSVReader reader = new CSVReaderBuilder(new FileReader(fileName))
                 .withCSVParser(new CSVParserBuilder()
-                        .withSeparator(CSVService.DELIMITER)
+                        .withSeparator(CSVService.DELIMITER_DEFAULT)
                         .withQuoteChar(CSVService.QUOTE)
                         .withEscapeChar('\\')
                         .build()
@@ -214,11 +225,11 @@ public class OrganisationDataLoader {
 
         Organisation organisation = Organisation.builder()
                 .referenceId(row[ORGANISATION_ID_INDEX])
-                .vatNumber(row[VAT_NUMBER_INDEX])
-                .name(row[NAME_INDEX])
-                .shortName(row[SHORT_NAME_INDEX])
+                .vatNumber(valueOrDefault(row[VAT_NUMBER_INDEX], null))
+                .name(valueOrDefault(row[NAME_INDEX], null))
+                .shortName(valueOrDefault(row[SHORT_NAME_INDEX], null))
                 .sme(BooleanEnum.fromBoolean(row[SME_INDEX]))
-                .nutsCode(row[NUTS_CODE_INDEX])
+                .nutsCode(valueOrDefault(row[NUTS_CODE_INDEX], null))
                 .rcn(row[RCN_INDEX])
                 .type(OrganisationTypeEnum.of(row[ACTIVITY_TYPE_INDEX]))
                 .build();

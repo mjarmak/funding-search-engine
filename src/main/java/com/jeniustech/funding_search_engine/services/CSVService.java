@@ -20,7 +20,7 @@ import static com.jeniustech.funding_search_engine.util.StringUtil.valueOrDefaul
 @Slf4j
 public class CSVService {
 
-    public static final char DELIMITER = ';';
+    public static final char DELIMITER_DEFAULT = ';';
     public static final char QUOTE = '\"';
 
     public String preprocessCSV(String inputFilePath, boolean oldFormat) {
@@ -89,20 +89,20 @@ public class CSVService {
                     .map(LongText::getText)
                     .orElse("");
             csv.append("\n")
-                    .append(QUOTE).append(project.getReferenceId()).append(QUOTE).append(DELIMITER)
-                    .append(QUOTE).append(valueOrDefault(project.getAcronym(), "")).append(QUOTE).append(DELIMITER)
-                    .append(QUOTE).append(project.getStatus()).append(QUOTE).append(DELIMITER)
-                    .append(QUOTE).append(valueOrDefault(project.getTitle(), "")).append(QUOTE).append(DELIMITER)
-                    .append(QUOTE).append(project.getStartDate() == null ? "" : project.getStartDate()).append(QUOTE).append(DELIMITER)
-                    .append(QUOTE).append(project.getEndDate() == null ? "" : project.getEndDate()).append(QUOTE).append(DELIMITER)
-                    .append(QUOTE).append(project.getFundingEU() != null ? project.getFundingEU().add(project.getFundingOrganisation()).toPlainString() : project.getFundingOrganisation()).append(QUOTE).append(DELIMITER)
-                    .append(QUOTE).append(project.getFundingEU().toPlainString()).append(QUOTE).append(DELIMITER)
-                    .append(QUOTE).append(valueOrDefault(project.getLegalBasis(), "")).append(QUOTE).append(DELIMITER)
-                    .append(QUOTE).append(project.getCall() == null ? "" : project.getCall().getIdentifier()).append(QUOTE).append(DELIMITER)
-                    .append(QUOTE).append(project.getSignDate() == null ? "" : project.getSignDate()).append(QUOTE).append(DELIMITER)
-                    .append(QUOTE).append(valueOrDefault(project.getMasterCallIdentifier(), "")).append(QUOTE).append(DELIMITER)
-                    .append(QUOTE).append(project.getFundingScheme() == null ? "" : project.getFundingScheme().getName()).append(QUOTE).append(DELIMITER)
-                    .append(QUOTE).append(description).append(QUOTE).append(DELIMITER)
+                    .append(QUOTE).append(project.getReferenceId()).append(QUOTE).append(DELIMITER_DEFAULT)
+                    .append(QUOTE).append(valueOrDefault(project.getAcronym(), "")).append(QUOTE).append(DELIMITER_DEFAULT)
+                    .append(QUOTE).append(project.getStatus()).append(QUOTE).append(DELIMITER_DEFAULT)
+                    .append(QUOTE).append(valueOrDefault(project.getTitle(), "")).append(QUOTE).append(DELIMITER_DEFAULT)
+                    .append(QUOTE).append(project.getStartDate() == null ? "" : project.getStartDate()).append(QUOTE).append(DELIMITER_DEFAULT)
+                    .append(QUOTE).append(project.getEndDate() == null ? "" : project.getEndDate()).append(QUOTE).append(DELIMITER_DEFAULT)
+                    .append(QUOTE).append(project.getFundingEU() != null ? project.getFundingEU().add(project.getFundingOrganisation()).toPlainString() : project.getFundingOrganisation()).append(QUOTE).append(DELIMITER_DEFAULT)
+                    .append(QUOTE).append(project.getFundingEU().toPlainString()).append(QUOTE).append(DELIMITER_DEFAULT)
+                    .append(QUOTE).append(valueOrDefault(project.getLegalBasis(), "")).append(QUOTE).append(DELIMITER_DEFAULT)
+                    .append(QUOTE).append(project.getCall() == null ? "" : project.getCall().getIdentifier()).append(QUOTE).append(DELIMITER_DEFAULT)
+                    .append(QUOTE).append(project.getSignDate() == null ? "" : project.getSignDate()).append(QUOTE).append(DELIMITER_DEFAULT)
+                    .append(QUOTE).append(valueOrDefault(project.getMasterCallIdentifier(), "")).append(QUOTE).append(DELIMITER_DEFAULT)
+                    .append(QUOTE).append(project.getFundingScheme() == null ? "" : project.getFundingScheme().getName()).append(QUOTE).append(DELIMITER_DEFAULT)
+                    .append(QUOTE).append(description).append(QUOTE).append(DELIMITER_DEFAULT)
                     .append(QUOTE).append(valueOrDefault(project.getRcn(), "")).append(QUOTE);
         }
         try (FileWriter fileWriter = new FileWriter(fileName.replace(".csv", "_" + System.currentTimeMillis() + "_failed.csv"))) {
@@ -119,11 +119,11 @@ public class CSVService {
         StringBuilder csv = new StringBuilder(header);
         for (Organisation organisation : organisations) {
             csv.append("\n")
-                    .append(QUOTE).append(organisation.getReferenceId()).append(QUOTE).append(DELIMITER)
-                    .append(QUOTE).append(organisation.getVatNumber()).append(QUOTE).append(DELIMITER)
-                    .append(QUOTE).append(organisation.getName()).append(QUOTE).append(DELIMITER)
-                    .append(QUOTE).append(organisation.getShortName()).append(QUOTE).append(DELIMITER)
-                    .append(QUOTE).append(organisation.getSme()).append(QUOTE).append(DELIMITER)
+                    .append(QUOTE).append(organisation.getReferenceId()).append(QUOTE).append(DELIMITER_DEFAULT)
+                    .append(QUOTE).append(organisation.getVatNumber()).append(QUOTE).append(DELIMITER_DEFAULT)
+                    .append(QUOTE).append(organisation.getName()).append(QUOTE).append(DELIMITER_DEFAULT)
+                    .append(QUOTE).append(organisation.getShortName()).append(QUOTE).append(DELIMITER_DEFAULT)
+                    .append(QUOTE).append(organisation.getSme()).append(QUOTE).append(DELIMITER_DEFAULT)
                     .append(QUOTE).append(valueOrDefault(organisation.getRcn(), "")).append(QUOTE);
         }
         try (FileWriter fileWriter = new FileWriter(fileName.replace(".csv", "_" + System.currentTimeMillis() + "_failed.csv"))) {

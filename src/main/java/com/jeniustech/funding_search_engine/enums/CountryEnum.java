@@ -245,7 +245,8 @@ public enum CountryEnum {
     BQ(241, "Bonaire", null, null),
     UM(242, "United States Minor Outlying Islands", null, null),
     ZZ(243, "Unknown", null, null),
-    SX(244, "Sint Maarten", null, null);
+    SX(244, "Sint Maarten", null, null),
+    CW(245, "Curacao", null, null);
 
 
     private final Integer hierarchy;

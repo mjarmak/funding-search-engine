@@ -94,7 +94,7 @@ public class ProjectDataLoader {
 
         try (CSVReader reader = new CSVReaderBuilder(new FileReader(fileName))
                 .withCSVParser(new CSVParserBuilder()
-                        .withSeparator(CSVService.DELIMITER)
+                        .withSeparator(CSVService.DELIMITER_DEFAULT)
                         .withQuoteChar(CSVService.QUOTE)
                         .withEscapeChar('\\')
                         .build()
