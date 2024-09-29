@@ -21,6 +21,7 @@ import static com.jeniustech.funding_search_engine.util.StringUtil.valueOrDefaul
 public class CSVService {
 
     public static final char DELIMITER_DEFAULT = ';';
+    public static final char DELIMITER_TAB = '\t';
     public static final char QUOTE = '\"';
 
     public String preprocessCSV(String inputFilePath, boolean oldFormat) {

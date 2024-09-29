@@ -1,0 +1,3 @@
+ALTER TABLE organisations ALTER COLUMN reference_id DROP NOT NULL;
+ALTER TABLE organisations ALTER COLUMN rcn DROP NOT NULL;
+ALTER TABLE organisations ALTER COLUMN sme DROP NOT NULL;

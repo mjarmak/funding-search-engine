@@ -7,7 +7,15 @@ public enum OrganisationTypeEnum {
     PRC("Private Company"),
     REC("Research Institute"),
     OTH("NGO"),
-    HES("Higher Education");
+    HES("Higher Education"),
+    GOV("Other"),
+    IND("Other"),
+    PRI("Other"),
+    R("Other"),
+    X("Other"),
+    RES("Other");
+
+
 
     private final String name;
 

@@ -53,7 +53,7 @@ public class ScrapeController {
             ) {
         log.info("Scraping partners");
         for (String file : files) {
-            organisationDataLoader.loadData(file, oldFormat);
+            organisationDataLoader.splitFileAndLoadData(file, oldFormat);
             adminLogService.addLog(AdminLogType.SCRAPE_SUCCESS, file);
         }
         log.info("Updating funding information");

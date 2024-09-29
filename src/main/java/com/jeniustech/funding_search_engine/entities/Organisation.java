@@ -142,4 +142,11 @@ public class Organisation {
                 .map(OrganisationProjectJoin::getProject)
                 .toList();
     }
+
+    public boolean matches(Organisation other) {
+        return (referenceId != null && referenceId.equals(other.referenceId)) ||
+                (name != null && name.equals(other.name)) ||
+                (shortName != null && shortName.equals(other.shortName)) ||
+                (vatNumber != null && vatNumber.equals(other.vatNumber));
+    }
 }

@@ -34,7 +34,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static com.jeniustech.funding_search_engine.scraper.services.OrganisationDataLoader.getBudget;
 import static com.jeniustech.funding_search_engine.scraper.services.OrganisationDataLoader.getBudgetString;
 import static com.jeniustech.funding_search_engine.util.StringUtil.*;
 
@@ -383,6 +382,14 @@ public class ProjectDataLoader {
         } else {
             return totalCost.subtract(ecMaxContribution).stripTrailingZeros();
         }
+    }
+
+    public static BigDecimal getBudget(String[] row, int index) {
+        BigDecimal budget = new BigDecimal(getBudgetString(index, row)).stripTrailingZeros();
+        if (budget.compareTo(BigDecimal.ZERO) == 0) {
+            return null;
+        }
+        return budget;
     }
 
     private static LocalDate getDate(int submissionDLIndex, String[] row) {
