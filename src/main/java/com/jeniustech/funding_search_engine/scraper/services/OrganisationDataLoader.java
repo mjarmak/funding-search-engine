@@ -69,18 +69,18 @@ public class OrganisationDataLoader {
     int EC_CONTRIBUTION_INDEX = -1;
     int TOTAL_COST_INDEX = -1;
 
-    public void splitFileAndLoadData(String fileName, boolean oldFormat) {
+    public void splitFileAndLoadData(String fileName, boolean oldFormat, boolean skipUpdate) {
         fileName = csvService.preprocessCSV(fileName, oldFormat);
 
         List<String> splitFileNames = CSVSplitter.splitCSVFile(fileName);
 
         for (String splitFileName : splitFileNames) {
             log.info("Loading data from " + splitFileName);
-            loadData(splitFileName, oldFormat);
+            loadData(splitFileName, oldFormat, skipUpdate);
         }
     }
 
-    private void loadData(String fileName, boolean oldFormat) {
+    private void loadData(String fileName, boolean oldFormat, boolean skipUpdate) {
         duplicates = 0;
         total = 0;
 
@@ -158,13 +158,14 @@ public class OrganisationDataLoader {
             List<Organisation> organisations = new ArrayList<>();
             String[] row;
             while ((row = reader.readNext()) != null) {
-                Organisation organisation = getOrganisation(row, oldFormat);
+                Organisation organisation = getOrganisation(row, oldFormat, skipUpdate);
                 processSave(organisations, organisation, fileName);
             }
             log.info("Saving last batch of " + organisations.size() + " items");
             save(organisations, fileName);
         } catch (IOException | DataIntegrityViolationException | CsvValidationException e) {
-            e.printStackTrace();
+            log.error(e.getMessage());
+//            e.printStackTrace();
             throw new ScraperException(e.getMessage());
         }
     }
@@ -220,7 +221,7 @@ public class OrganisationDataLoader {
         }
     }
 
-    private Organisation getOrganisation(String[] row, boolean oldFormat) {
+    private Organisation getOrganisation(String[] row, boolean oldFormat, boolean skipUpdate) {
         if (row[NAME_INDEX] == null) {
             return null; // skip empty rows
         }
@@ -260,6 +261,10 @@ public class OrganisationDataLoader {
 
             updateProjectLinks(organisation, existingOrganisation);
 
+            if (skipUpdate) {
+                return existingOrganisation;
+            }
+
             if (!oldFormat) {
                 updateAddress(organisation, existingOrganisation);
                 updateContactInfos(organisation, existingOrganisation);
@@ -297,17 +302,22 @@ public class OrganisationDataLoader {
     }
 
     private Optional<Organisation> findOrganisation(Organisation organisation) {
-        Optional<Organisation> organisationOptional = Optional.empty();
-        if (organisation.getReferenceId() != null) {
-            organisationOptional = organisationRepository.findByReferenceId(organisation.getReferenceId());
+        try {
+            Optional<Organisation> organisationOptional = Optional.empty();
+            if (organisation.getReferenceId() != null) {
+                organisationOptional = organisationRepository.findByReferenceId(organisation.getReferenceId());
+            }
+            if (organisationOptional.isEmpty() && organisation.getVatNumber() != null) {
+                organisationOptional = organisationRepository.findByVatNumber(organisation.getVatNumber());
+            }
+            if (organisationOptional.isEmpty() && organisation.getName() != null) {
+                organisationOptional = organisationRepository.findByName(organisation.getName());
+            }
+            return organisationOptional;
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            throw new ScraperException(e.getMessage());
         }
-        if (organisationOptional.isEmpty() && organisation.getVatNumber() != null) {
-            organisationOptional = organisationRepository.findByVatNumber(organisation.getVatNumber());
-        }
-        if (organisationOptional.isEmpty() && organisation.getName() != null) {
-            organisationOptional = organisationRepository.findByName(organisation.getName());
-        }
-        return organisationOptional;
     }
 
     private void setContactInfo(String[] row, Organisation organisation) {
@@ -363,7 +373,8 @@ public class OrganisationDataLoader {
         try{
             organisationRepository.saveAll(organisations);
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error(e.getMessage());
+//            e.printStackTrace();
             csvService.writePartnersCSV(organisations, fileName);
         }
     }

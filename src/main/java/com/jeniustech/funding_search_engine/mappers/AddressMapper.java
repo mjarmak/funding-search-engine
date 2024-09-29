@@ -16,7 +16,7 @@ public interface AddressMapper {
                 .city(address.getCity())
                 .postCode(address.getPostCode())
                 .country(address.getCountry())
-                .countryName(address.getCountry().getName())
+                .countryName(address.getCountry() == null ? null : address.getCountry().getName())
                 .build();
     }
 

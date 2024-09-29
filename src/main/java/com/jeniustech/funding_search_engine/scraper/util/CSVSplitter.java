@@ -9,7 +9,7 @@ import java.util.List;
 
 @Slf4j
 public class CSVSplitter {
-    private static final int ROWS_PER_FILE = 50000;
+    private static final int ROWS_PER_FILE = 25000;
 
     public static List<String> splitCSVFile(String fileName) throws ScraperException {
         List<String> splitFileNames = new ArrayList<>();

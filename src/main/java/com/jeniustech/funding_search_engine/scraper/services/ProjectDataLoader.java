@@ -69,14 +69,14 @@ public class ProjectDataLoader {
     int OBJECTIVE_INDEX = -1;
     int RCN_INDEX = -1;
 
-    public void splitFileAndLoadData(String fileName, boolean oldFormat) {
+    public void splitFileAndLoadData(String fileName, boolean oldFormat, boolean skipUpdate) {
         fileName = csvService.preprocessCSV(fileName, oldFormat);
 
         List<String> splitFileNames = CSVSplitter.splitCSVFile(fileName);
 
         for (String splitFileName : splitFileNames) {
             log.info("Loading data from " + splitFileName);
-            loadData(splitFileName, oldFormat);
+            loadData(splitFileName, oldFormat, skipUpdate);
         }
     }
 
@@ -96,7 +96,7 @@ public class ProjectDataLoader {
         }
     }
 
-    public void loadData(String fileName, boolean oldFormat) {
+    public void loadData(String fileName, boolean oldFormat, boolean skipUpdate) {
         total = 0;
 
         resetIndexes();
@@ -167,13 +167,14 @@ public class ProjectDataLoader {
             List<Project> projects = new ArrayList<>();
             String[] row;
             while ((row = reader.readNext()) != null) {
-                Project project = getProject(row);
+                Project project = getProject(row, skipUpdate);
                 processSave(projects, project, fileName);
             }
             log.info("Saving last batch of " + projects.size() + " items");
             save(projects, fileName);
         } catch (IOException | DataIntegrityViolationException | CsvValidationException e) {
-            e.printStackTrace();
+//            e.printStackTrace();
+            log.error(e.getMessage());
             throw new ScraperException(e.getMessage());
         }
     }
@@ -215,7 +216,7 @@ public class ProjectDataLoader {
         }
     }
 
-    private Project getProject(String[] row) {
+    private Project getProject(String[] row, boolean skipUpdate) {
         if (row[ID_INDEX] == null) {
             return null; // skip empty rows
         }
@@ -248,10 +249,11 @@ public class ProjectDataLoader {
 
         Optional<Project> existingProjectOptional = findProject(row);
         if (existingProjectOptional.isPresent()) {
-//            if (skipUpdate) {
-//                return existingProjectOptional.get();
-//            }
             Project existingProject = existingProjectOptional.get();
+
+            if (skipUpdate) {
+                return existingProject;
+            }
 
             for (LongText longText : project.getLongTexts()) {
                 if (existingProject.getLongTexts().stream().noneMatch(lt -> lt.getType().equals(longText.getType()))) {
@@ -357,7 +359,8 @@ public class ProjectDataLoader {
         try {
             projectRepository.saveAll(projects);
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error(e.getMessage());
+//            e.printStackTrace();
             csvService.writeProjectsCSV(projects, fileName);
             throw new ScraperException(e.getMessage());
         }

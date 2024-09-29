@@ -49,11 +49,13 @@ public class ScrapeController {
     @GetMapping("/partners/scrape")
     public void scrapePartners(
             @RequestParam(value = "files") List<String> files,
-            @RequestParam(value = "oldFormat", required = false, defaultValue = "false") boolean oldFormat
+            @RequestParam(value = "oldFormat", required = false, defaultValue = "false") boolean oldFormat,
+            @RequestParam(value = "skipUpdate", required = false, defaultValue = "false") boolean skipUpdate
             ) {
         log.info("Scraping partners");
+        log.info("Skipping update: {}", skipUpdate);
         for (String file : files) {
-            organisationDataLoader.splitFileAndLoadData(file, oldFormat);
+            organisationDataLoader.splitFileAndLoadData(file, oldFormat, skipUpdate);
             adminLogService.addLog(AdminLogType.SCRAPE_SUCCESS, file);
         }
         log.info("Updating funding information");
@@ -76,11 +78,13 @@ public class ScrapeController {
     @GetMapping("/projects/scrape")
     public void scrapeProjects(
             @RequestParam(value = "files") List<String> files,
-            @RequestParam(value = "oldFormat", required = false, defaultValue = "false") boolean oldFormat
+            @RequestParam(value = "oldFormat", required = false, defaultValue = "false") boolean oldFormat,
+            @RequestParam(value = "skipUpdate", required = false, defaultValue = "false") boolean skipUpdate
             ) {
         log.info("Scraping projects");
+        log.info("Skipping update: {}", skipUpdate);
         for (String file : files) {
-            projectDataLoader.splitFileAndLoadData(file, oldFormat);
+            projectDataLoader.splitFileAndLoadData(file, oldFormat, skipUpdate);
             adminLogService.addLog(AdminLogType.SCRAPE_SUCCESS, file);
         }
     }
