@@ -301,14 +301,11 @@ public class OrganisationDataLoader {
         if (organisation.getReferenceId() != null) {
             organisationOptional = organisationRepository.findByReferenceId(organisation.getReferenceId());
         }
-        if (organisationOptional.isEmpty() && organisation.getName() != null) {
-            organisationOptional = organisationRepository.findByName(organisation.getName());
-        }
-        if (organisationOptional.isEmpty() && organisation.getShortName() != null) {
-            organisationOptional = organisationRepository.findByShortName(organisation.getShortName());
-        }
         if (organisationOptional.isEmpty() && organisation.getVatNumber() != null) {
             organisationOptional = organisationRepository.findByVatNumber(organisation.getVatNumber());
+        }
+        if (organisationOptional.isEmpty() && organisation.getName() != null) {
+            organisationOptional = organisationRepository.findByName(organisation.getName());
         }
         return organisationOptional;
     }

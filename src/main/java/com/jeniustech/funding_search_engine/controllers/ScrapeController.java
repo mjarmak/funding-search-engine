@@ -80,7 +80,7 @@ public class ScrapeController {
             ) {
         log.info("Scraping projects");
         for (String file : files) {
-            projectDataLoader.loadData(file, oldFormat);
+            projectDataLoader.splitFileAndLoadData(file, oldFormat);
             adminLogService.addLog(AdminLogType.SCRAPE_SUCCESS, file);
         }
     }

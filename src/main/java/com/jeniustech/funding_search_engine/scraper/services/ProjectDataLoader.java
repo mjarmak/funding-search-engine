@@ -10,6 +10,7 @@ import com.jeniustech.funding_search_engine.mappers.SolrMapper;
 import com.jeniustech.funding_search_engine.repository.CallRepository;
 import com.jeniustech.funding_search_engine.repository.ProjectRepository;
 import com.jeniustech.funding_search_engine.scraper.constants.excel.ProjectCSVColumns;
+import com.jeniustech.funding_search_engine.scraper.util.CSVSplitter;
 import com.jeniustech.funding_search_engine.services.CSVService;
 import com.jeniustech.funding_search_engine.services.solr.ProjectSolrClientService;
 import com.opencsv.CSVParserBuilder;
@@ -68,6 +69,17 @@ public class ProjectDataLoader {
     int OBJECTIVE_INDEX = -1;
     int RCN_INDEX = -1;
 
+    public void splitFileAndLoadData(String fileName, boolean oldFormat) {
+        fileName = csvService.preprocessCSV(fileName, oldFormat);
+
+        List<String> splitFileNames = CSVSplitter.splitCSVFile(fileName);
+
+        for (String splitFileName : splitFileNames) {
+            log.info("Loading data from " + splitFileName);
+            loadData(splitFileName, oldFormat);
+        }
+    }
+
     public void loadSolrData() {
         log.info("Loading projects to solr");
         // do in batch of 1000
@@ -88,8 +100,6 @@ public class ProjectDataLoader {
         total = 0;
 
         resetIndexes();
-
-        fileName = csvService.preprocessCSV(fileName, oldFormat);
 
         try (CSVReader reader = new CSVReaderBuilder(new FileReader(fileName))
                 .withCSVParser(new CSVParserBuilder()
@@ -238,6 +248,9 @@ public class ProjectDataLoader {
 
         Optional<Project> existingProjectOptional = findProject(row);
         if (existingProjectOptional.isPresent()) {
+//            if (skipUpdate) {
+//                return existingProjectOptional.get();
+//            }
             Project existingProject = existingProjectOptional.get();
 
             for (LongText longText : project.getLongTexts()) {

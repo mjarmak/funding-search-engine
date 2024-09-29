@@ -13,7 +13,8 @@ public enum OrganisationTypeEnum {
     PRI("Other"),
     R("Other"),
     X("Other"),
-    RES("Other");
+    RES("Other"),
+    HEC("Other");
 
 
 
