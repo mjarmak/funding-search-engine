@@ -5,6 +5,7 @@ import com.jeniustech.funding_search_engine.enums.ContactInfoTypeEnum;
 import com.jeniustech.funding_search_engine.enums.OrganisationTypeEnum;
 import com.jeniustech.funding_search_engine.enums.UrlTypeEnum;
 import com.jeniustech.funding_search_engine.mappers.NumberMapper;
+import com.jeniustech.funding_search_engine.scraper.util.ScraperStringUtil;
 import com.jeniustech.funding_search_engine.util.StringUtil;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -143,9 +144,20 @@ public class Organisation {
                 .toList();
     }
 
-    public boolean matches(Organisation other) {
-        return (referenceId != null && referenceId.equals(other.referenceId)) ||
-                (name != null && name.equals(other.name)) ||
-                (vatNumber != null && vatNumber.equals(other.vatNumber));
+    public boolean isDifferent(Organisation other) {
+
+        if (!ScraperStringUtil.isDifferent(other.getVatNumber(), this.getVatNumber(), true)) {
+            return false;
+        } else if (ScraperStringUtil.isDifferent(other.getVatNumber(), this.getVatNumber(), false)) {
+            return true;
+        } else if (!ScraperStringUtil.isDifferent(other.getReferenceId(), this.getReferenceId(), true)) {
+            return false;
+        } else if (ScraperStringUtil.isDifferent(other.getReferenceId(), this.getReferenceId(), false)) {
+            return true;
+        }
+
+        return ScraperStringUtil.isDifferent(other.getId(), this.getId())
+                || ScraperStringUtil.isDifferent(other.getName(), this.getName(), false)
+                || ScraperStringUtil.isDifferent(other.getShortName(), this.getShortName(), false);
     }
 }

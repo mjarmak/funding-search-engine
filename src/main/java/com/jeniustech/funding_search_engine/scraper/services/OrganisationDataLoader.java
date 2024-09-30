@@ -197,7 +197,7 @@ public class OrganisationDataLoader {
         total++;
         if (item != null) {
             Optional<Organisation> existingItem = items.stream()
-                    .filter(i -> i.matches(item))
+                    .filter(i -> !i.isDifferent(item))
                     .findFirst();
             if (existingItem.isPresent()) {
                 Organisation itemToUpdate = existingItem
@@ -302,22 +302,58 @@ public class OrganisationDataLoader {
     }
 
     private Optional<Organisation> findOrganisation(Organisation organisation) {
-        try {
-            Optional<Organisation> organisationOptional = Optional.empty();
-            if (organisation.getReferenceId() != null) {
+        Optional<Organisation> organisationOptional = Optional.empty();
+        if (organisation.getReferenceId() != null && !organisation.getReferenceId().isBlank()) {
+            try {
                 organisationOptional = organisationRepository.findByReferenceId(organisation.getReferenceId());
+            } catch (Exception e) {
+                log.error("Error finding organisation for referenceId: " + organisation.getReferenceId());
+                log.error(e.getMessage());
+                throw new ScraperException(e.getMessage());
             }
-            if (organisationOptional.isEmpty() && organisation.getVatNumber() != null) {
-                organisationOptional = organisationRepository.findByVatNumber(organisation.getVatNumber());
-            }
-            if (organisationOptional.isEmpty() && organisation.getName() != null) {
-                organisationOptional = organisationRepository.findByName(organisation.getName());
-            }
-            return organisationOptional;
-        } catch (Exception e) {
-            log.error(e.getMessage());
-            throw new ScraperException(e.getMessage());
         }
+        if (organisationOptional.isEmpty() && organisation.getVatNumber() != null && !organisation.getVatNumber().isBlank()) {
+            try {
+                organisationOptional = organisationRepository.findByVatNumber(organisation.getVatNumber());
+            } catch (Exception e) {
+                log.error("Error finding organisation for vatNumber: " + organisation.getVatNumber());
+                log.error(e.getMessage());
+                throw new ScraperException(e.getMessage());
+            }
+        }
+        if (organisationOptional.isEmpty() && organisation.getShortName() != null && !organisation.getShortName().isBlank()) {
+            try {
+                List<Organisation> result = organisationRepository.findByShortName(organisation.getShortName());
+                if (result.size() == 1) {
+                    organisationOptional = Optional.of(result.get(0));
+                    if (organisation.isDifferent(organisationOptional.get())
+                    ) {
+                        organisationOptional = Optional.empty();
+                    }
+                }
+            } catch (Exception e) {
+                log.error("Error finding organisation for shortName: " + organisation.getShortName());
+                log.error(e.getMessage());
+                throw new ScraperException(e.getMessage());
+            }
+        }
+        if (organisationOptional.isEmpty() && organisation.getName() != null && !organisation.getName().isBlank()) {
+            try {
+                List<Organisation> result = organisationRepository.findByName(organisation.getName());
+                if (result.size() == 1) {
+                    organisationOptional = Optional.of(result.get(0));
+                    if (organisation.isDifferent(organisationOptional.get())
+                    ) {
+                        organisationOptional = Optional.empty();
+                    }
+                }
+            } catch (Exception e) {
+                log.error("Error finding organisation for name: " + organisation.getName());
+                log.error(e.getMessage());
+                throw new ScraperException(e.getMessage());
+            }
+        }
+        return organisationOptional;
     }
 
     private void setContactInfo(String[] row, Organisation organisation) {

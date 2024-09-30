@@ -7,7 +7,7 @@ import org.junit.jupiter.api.Test;
 import java.io.IOException;
 
 import static com.jeniustech.funding_search_engine.mappers.DateMapper.csvFormatter;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 
 public class StringUtilTest {
@@ -68,4 +68,38 @@ public class StringUtilTest {
                 StringUtil.processString("Types of activities (art 10(3) EDF Regulation)      Eligible?                (a)      Activity", false));
     }
 
+    @Test
+    void isDifferentTest() {
+        assertTrue(ScraperStringUtil.isDifferent("nope", "test", false));
+        assertFalse(ScraperStringUtil.isDifferent("test", "test", false));
+        assertFalse(ScraperStringUtil.isDifferent("", "test", false));
+        assertFalse(ScraperStringUtil.isDifferent("test", "", false));
+        assertFalse(ScraperStringUtil.isDifferent("", "", false));
+        assertFalse(ScraperStringUtil.isDifferent(null, "", false));
+        assertFalse(ScraperStringUtil.isDifferent("", "test", false));
+        assertFalse(ScraperStringUtil.isDifferent(null, "test", false));
+        assertFalse(ScraperStringUtil.isDifferent("test", null, false));
+
+        assertFalse(ScraperStringUtil.isDifferent("test", "null", false));
+        assertFalse(ScraperStringUtil.isDifferent("null", "test", false));
+
+        assertFalse(ScraperStringUtil.isDifferent("null", "null", false));
+
+
+        assertTrue(ScraperStringUtil.isDifferent("nope", "test", true));
+        assertFalse(ScraperStringUtil.isDifferent("test", "test", true));
+        assertTrue(ScraperStringUtil.isDifferent("", "test", true));
+        assertTrue(ScraperStringUtil.isDifferent("test", "", true));
+        assertTrue(ScraperStringUtil.isDifferent("", "", true));
+        assertTrue(ScraperStringUtil.isDifferent(null, "", true));
+        assertTrue(ScraperStringUtil.isDifferent("", "test", true));
+        assertTrue(ScraperStringUtil.isDifferent(null, "test", true));
+        assertTrue(ScraperStringUtil.isDifferent("test", null, true));
+
+        assertTrue(ScraperStringUtil.isDifferent("test", "null", true));
+        assertTrue(ScraperStringUtil.isDifferent("null", "test", true));
+
+        assertTrue(ScraperStringUtil.isDifferent("null", "null", true));
+
+    }
 }

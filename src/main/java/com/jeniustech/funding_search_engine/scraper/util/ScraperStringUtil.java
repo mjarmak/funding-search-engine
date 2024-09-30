@@ -4,6 +4,8 @@ import com.jeniustech.funding_search_engine.util.StringUtil;
 
 import java.nio.charset.StandardCharsets;
 
+import static com.jeniustech.funding_search_engine.util.StringUtil.isEmpty;
+
 public class ScraperStringUtil {
 
 
@@ -71,5 +73,18 @@ public class ScraperStringUtil {
         return StringUtil.removeMultiSpaces(str.replaceAll("<[^>]*>", " ")).trim();
     }
 
-
+    public static boolean isDifferent(String value1, String value2, boolean strict) {
+        if (!strict && (isEmpty(value1) || isEmpty(value2))) {
+            return false;
+        } else if (strict && (isEmpty(value1) || isEmpty(value2))) {
+            return true;
+        }
+        return !value2.equals(value1);
+    }
+    public static boolean isDifferent(Long value1, Long value2) {
+        if (isEmpty(value1) || isEmpty(value2)) {
+            return false;
+        }
+        return !value2.equals(value1);
+    }
 }

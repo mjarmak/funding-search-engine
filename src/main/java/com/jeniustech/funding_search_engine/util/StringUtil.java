@@ -18,6 +18,9 @@ public interface StringUtil {
     static boolean isEmpty(String row) {
         return row == null || row.isEmpty() || row.isBlank() || row.equals("null");
     }
+    static boolean isEmpty(Long row) {
+        return row == null;
+    }
 
     static boolean isNotEmpty(Long row) {
         return row != null;
