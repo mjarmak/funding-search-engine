@@ -69,10 +69,10 @@ public class OrganisationDataLoader {
     int EC_CONTRIBUTION_INDEX = -1;
     int TOTAL_COST_INDEX = -1;
 
-    public void splitFileAndLoadData(String fileName, boolean oldFormat, boolean skipUpdate) {
+    public void splitFileAndLoadData(String fileName, boolean oldFormat, boolean skipUpdate, int rowsPerFile) {
         fileName = csvService.preprocessCSV(fileName, oldFormat);
 
-        List<String> splitFileNames = CSVSplitter.splitCSVFile(fileName);
+        List<String> splitFileNames = CSVSplitter.splitCSVFile(fileName, rowsPerFile);
 
         for (String splitFileName : splitFileNames) {
             log.info("Loading data from " + splitFileName);

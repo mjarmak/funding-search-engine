@@ -69,10 +69,10 @@ public class ProjectDataLoader {
     int OBJECTIVE_INDEX = -1;
     int RCN_INDEX = -1;
 
-    public void splitFileAndLoadData(String fileName, boolean oldFormat, boolean skipUpdate) {
+    public void splitFileAndLoadData(String fileName, boolean oldFormat, boolean skipUpdate, int rowsPerFile) {
         fileName = csvService.preprocessCSV(fileName, oldFormat);
 
-        List<String> splitFileNames = CSVSplitter.splitCSVFile(fileName);
+        List<String> splitFileNames = CSVSplitter.splitCSVFile(fileName, rowsPerFile);
 
         for (String splitFileName : splitFileNames) {
             log.info("Loading data from " + splitFileName);
@@ -415,9 +415,9 @@ public class ProjectDataLoader {
         return DateMapper.mapToDate(row[submissionDLIndex]);
     }
 
-    private static void addDescriptionIfPresent(String[] row, int index, Project project, LongTextTypeEnum description) {
-        if (isNotEmpty(row[index])) {
-            LongText longText = LongText.builder().type(description).text(row[index]).build();
+    private static void addDescriptionIfPresent(String[] row, int OBJECTIVE_INDEX, Project project, LongTextTypeEnum description) {
+        if (isNotEmpty(row[OBJECTIVE_INDEX])) {
+            LongText longText = LongText.builder().type(description).text(row[OBJECTIVE_INDEX]).build();
             project.getLongTexts().add(longText);
             longText.setProject(project);
         }

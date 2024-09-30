@@ -49,13 +49,14 @@ public class ScrapeController {
     @GetMapping("/partners/scrape")
     public void scrapePartners(
             @RequestParam(value = "files") List<String> files,
-            @RequestParam(value = "oldFormat", required = false, defaultValue = "false") boolean oldFormat,
-            @RequestParam(value = "skipUpdate", required = false, defaultValue = "false") boolean skipUpdate
+            @RequestParam(required = false, defaultValue = "false") boolean oldFormat,
+            @RequestParam(required = false, defaultValue = "false") boolean skipUpdate,
+            @RequestParam(required = false, defaultValue = "10000") int rowsPerFile
             ) {
         log.info("Scraping partners");
         log.info("Skipping update: {}", skipUpdate);
         for (String file : files) {
-            organisationDataLoader.splitFileAndLoadData(file, oldFormat, skipUpdate);
+            organisationDataLoader.splitFileAndLoadData(file, oldFormat, skipUpdate, rowsPerFile);
             adminLogService.addLog(AdminLogType.SCRAPE_SUCCESS, file);
         }
         log.info("Updating funding information");
@@ -79,12 +80,13 @@ public class ScrapeController {
     public void scrapeProjects(
             @RequestParam(value = "files") List<String> files,
             @RequestParam(value = "oldFormat", required = false, defaultValue = "false") boolean oldFormat,
-            @RequestParam(value = "skipUpdate", required = false, defaultValue = "false") boolean skipUpdate
+            @RequestParam(value = "skipUpdate", required = false, defaultValue = "false") boolean skipUpdate,
+            @RequestParam(required = false, defaultValue = "10000") int rowsPerFile
             ) {
         log.info("Scraping projects");
         log.info("Skipping update: {}", skipUpdate);
         for (String file : files) {
-            projectDataLoader.splitFileAndLoadData(file, oldFormat, skipUpdate);
+            projectDataLoader.splitFileAndLoadData(file, oldFormat, skipUpdate, rowsPerFile);
             adminLogService.addLog(AdminLogType.SCRAPE_SUCCESS, file);
         }
     }
