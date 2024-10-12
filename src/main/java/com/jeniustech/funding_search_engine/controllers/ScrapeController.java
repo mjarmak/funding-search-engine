@@ -34,11 +34,12 @@ public class ScrapeController {
     public void scrapeCalls(
             @RequestParam(value = "query", required = false) List<String> queries,
             @RequestParam(value = "files", required = false) List<String> files,
-            @RequestParam(value = "destination")
-            String destination
+            @RequestParam(required = false, defaultValue = "false") boolean skipUpdate,
+            @RequestParam(value = "destination") String destination
     ) {
-        scrapeAndNotify(queries, files, destination);
+        scrapeAndNotify(queries, files, destination, skipUpdate);
     }
+
     @PreAuthorize("hasRole('admin-server')")
     @GetMapping("/calls/solr")
     public void loadCallSolr() {
@@ -96,7 +97,7 @@ public class ScrapeController {
         projectDataLoader.loadSolrData();
     }
 
-    public void scrapeAndNotify(List<String> queries, List<String> files, String destination) {
+    public void scrapeAndNotify(List<String> queries, List<String> files, String destination, boolean skipUpdate) {
         if (files == null) {
             files = new ArrayList<>();
         }
@@ -109,7 +110,7 @@ public class ScrapeController {
         }
         for (String file : files) {
             log.info("Loading file: {}", file);
-            callDataLoader.loadData(file);
+            callDataLoader.loadData(file, skipUpdate);
         }
         callDataLoader.loadSolrData();
         notificationService.sendAllNotifications();

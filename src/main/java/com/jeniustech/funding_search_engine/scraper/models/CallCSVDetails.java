@@ -33,8 +33,6 @@ public class CallCSVDetails {
     String beneficiaryAdministration;
     String furtherInformation;
     String duration;
-    String conditions;
-    String supportInformation;
 
     public static List<String> getCSVHeaders() {
         return List.of(

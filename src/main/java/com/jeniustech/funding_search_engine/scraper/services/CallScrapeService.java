@@ -11,6 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
@@ -93,16 +94,21 @@ public class CallScrapeService {
                     if (item.hasJsonUrl()) {
                         try {
                             EUCallDetailDTO callDetails = getDetails(item.getJsonUrl());
-                            details = CSVMapper.map(item, callDetails);
-                        } catch (Exception e) {
-                            log.error("Failed to map details for: {}", item.getJsonUrl());
+                            try {
+                                details = CSVMapper.map(item, callDetails);
+                            } catch (Exception e) {
+                                log.error("Failed to map details for: {}", item.getJsonUrl());
+                                e.printStackTrace();
+                                details = CSVMapper.map(item);
+                            }
+                        } catch (SearchException e) {
                             details = CSVMapper.map(item);
                         }
                     } else {
                         details = CSVMapper.map(item);
                     }
                     if (details != null) {
-                        log.debug(details.getIdentifier());
+//                        log.debug(details.getIdentifier());
                         writer.write(String.join(",", details.getCSVValues()));
                         writer.newLine();
                     }
@@ -141,8 +147,9 @@ public class CallScrapeService {
     }
 
     private EUSearchResultDTO getSearch(int pageNumber, int pageSize, MultiValueMap<String, Object> body) throws ConnectException {
+        final String url = searchAPIUrl + "?pageNumber=" + pageNumber + "&pageSize=" + pageSize + "&apiKey=" + apiKey + "&text=***";
         return restTemplateSearch.postForObject(
-                searchAPIUrl + "?pageNumber=" + pageNumber + "&pageSize=" + pageSize + "&apiKey=" + apiKey + "&text=***",
+                url,
                 body,
                 EUSearchResultDTO.class
         );
@@ -150,16 +157,15 @@ public class CallScrapeService {
 
     private EUCallDetailDTO getDetails(String url) throws MismatchedInputException {
         try {
-            log.debug("Getting details from: {}", url);
+//            log.debug("Getting details from: {}", url);
             return restTemplateDetails.getForObject(url, EUCallDetailDTO.class);
         } catch (HttpClientErrorException e) {
-            log.error("Failed to get details from: {}", url);
+            if (e.getStatusCode().equals(HttpStatus.UNAUTHORIZED)) {
+                log.debug("Unauthorized to get details from: {}", url);
+            } else {
+                log.error("Failed to get details from: {}", url);
+            }
             throw new SearchException("Failed to get details from: " + url);
         }
     }
-
-    private EUCallDTO getDetailsFromSearchAPI(String url) {
-        return restTemplateDetails.getForObject(url, EUCallDTO.class);
-    }
-
 }

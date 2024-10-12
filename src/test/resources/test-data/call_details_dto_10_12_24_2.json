@@ -1,0 +1,479 @@
+{
+  "TopicDetails": {
+    "type": 0,
+    "ccm2Id": 31089882,
+    "cftId": 0,
+    "identifier": "MIGRATION-05-2018-2020",
+    "title": "Mapping and overcoming integration challenges for migrant children",
+    "publicationDateLong": 1509062400000,
+    "callIdentifier": "H2020-SC6-MIGRATION-2018-2019-2020",
+    "callTitle": "MIGRATION ",
+    "callccm2Id": 31089913,
+    "allowPartnerSearch": true,
+    "workProgrammepart": {
+      "id": 265562,
+      "ccm_id": 31091192,
+      "wp_part": "H2020-SC6-2018-2020",
+      "wp_year": "H2020-2018-2020",
+      "wp_title": "Europe in a changing world – Inclusive, innovative and reflective societies",
+      "wp_website": "http://ec.europa.eu/programmes/horizon2020/en/h2020-section/europe-changing-world-inclusive-innovative-and-reflective-societies",
+      "wp_document": "http://ec.europa.eu/research/participants/data/ref/h2020/wp/2018-2020/main/h2020-wp1820-societies_en.pdf"
+    },
+    "frameworkProgramme": {
+      "id": 31045243,
+      "abbreviation": "H2020",
+      "description": "Horizon 2020 Framework Programme"
+    },
+    "programmeDivision": [
+      {
+        "id": 31047996,
+        "abbreviation": "EU.3.6.1.",
+        "description": "Inclusive societies"
+      },
+      {
+        "id": 31047893,
+        "abbreviation": "EU.3.",
+        "description": "Societal Challenges"
+      },
+      {
+        "id": 31045244,
+        "abbreviation": "EC",
+        "description": "EC Treaty"
+      },
+      {
+        "id": 31047997,
+        "abbreviation": "EU.3.6.1.1.",
+        "description": "The mechanisms to promote smart, sustainable and inclusive growth"
+      },
+      {
+        "id": 31047998,
+        "abbreviation": "EU.3.6.1.2.",
+        "description": "Trusted organisations, practices, services and policies that are necessary to build resilient, inclusive, participatory, open and creative societies in Europe, in particular taking into account migration, integration and demographic change"
+      },
+      {
+        "id": 31047995,
+        "abbreviation": "EU.3.6.",
+        "description": "Europe in a changing world - inclusive, innovative and reflective societies"
+      },
+      {
+        "id": 31048000,
+        "abbreviation": "EU.3.6.1.4.",
+        "description": "The promotion of sustainable and inclusive environments through innovative spatial and urban planning and design"
+      }
+    ],
+    "topicMGAs": [
+
+    ],
+    "tags": [
+      "formal education",
+      "informal education",
+      "education",
+      "integration",
+      "civil society organisations",
+      "diversity",
+      "migrant children"
+    ],
+    "keywords": [
+      "Family studies, Social work",
+      "Psychology",
+      "Sociology",
+      "Social psychology",
+      "Education policy",
+      "Globalisation, migration, interethnic relations",
+      "Gender in education",
+      "School education",
+      "Human rights",
+      "Educational psychology",
+      "Demography",
+      "Pre-school education",
+      "Education, general (including training, pedagogy,",
+      "Non-formal education",
+      "Migration",
+      "Formal education",
+      "Population dynamics, aging, health and society",
+      "Educational sciences",
+      "Rights of the child"
+    ],
+    "flags": [
+      "Gender",
+      "SSH",
+      "OpenInnovation"
+    ],
+    "sme": true,
+    "actions": [
+      {
+        "status": {
+          "id": 31094503,
+          "abbreviation": "Closed",
+          "description": "Closed"
+        },
+        "types": [
+          {
+            "typeOfAction": "RIA Research and Innovation action",
+            "typeOfMGA": [
+
+            ]
+          }
+        ],
+        "plannedOpeningDate": "07 November 2017",
+        "submissionProcedure": {
+          "id": 31094504,
+          "abbreviation": "single-stage",
+          "description": "single-stage"
+        },
+        "deadlineDates": [
+          "13 March 2018"
+        ]
+      },
+      {
+        "status": {
+          "id": 31094503,
+          "abbreviation": "Closed",
+          "description": "Closed"
+        },
+        "types": [
+          {
+            "typeOfAction": "IA Innovation action",
+            "typeOfMGA": [
+
+            ]
+          }
+        ],
+        "plannedOpeningDate": "05 November 2019",
+        "submissionProcedure": {
+          "id": 31094504,
+          "abbreviation": "single-stage",
+          "description": "single-stage"
+        },
+        "deadlineDates": [
+          "19 March 2020"
+        ]
+      }
+    ],
+    "latestInfos": [
+      {
+        "approvalDate": "Mar 12, 2020 4:55:38 PM",
+        "lastChangeDate": "Mar 12, 2020 4:55:38 PM",
+        "content": "<p><span _ngcontent-kkt-c10=\"\">\r\n<p><span lang=\"EN-GB\">Dear applicants,</span></p>\r\n<p>&nbsp;</p>\r\n<p class=\"MsoNormal\"><span lang=\"EN-GB\">In order to take into account  the impact of COVID-19 and the precautionary measures applied by  different Member States, it has been decided to extend the call deadline  by one week to<u> 19/03/2020 at 17.00.00 Brussels local time</u>. </span></p>\r\n<p class=\"MsoNormal\"><span lang=\"EN-GB\">Please note that proposals already submitted can be re-opened and modified until the new deadline.&nbsp; </span></p>\r\n</span></p>"
+      },
+      {
+        "approvalDate": "Feb 28, 2018 11:05:57 AM",
+        "lastChangeDate": "Feb 28, 2018 11:05:57 AM",
+        "content": "<p>&nbsp;</p>\r\n<div><i><span style=\"color: #1f497d\">Dear applicants,</span></i></div>\r\n<div><i><span style=\"color: #1f497d\">&nbsp;</span></i></div>\r\n<div><i><span style=\"color: #1f497d\">We bring to your attention the following notice regarding page limits applicable to proposals. </span></i></div>\r\n<div>&nbsp;</div>\r\n<div><i><span style=\"font-size: 12pt; color: #1f497d\">Applicants are allowed to remove the page break in the cover page of the template for the technical annex,&nbsp;i.e. the proposal text can start on the cover page. </span></i></div>\r\n<div>&nbsp;</div>\r\n<div><i><span style=\"font-size: 12pt; color: #1f497d\">We sincerely apologise for any inconvenience caused by the late notice on this.</span></i></div>\r\n<div>&nbsp;</div>\r\n<div><i><span style=\"color: #1f497d\">With kind regards, </span></i></div>\r\n<div><i><span style=\"color: #1f497d\">European Commission - Participant Portal Submission System team</span></i></div>"
+      }
+    ],
+    "budgetOverviewJSONItem": {
+      "budgetTopicActionMap": {
+        "3288271": [
+          {
+            "action": "MIGRATION-05-2018-2020 - RIA Research and Innovation action",
+            "plannedOpeningDate": "07 November 2017",
+            "deadlineModel": "single-stage",
+            "deadlineDates": [
+              "13 March 2018"
+            ],
+            "budgetYearMap": {
+              "2018": 6000000
+            },
+            "budgetTopicActionMap": {
+
+            }
+          }
+        ],
+        "3288272": [
+          {
+            "action": "MIGRATION-02-2018 - RIA Research and Innovation action",
+            "plannedOpeningDate": "07 November 2017",
+            "deadlineModel": "single-stage",
+            "deadlineDates": [
+              "13 March 2018"
+            ],
+            "budgetYearMap": {
+              "2018": 9000000
+            },
+            "budgetTopicActionMap": {
+
+            }
+          }
+        ],
+        "3288273": [
+          {
+            "action": "MIGRATION-08-2018 - RIA Research and Innovation action",
+            "plannedOpeningDate": "07 November 2017",
+            "deadlineModel": "single-stage",
+            "deadlineDates": [
+              "13 March 2018"
+            ],
+            "budgetYearMap": {
+              "2018": 9000000
+            },
+            "budgetTopicActionMap": {
+
+            }
+          }
+        ],
+        "3288274": [
+          {
+            "action": "DT-MIGRATION-06-2018-2019 - IA Innovation action",
+            "plannedOpeningDate": "07 November 2017",
+            "deadlineModel": "single-stage",
+            "deadlineDates": [
+              "13 March 2018"
+            ],
+            "budgetYearMap": {
+              "2018": 12000000
+            },
+            "budgetTopicActionMap": {
+
+            }
+          }
+        ],
+        "3288275": [
+          {
+            "action": "MIGRATION-05-2018-2020 - IA Innovation action",
+            "plannedOpeningDate": "05 November 2019",
+            "deadlineModel": "single-stage",
+            "deadlineDates": [
+              "19 March 2020"
+            ],
+            "budgetYearMap": {
+              "2020": 9000000
+            },
+            "budgetTopicActionMap": {
+
+            }
+          }
+        ],
+        "3288276": [
+          {
+            "action": "MIGRATION-10-2020 - CSA Coordination and support action",
+            "plannedOpeningDate": "05 November 2019",
+            "deadlineModel": "single-stage",
+            "deadlineDates": [
+              "19 March 2020"
+            ],
+            "budgetYearMap": {
+              "2020": 2000000
+            },
+            "budgetTopicActionMap": {
+
+            }
+          }
+        ],
+        "3288277": [
+          {
+            "action": "MIGRATION-09-2020 - RIA Research and Innovation action",
+            "plannedOpeningDate": "05 November 2019",
+            "deadlineModel": "single-stage",
+            "deadlineDates": [
+              "19 March 2020"
+            ],
+            "budgetYearMap": {
+              "2020": 9000000
+            },
+            "budgetTopicActionMap": {
+
+            }
+          }
+        ],
+        "3288278": [
+          {
+            "action": "MIGRATION-04-2020 - IA-LS Innovation action Lump Sum",
+            "plannedOpeningDate": "05 November 2019",
+            "deadlineModel": "single-stage",
+            "deadlineDates": [
+              "19 March 2020"
+            ],
+            "budgetYearMap": {
+              "2020": 9000000
+            },
+            "budgetTopicActionMap": {
+
+            }
+          },
+          {
+            "action": "MIGRATION-04-2020 - RIA Research and Innovation action",
+            "plannedOpeningDate": "05 November 2019",
+            "deadlineModel": "single-stage",
+            "deadlineDates": [
+              "19 March 2020"
+            ],
+            "budgetYearMap": {
+              "2020": 9000000
+            },
+            "budgetTopicActionMap": {
+
+            }
+          }
+        ],
+        "3288279": [
+          {
+            "action": "MIGRATION-03-2019 - RIA Research and Innovation action",
+            "plannedOpeningDate": "06 November 2018",
+            "deadlineModel": "single-stage",
+            "deadlineDates": [
+              "14 March 2019"
+            ],
+            "budgetYearMap": {
+              "2019": 9000000
+            },
+            "budgetTopicActionMap": {
+
+            }
+          }
+        ],
+        "3288280": [
+          {
+            "action": "DT-MIGRATION-06-2018-2019 - IA Innovation action",
+            "plannedOpeningDate": "06 November 2018",
+            "deadlineModel": "single-stage",
+            "deadlineDates": [
+              "14 March 2019"
+            ],
+            "budgetYearMap": {
+              "2019": 8000000
+            },
+            "budgetTopicActionMap": {
+
+            }
+          }
+        ],
+        "3288281": [
+          {
+            "action": "MIGRATION-01-2019 - RIA Research and Innovation action",
+            "plannedOpeningDate": "06 November 2018",
+            "deadlineModel": "single-stage",
+            "deadlineDates": [
+              "14 March 2019"
+            ],
+            "budgetYearMap": {
+              "2019": 9000000
+            },
+            "budgetTopicActionMap": {
+
+            }
+          }
+        ],
+        "3288282": [
+          {
+            "action": "MIGRATION-07-2019 - RIA Research and Innovation action",
+            "plannedOpeningDate": "06 November 2018",
+            "deadlineModel": "single-stage",
+            "deadlineDates": [
+              "14 March 2019"
+            ],
+            "budgetYearMap": {
+              "2019": 9000000
+            },
+            "budgetTopicActionMap": {
+
+            }
+          }
+        ]
+      },
+      "budgetYearsColumns": [
+        "2018",
+        "2019",
+        "2020"
+      ]
+    },
+    "description": "<SPAN class=\"topicdescriptionkind\">Specific Challenge</SPAN>:<p><span>At a time where the integration of refugee and migrant children into host societies is most pressing, education systems face multiple challenges due to growing cultural, linguistic and ethnic diversity and to socio-economic inequalities.</span></p>\n<SPAN class=\"topicdescriptionkind\">Scope</SPAN>:<p> </p><p><strong>Research and Innovation Action (2018)</strong>:</p><p>Proposals should generate quantitative and qualitative data and policy recommendations on the integration in schools of pupils (ISCED 0-3) from existing migration cohorts, children of refugees and asylum seekers, and unaccompanied minors, including those residing in hotspots and reception centres. They should take account of the complexity of pupils' background, including of children who are EU long-term residents with migration background and of newcomers, and should assess issues related to gender, identity, achievement, well-being, home-school links and discrimination among others. Ethnological, cultural, and anthropological perspectives should be included. Social and learning environments should be considered as well as strategies to promote resilience, avoid segregation and to enhance children's skills and well-being. Proposals can take an integrated approach, looking at how access to adequate housing, a decent standard of living, protection from all forms of abuse and exploitation, healthcare and psychosocial support, alternative pedagogical approaches and arts affect successful integration in schools. Proposals should also address (several of) the following issues: the time elapsed between arrival to Europe and access to education; year(s) spent out of education as a child; experiences of detention and deportation; governance and funding; roles and attitudes of families, communities, educational centres, civil society and local services, also from a gender perspective; preparedness of schools and teaching staff; language learning and multilingualism; educational and vocational opportunities for those who arrive past the age of compulsory schooling, as well as the role of extra-curricular activities (including sports and leisure) in promoting integration. Refugee and migrant children’s lived experience and voice must be taken into account in line with Article 12 of the UN Convention on the rights of the child. Best practices supporting equal life-chances should be identified with the involvement of stakeholders, maximising the potential of existing experiences<sup><a target=_self href=#fn1 id=r1>[1]</a></sup>, including those developed in cooperation with refugee and migrant scholars and scientists.</p><p>The Commission considers that proposals requesting a contribution from the EU in the order of EUR 3 million would allow this specific challenge to be addressed appropriately. Nonetheless, this does not preclude submission and selection of proposals requesting other amounts.</p><p><strong>Innovation Action (2020):</strong></p><p>Building on existing evidence, including from projects funded under topic Migration-6 2018 where relevant, proposals should implement pilot actions able to experiment formal, informal and non-formal education solutions to address the integration challenges of children (0 to 18 years old - ISCED 0-3) from recent migration cohorts, in particular children of refugees and asylum seekers, and unaccompanied minors, including those residing in hotspots and reception centres. The proposals shall include actions with local schools, teaching programmes and organizations working with children (with or without migration background) and focus not only on formal educational settings but also on informal social and learning environments, beyond schools. Proposals should address at least three of the following dimensions: governance and funding of education institutions, funding of integration actions targeting children, roles and attitudes of families, gender aspects, communities, civil society organisations and local service providers, preparedness of schools and teaching staff, practices for language learning and use of native languages alongside the language used at school. Proposals should build upon good practices identified with the involvement of stakeholders such as e.g. practices of mutual cultural participation and exchange, or equal opportunities in regards to gender. Attention should be paid to existing educational centres around Europe which having high rates of migrant and ethnic-minority children are achieving academic results above national averages, as well as how the issues already mentioned are being articulated.</p><p>Proposals should address at least 3 of the points above, piloted on the basis of clearly defined goals. Processing of personal data of migrants must be conducted in accordance with EU data protection legislation<sup><a target=_self href=#fn2 id=r2>[2]</a></sup> and existing regulation such as eIDAS<a href=\"http://ec.europa.eu/research/participants/portal/desktop/en/opportunities/h2020/topics/dt-migration-06-2018-2019.html#fn1\">[1]</a>.</p><p>Proposals should engage all actors and consider the potential for co-creation work with all relevant stakeholders, including migrant children and their families themselves, in the design and delivery of services. In addition, proposals should demonstrate their reusability or scalability and should develop a strong and realistic plan to ensure the long-term sustainability as well as take up of the results by the identified users. The involvement of multi-disciplinary and multi-sectoral teams is encouraged to explore the complexity of this challenge, to identify the necessary changes, and the risks and barriers to their implementation, addressing diversity as appropriate (gender, age, social-, cultural-, linguistic-, religious background). Proposals shall combine strong academic knowledge and research-action based support, with stakeholders and practitioners knowledge in the several fields identified above. Children voice must be taken into account in line with Article 12 of the UN Convention on the rights of the child.</p><p>The Commission considers that proposals requesting a contribution from the EU of EUR 3 million would allow this specific challenge to be addressed appropriately. Nonetheless, this does not preclude submission and selection of proposals requesting other amounts.</p>\n<SPAN class=\"topicdescriptionkind\">Expected Impact</SPAN>:<p> </p><p><strong>(2018)</strong></p><p>Through informing policymakers, families, children themselves, teachers and other stakeholders, the action will support the advancement of effective practices for integrating migrant children in schools. The action will enhance synergies and cooperation amongst the relevant stakeholders, thereby promoting the uptake of innovative practices as well as improving monitoring and data collection. The action will also contribute to the development of the research agenda on education.</p><p><strong>(2020):</strong></p><p>The actions will inform policymakers, families, teachers and other stakeholders on effective practices for integrating migrant children in schools and more broadly in society, and for developing more inclusive schools, able to increase sense of belonging of all children, including both boys and girls. They will enhance synergies and cooperation amongst these actors for the uptake of innovative practices, for monitoring and data collection and for the definition of research gaps. Proposals should develop and implement actions which can be adapted, rescaled and reproduced in different environments according to the local/regional needs and involve stakeholders from public administrations, civil society, migrants and the host community from a very early stage as appropriate. </p>\n<SPAN class=\"topicdescriptionkind\">Cross-cutting Priorities</SPAN>:<p><a href=\"//ec.europa.eu/info/funding-tenders/opportunities/portal/screen/opportunities/topic-search;statusCodes=31094501,31094502,31094503;programCcm2Id=31045243;crossCuttingPriorityCode=SSH;sortQuery=sortStatus;orderBy=asc\">Socio-economic science and humanities</a><br><a href=\"//ec.europa.eu/info/funding-tenders/opportunities/portal/screen/opportunities/topic-search;statusCodes=31094501,31094502,31094503;programCcm2Id=31045243;crossCuttingPriorityCode=Gender;sortQuery=sortStatus;orderBy=asc\">Gender</a><br><a href=\"//ec.europa.eu/info/funding-tenders/opportunities/portal/screen/opportunities/topic-search;statusCodes=31094501,31094502,31094503;programCcm2Id=31045243;crossCuttingPriorityCode=OpenInnovation;sortQuery=sortStatus;orderBy=asc\">Open Innovation</a><br><a href=\"//ec.europa.eu/info/funding-tenders/opportunities/portal/screen/opportunities/topic-search;statusCodes=31094501,31094502,31094503;programCcm2Id=31045243;crossCuttingPriorityCode=SSH;sortQuery=sortStatus;orderBy=asc\">Socio-economic science and humanities</a><br></p>\n<p id=fn1><a  target=_self href=#r1>[1]</a>For instance, data and insights from the EU Education and Training Monitor and from the European Policy Network on the education of children and young people with a migration background (SIRIUS).</p><p id=fn2><a  target=_self href=#r2>[2]</a>https://eur-lex.europa.eu/legal-content/EN/TXT/PDF/?uri=CELEX:02016R0679-20160504&amp;from=EN</p>",
+    "conditions": "<p><span style=\"color: rgb(0, 51, 102);\"><strong>1. Eligible countries:</strong></span><span style=\"color: rgb(0, 0, 128);\"><strong> </strong></span>described in <a href=\"https://ec.europa.eu/research/participants/data/ref/h2020/other/wp/2018-2020/annexes/h2020-wp1820-annex-a-countries-rules_en.pdf\" target=\"_blank\">Annex A</a> of the Work Programme.<br />\r\nA number of non-EU/non-Associated Countries that are not automatically eligible for funding have made specific provisions for making funding available for their participants in Horizon 2020 projects. See the information in the <a href=\"https://ec.europa.eu/research/participants/docs/h2020-funding-guide/cross-cutting-issues/international-cooperation_en.htm#support-non-eu-countries\" target=\"_blank\">Online Manual</a>.</p>\r\n<p>&nbsp;</p>\n<p><span style=\"color: rgb(0, 51, 102);\"><strong>2. Eligibility and admissibility conditions:</strong></span> described in <a href=\"https://ec.europa.eu/research/participants/data/ref/h2020/other/wp/2018-2020/annexes/h2020-wp1820-annex-b-adm_en.pdf\" target=\"_blank\">Annex B</a> and <a href=\"https://ec.europa.eu/research/participants/data/ref/h2020/other/wp/2018-2020/annexes/h2020-wp1820-annex-c-elig_en.pdf\" target=\"_blank\">Annex C</a> of the Work Programme.&nbsp;</p>\r\n<p>&nbsp;</p>\n<p><span style=\"color: rgb(0, 51, 102);\"><strong>Proposal page limits and layout: </strong></span>please refer to Part B of the proposal template in the submission system below.</p>\r\n<p>&nbsp;</p>\n<p><span style=\"color: rgb(0, 51, 102);\"><strong>3. Evaluation:</strong></span></p>\r\n<ul>\r\n    <li><strong>Evaluation criteria, scoring and threshold</strong>s are described in <a href=\"https://ec.europa.eu/research/participants/data/ref/h2020/other/wp/2018-2020/annexes/h2020-wp1820-annex-h-esacrit_en.pdf\" target=\"_blank\">Annex H</a> of the Work Programme.&nbsp;&nbsp;</li>\r\n    <li><strong>Submission and evaluation processes</strong> are described in the <a href=\"https://ec.europa.eu/research/participants/docs/h2020-funding-guide/grants/applying-for-funding/submit-proposals_en.htm\" target=\"_blank\">Online Manual</a>.</li>\r\n</ul>\n<p><span style=\"color: rgb(0, 51, 102);\"><strong>4. Indicative time for evaluation and grant agreements:</strong></span></p>\r\n<p>Information on the outcome of evaluation (<strong>single-stage</strong> call): maximum 5 months from the deadline for submission.<br />\r\nSignature of grant agreements: maximum 8 months from the deadline for submission.</p>\r\n<p>&nbsp;</p>\n<p><span style=\"color: rgb(0, 51, 102);\"><strong>5. Proposal templates, evaluation forms and model grant agreements (MGA): </strong></span></p>\r\n<p><strong>Innovation Action:</strong></p>\r\n<p><a href=\"https://ec.europa.eu/research/participants/data/ref/h2020/other/wp/2018-2020/annexes/h2020-wp1820-annex-d-ia_en.pdf\" target=\"_blank\">Specific provisions and funding rates</a><br />\r\n<a href=\"https://ec.europa.eu/research/participants/data/ref/h2020/call_ptef/pt/2018-2020/h2020-call-pt-ria-ia-2018-20_en.pdf\" target=\"_blank\">Standard proposal template</a><br />\r\n<a href=\"https://ec.europa.eu/research/participants/data/ref/h2020/call_ptef/ef/2018-2020/h2020-call-ef-ria-ia-csa-2018-20_en.pdf\" target=\"_blank\">Standard evaluation form</a><br />\r\n<a href=\"https://ec.europa.eu/research/participants/data/ref/h2020/mga/gga/h2020-mga-gga-multi_en.pdf\" target=\"_blank\">General MGA - Multi-Beneficiary </a><br />\r\n<a href=\"https://ec.europa.eu/research/participants/data/ref/h2020/grants_manual/amga/h2020-amga_en.pdf\" target=\"_blank\">Annotated Grant Agreement</a></p>\r\n<p>&nbsp;</p>\n<p><span style=\"color: rgb(0, 51, 102);\"><strong>6. Additional provisions:</strong></span></p>\r\n<p><a href=\"https://ec.europa.eu/research/participants/data/ref/h2020/other/wp/2018-2020/annexes/h2020-wp1820-annex-i-budgflex_en.pdf\" target=\"_blank\">Horizon 2020 budget flexibility </a><br />\r\n<a href=\"https://ec.europa.eu/research/participants/data/ref/h2020/other/wp/2018-2020/annexes/h2020-wp1820-annex-g-trl_en.pdf\" target=\"_blank\">Technology readiness levels (TRL)</a> &ndash; where a topic description refers to TRL, these definitions apply</p>\n<p>Members of consortium are required to conclude a consortium agreement, in principle prior to the signature of the grant agreement.</p>\n<p><span style=\"color: rgb(0, 51, 102);\"><strong>8. Additional documents:</strong></span></p>\r\n<p><a href=\"https://ec.europa.eu/research/participants/data/ref/h2020/wp/2018-2020/main/h2020-wp1820-intro_en.pdf\" target=\"_blank\">1. Introduction WP 2018-2020</a><br />\r\n<a href=\"https://ec.europa.eu/research/participants/data/ref/h2020/wp/2018-2020/main/h2020-wp1820-societies_en.pdf\" target=\"_blank\">2. Europe in a changing world - inclusive, innovative and reflective societies WP 2018-2020</a></p>\r\n<p><a href=\"https://ec.europa.eu/research/participants/data/ref/h2020/other/wp/2018-2020/annexes/h2020-wp1820-annex-ga_en.pdf\" target=\"_blank\">General annexes to the Work Programme 2018-2020</a></p>\r\n<p><a href=\"https://ec.europa.eu/research/participants/data/ref/h2020/legal_basis/fp/h2020-eu-establact_en.pdf\" target=\"_blank\">Legal basis: Horizon 2020 Regulation of Establishment </a><br />\r\n<a href=\"https://ec.europa.eu/research/participants/data/ref/h2020/legal_basis/rules_participation/h2020-rules-participation_en.pdf\" target=\"_blank\">Legal basis: Horizon 2020 Rules for Participation</a><br />\r\n<a href=\"https://ec.europa.eu/research/participants/data/ref/h2020/legal_basis/sp/h2020-sp_en.pdf\" target=\"_blank\">Legal basis: Horizon 2020 Specific Programme </a></p>\r\n<p>&nbsp;</p>\n<p><strong><span style=\"color: rgb(0, 51, 102);\">7. Open access must be granted to all scientific publications </span></strong>resulting from Horizon 2020 actions.</p>\r\n<p>Where relevant, proposals should also provide information on how the participants will manage the research data generated and/or collected during the project, such as details on what types of data the project will generate, whether and how this data will be exploited or made accessible for verification and re-use, and how it will be curated and preserved.</p>\r\n<p><span style=\"color: rgb(0, 51, 102);\"><strong>Open access to research data</strong></span><br />\r\nThe Open Research Data Pilot has been extended to cover all Horizon 2020 topics for which the submission is opened on 26 July 2016 or later. Projects funded under this topic will therefore by default provide open access to the research data they generate, except if they decide to opt-out under the conditions described in <a href=\"https://ec.europa.eu/research/participants/data/ref/h2020/other/wp/2018-2020/annexes/h2020-wp1820-annex-l-openaccess_en.pdf\" target=\"_blank\">Annex L of the Work Programme</a>. Projects can opt-out at any stage, that is both before and after the grant signature.</p>\r\n<p>Note that the evaluation phase proposals will not be evaluated more favourably because they plan to open or share their data, and will not be penalised for opting out.</p>\r\n<p>Open research data sharing applies to the data needed to validate the results presented in scientific publications. Additionally, projects can choose to make other data available open access and need to describe their approach in a Data Management Plan.</p>\r\n<p>Projects need to create a Data Management Plan (DMP), except if they opt-out of making their research data open access. A first version of the DMP must be provided as an early deliverable within six months of the project and should be updated during the project as appropriate. The Commission already provides guidance documents, including a template for DMPs. See the <a href=\"https://ec.europa.eu/research/participants/docs/h2020-funding-guide/cross-cutting-issues/open-access-dissemination_en.htm\" target=\"_blank\">Online Manual</a>.</p>\r\n<p>Eligibility of costs: costs related to data management and data sharing are eligible for reimbursement during the project duration.</p>\r\n<p>The legal requirements for projects participating in this pilot are in the article 29.3 of the <a href=\"https://ec.europa.eu/research/participants/data/ref/h2020/mga/gga/h2020-mga-gga-multi_en.pdf\" target=\"_blank\">Model Grant Agreement</a>.</p>\r\n<p>&nbsp;</p>",
+    "supportInfo": "<p><span style=\"color: rgb(0, 51, 102);\"><a href=\"http://ec.europa.eu/research/participants/docs/h2020-funding-guide/index_en.htm\" target=\"_blank\"><strong>H2020 Online Manual</strong></a> </span>is your guide on the procedures from proposal submission to managing your grant.</p>\r\n<p><a href=\"http://ec.europa.eu/research/participants/portal/desktop/en/support/faq.html#c,faqs=categoryMachineName/t/pp_roles_and_rights/0/1/1/category&amp;categoryMachineName/t/p_registration/0/1/1/category&amp;categoryMachineName/t/work_programme_calls/0/1/1/category&amp;categoryMachineName/t/p_submission_eval/1/1/1/category&amp;categoryMachineName/t/ethics_research_integrity/0/1/1/category&amp;categoryMachineName/t/grants/0/1/1/category&amp;categoryMachineName/t/audit/0/1/1/category&amp;categoryMachineName/t/experts/0/1/1/category&amp;categoryMachineName/t/eu_research_policy/0/1/1/category&amp;programmeList/t/H2020/0/1/1/programme&amp;programmeList/t/3rd_health_programme/0/1/1/programme&amp;programmeList/t/asylum_migration_and_integration_fund/0/1/1/programme&amp;programmeList/t/consumer_programme/0/1/1/programme&amp;programmeList/t/COSME/0/1/1/programme&amp;programmeList/t/creative_europe_programme/0/1/1/programme&amp;programmeList/t/erasmus_programme/0/1/1/programme&amp;programmeList/t/FP7/0/1/1/programme&amp;programmeList/t/hercule_iii_programme/0/1/1/programme&amp;programmeList/t/internal_security_fund_borders/0/1/1/programme&amp;programmeList/t/internal_security_fund_police/0/1/1/programme&amp;programmeList/t/justice_programme/0/1/1/programme&amp;programmeList/t/pilot_projects_preparatory_actions/0/1/1/programme&amp;programmeList/t/promotion_of_agricultural_products/0/1/1/programme&amp;programmeList/t/research_fund_for_coal_and_steel/0/1/1/programme&amp;programmeList/t/rights_equality_and_citizenship_programme/0/1/1/programme&amp;programmeList/t/union_civil_protection_mechanism/0/1/1/programme&amp;programmeList/t/european_statistics/0/1/1/programme&amp;tagList/t/MSCA/0/1/1/tag&amp;tagList/t/ERC/0/1/1/tag\" target=\"_blank\"><strong><span style=\"color: rgb(0, 51, 102);\">Participant Portal FAQ</span></strong></a> &ndash; Submission of proposals.</p>\r\n<p><a href=\"http://ec.europa.eu/research/participants/portal4/desktop/en/support/national_contact_points.html\" target=\"_blank\"><span style=\"color: rgb(0, 51, 102);\"><strong>National Contact Points (NCP)</strong></span></a> - contact your NCP for further assistance in your national language(s).</p>\r\n<p><a href=\"http://ec.europa.eu/research/index.cfm?lg=en&amp;pg=enquiries\" target=\"_blank\"><span style=\"color: rgb(0, 51, 102);\"><strong>Research Enquiry Service</strong></span></a> &ndash; ask questions about any aspect of European research in general and the EU Research Framework Programmes in particular.</p>\r\n<p><span style=\"color: rgb(0, 51, 102);\"><strong><a href=\"http://een.ec.europa.eu/\" target=\"_blank\">Enterprise Europe Network</a> </strong></span>&ndash; contact your EEN national contact for advice to businesses with special focus on SMEs. The support includes guidance on the EU research funding.</p>\r\n<p><a href=\"http://ec.europa.eu/research/participants/api/contact/index.html\" target=\"_blank\"><span style=\"color: rgb(0, 51, 102);\"><strong>IT Helpdesk</strong></span></a><strong> </strong>- contact the Participant Portal IT helpdesk for questions such as forgotten passwords, access rights and roles, technical aspects of submission of proposals, etc.</p>\r\n<p><span style=\"color: rgb(0, 51, 102);\"><strong>Ethics</strong></span> &ndash; for compliance with ethical issues, see the <a href=\"http://ec.europa.eu/research/participants/docs/h2020-funding-guide/cross-cutting-issues/ethics_en.htm\" target=\"_blank\">Online Manual</a> and <a href=\"http://ec.europa.eu/research/swafs/index.cfm?pg=policy&amp;lib=ethics\" target=\"_blank\">Science and Society Portal</a></p>\r\n<p><a href=\"http://www.iprhelpdesk.eu/\" target=\"_blank\"><span style=\"color: rgb(0, 51, 102);\"><strong>European IPR Helpdesk</strong></span></a> assists you on intellectual property issues</p>\r\n<p><a href=\"https://www.cencenelec.eu/research/Pages/default.aspx\" target=\"_blank\"><span style=\"color: rgb(0, 51, 102);\"><strong>CEN</strong></span><strong> <span style=\"color: rgb(0, 51, 102);\">and</span> </strong><span style=\"color: rgb(0, 51, 102);\"><strong>CENELEC</strong></span></a>, the <span style=\"color: rgb(0, 51, 102);\"><strong>European Standards Organisations</strong></span>, advise you how to tackle standardisation in your project proposal. Contact CEN-CENELEC Research Helpdesk at <span style=\"color: rgb(0, 0, 255);\">research@cencenelec.eu</span></p>\r\n<p><a href=\"http://ec.europa.eu/euraxess/pdf/brochure_rights/am509774CEE_EN_E4.pdf\" target=\"_blank\"><span style=\"color: rgb(0, 51, 102);\"><strong>The European Charter for Researchers and the Code of Conduct for their recruitment</strong></span></a></p>\r\n<p><a href=\"http://ec.europa.eu/research/participants/docs/h2020-funding-guide/grants/applying-for-funding/find-partners_en.htm\" target=\"_blank\"><span style=\"color: rgb(0, 51, 102);\"><strong>Partner Search Services</strong></span></a> help you find a partner organisation for your proposal.</p>",
+    "sepTemplate": "<p>To access the Electronic Submission Service, please click on the submission-button next to the type of action that corresponds to your proposal. You will then be asked to confirm your choice of the type of action and topic, as these cannot be changed in the submission system. Upon confirmation, you will be linked to the correct entry point.</p>\r\n<p>To access existing draft proposals for this topic, please login to the Funding &amp; Tenders Portal and select the My Proposals page of the My Area section.</p>",
+    "links": [
+
+    ],
+    "additionalDossiers": [
+      {
+        "callId": 52392667302,
+        "id": 165957462,
+        "title": "H2020-SC6-MIGRATION-2020_Call Results_en",
+        "sectionId": 52392667302,
+        "translationFiles": [
+          {
+            "language": "en",
+            "mimeType": "application/pdf",
+            "fileSize": 115750,
+            "docPath": "https://ec.europa.eu/info/funding-tenders/opportunities/docs/cap/h2020/migration-05-2018-2020/1900112-h2020-sc6-migration-2020_call_results_en.pdf",
+            "id": 1900112,
+            "fileName": "H2020-SC6-MIGRATION-2020_Call Results_en.pdf",
+            "common": false,
+            "crc32": 1293054875
+          }
+        ]
+      }
+    ],
+    "infoPackDossiers": [
+
+    ],
+    "callDetailsJSONItem": {
+      "staticAdditionalInfo": "<p><em>The aim of the call is to produce evidence-based recommendations for the global and European governance of migration of third country nationals as well as innovative (including ICT) solutions for the successful integration of migrants into European host societies. The call will contribute to promoting sustainable development, demonstrating a strong commitment to supporting the UN's Sustainable Development Goals (SDGs), and contribute to strengthening international cooperation, as well as a better understanding and awareness of the role of international development and regional policies. It will foster improved responses for the international protection of refugees, the management of forced displacement, and the promotion of more fact-based and accurate discourses and adapted strategies for addressing concerns in host communities. The call will also provide evidence based knowledge on the effects of migration on social systems, the access to and impact on labour markets and the cultural integration of third country nationals, in particular in urban settings. Solutions will be developed to enhance access to factual information on migration and the regulation of migration of third country nationals, also by involving migrants and their individual experiences in the shaping of narratives, including the gender dimension, and by promoting international cooperation where relevant.</em></p>\n",
+      "latestInfos": [
+        {
+          "approvalDate": "Mar 20, 2020 11:18:40 AM",
+          "lastChangeDate": "Mar 20, 2020 11:18:40 AM",
+          "content": "<p>&nbsp;</p>\r\n<p><!--[if gte mso 9]><xml>\r\n<w:WordDocument>\r\n<w:View>Normal</w:View>\r\n<w:Zoom>0</w:Zoom>\r\n<w:TrackMoves />\r\n<w:TrackFormatting />\r\n<w:HyphenationZone>21</w:HyphenationZone>\r\n<w:PunctuationKerning />\r\n<w:ValidateAgainstSchemas />\r\n<w:SaveIfXMLInvalid>false</w:SaveIfXMLInvalid>\r\n<w:IgnoreMixedContent>false</w:IgnoreMixedContent>\r\n<w:AlwaysShowPlaceholderText>false</w:AlwaysShowPlaceholderText>\r\n<w:DoNotPromoteQF />\r\n<w:LidThemeOther>EN-GB</w:LidThemeOther>\r\n<w:LidThemeAsian>X-NONE</w:LidThemeAsian>\r\n<w:LidThemeComplexScript>X-NONE</w:LidThemeComplexScript>\r\n<w:Compatibility>\r\n<w:BreakWrappedTables />\r\n<w:SnapToGridInCell />\r\n<w:WrapTextWithPunct />\r\n<w:UseAsianBreakRules />\r\n<w:DontGrowAutofit />\r\n<w:SplitPgBreakAndParaMark />\r\n<w:EnableOpenTypeKerning />\r\n<w:DontFlipMirrorIndents />\r\n<w:OverrideTableStyleHps />\r\n</w:Compatibility>\r\n<w:BrowserLevel>MicrosoftInternetExplorer4</w:BrowserLevel>\r\n<m:mathPr>\r\n<m:mathFont m:val=\"Cambria Math\" />\r\n<m:brkBin m:val=\"before\" />\r\n<m:brkBinSub m:val=\"&#45;-\" />\r\n<m:smallFrac m:val=\"off\" />\r\n<m:dispDef />\r\n<m:lMargin m:val=\"0\" />\r\n<m:rMargin m:val=\"0\" />\r\n<m:defJc m:val=\"centerGroup\" />\r\n<m:wrapIndent m:val=\"1440\" />\r\n<m:intLim m:val=\"subSup\" />\r\n<m:naryLim m:val=\"undOvr\" />\r\n</m:mathPr></w:WordDocument>\r\n</xml><![endif]--><!--[if gte mso 9]><xml>\r\n<w:LatentStyles DefLockedState=\"false\" DefUnhideWhenUsed=\"false\"\r\nDefSemiHidden=\"false\" DefQFormat=\"false\" DefPriority=\"99\"\r\nLatentStyleCount=\"371\">\r\n<w:LsdException Locked=\"false\" Priority=\"0\" QFormat=\"true\" Name=\"Normal\" />\r\n<w:LsdException Locked=\"false\" Priority=\"9\" QFormat=\"true\" Name=\"heading 1\" />\r\n<w:LsdException Locked=\"false\" Priority=\"9\" SemiHidden=\"true\"\r\nUnhideWhenUsed=\"true\" QFormat=\"true\" Name=\"heading 2\" />\r\n<w:LsdException Locked=\"false\" Priority=\"9\" SemiHidden=\"true\"\r\nUnhideWhenUsed=\"true\" QFormat=\"true\" Name=\"heading 3\" />\r\n<w:LsdException Locked=\"false\" Priority=\"9\" SemiHidden=\"true\"\r\nUnhideWhenUsed=\"true\" QFormat=\"true\" Name=\"heading 4\" />\r\n<w:LsdException Locked=\"false\" Priority=\"9\" SemiHidden=\"true\"\r\nUnhideWhenUsed=\"true\" QFormat=\"true\" Name=\"heading 5\" />\r\n<w:LsdException Locked=\"false\" Priority=\"9\" SemiHidden=\"true\"\r\nUnhideWhenUsed=\"true\" QFormat=\"true\" Name=\"heading 6\" />\r\n<w:LsdException Locked=\"false\" Priority=\"9\" SemiHidden=\"true\"\r\nUnhideWhenUsed=\"true\" QFormat=\"true\" Name=\"heading 7\" />\r\n<w:LsdException Locked=\"false\" Priority=\"9\" SemiHidden=\"true\"\r\nUnhideWhenUsed=\"true\" QFormat=\"true\" Name=\"heading 8\" />\r\n<w:LsdException Locked=\"false\" Priority=\"9\" SemiHidden=\"true\"\r\nUnhideWhenUsed=\"true\" QFormat=\"true\" Name=\"heading 9\" />\r\n<w:LsdException Locked=\"false\" SemiHidden=\"true\" UnhideWhenUsed=\"true\"\r\nName=\"index 1\" />\r\n<w:LsdException Locked=\"false\" SemiHidden=\"true\" UnhideWhenUsed=\"true\"\r\nName=\"index 2\" />\r\n<w:LsdException Locked=\"false\" SemiHidden=\"true\" UnhideWhenUsed=\"true\"\r\nName=\"index 3\" />\r\n<w:LsdException Locked=\"false\" SemiHidden=\"true\" UnhideWhenUsed=\"true\"\r\nName=\"index 4\" />\r\n<w:LsdException Locked=\"false\" SemiHidden=\"true\" UnhideWhenUsed=\"true\"\r\nName=\"index 5\" />\r\n<w:LsdException Locked=\"false\" SemiHidden=\"true\" UnhideWhenUsed=\"true\"\r\nName=\"index 6\" />\r\n<w:LsdException Locked=\"false\" SemiHidden=\"true\" UnhideWhenUsed=\"true\"\r\nName=\"index 7\" />\r\n<w:LsdException Locked=\"false\" SemiHidden=\"true\" UnhideWhenUsed=\"true\"\r\nName=\"index 8\" />\r\n<w:LsdException Locked=\"false\" SemiHidden=\"true\" UnhideWhenUsed=\"true\"\r\nName=\"index 9\" />\r\n<w:LsdException Locked=\"false\" Priority=\"39\" SemiHidden=\"true\"\r\nUnhideWhenUsed=\"true\" Name=\"toc 1\" />\r\n<w:LsdException Locked=\"false\" Priority=\"39\" SemiHidden=\"true\"\r\nUnhideWhenUsed=\"true\" Name=\"toc 2\" />\r\n<w:LsdException Locked=\"false\" Priority=\"39\" SemiHidden=\"true\"\r\nUnhideWhenUsed=\"true\" Name=\"toc 3\" />\r\n<w:LsdException Locked=\"false\" Priority=\"39\" SemiHidden=\"true\"\r\nUnhideWhenUsed=\"true\" Name=\"toc 4\" />\r\n<w:LsdException Locked=\"false\" Priority=\"39\" SemiHidden=\"true\"\r\nUnhideWhenUsed=\"true\" Name=\"toc 5\" />\r\n<w:LsdException Locked=\"false\" Priority=\"39\" SemiHidden=\"true\"\r\nUnhideWhenUsed=\"true\" Name=\"toc 6\" />\r\n<w:LsdException Locked=\"false\" Priority=\"39\" SemiHidden=\"true\"\r\nUnhideWhenUsed=\"true\" Name=\"toc 7\" />\r\n<w:LsdException Locked=\"false\" Priority=\"39\" SemiHidden=\"true\"\r\nUnhideWhenUsed=\"true\" Name=\"toc 8\" />\r\n<w:LsdException Locked=\"false\" Priority=\"39\" SemiHidden=\"true\"\r\nUnhideWhenUsed=\"true\" Name=\"toc 9\" />\r\n<w:LsdException Locked=\"false\" SemiHidden=\"true\" UnhideWhenUsed=\"true\"\r\nName=\"Normal Indent\" />\r\n<w:LsdException Locked=\"false\" SemiHidden=\"true\" UnhideWhenUsed=\"true\"\r\nName=\"footnote text\" />\r\n<w:LsdException Locked=\"false\" SemiHidden=\"true\" UnhideWhenUsed=\"true\"\r\nName=\"annotation text\" />\r\n<w:LsdException Locked=\"false\" SemiHidden=\"true\" UnhideWhenUsed=\"true\"\r\nName=\"header\" />\r\n<w:LsdException Locked=\"false\" SemiHidden=\"true\" UnhideWhenUsed=\"true\"\r\nName=\"footer\" />\r\n<w:LsdException Locked=\"false\" SemiHidden=\"true\" UnhideWhenUsed=\"true\"\r\nName=\"index heading\" />\r\n<w:LsdException Locked=\"false\" Priority=\"35\" SemiHidden=\"true\"\r\nUnhideWhenUsed=\"true\" QFormat=\"true\" Name=\"caption\" />\r\n<w:LsdException Locked=\"false\" SemiHidden=\"true\" UnhideWhenUsed=\"true\"\r\nName=\"table of figures\" />\r\n<w:LsdException Locked=\"false\" SemiHidden=\"true\" UnhideWhenUsed=\"true\"\r\nName=\"envelope address\" />\r\n<w:LsdException Locked=\"false\" SemiHidden=\"true\" UnhideWhenUsed=\"true\"\r\nName=\"envelope return\" />\r\n<w:LsdException Locked=\"false\" SemiHidden=\"true\" UnhideWhenUsed=\"true\"\r\nName=\"footnote reference\" />\r\n<w:LsdException Locked=\"false\" SemiHidden=\"true\" UnhideWhenUsed=\"true\"\r\nName=\"annotation reference\" />\r\n<w:LsdException Locked=\"false\" SemiHidden=\"true\" UnhideWhenUsed=\"true\"\r\nName=\"line number\" />\r\n<w:LsdException Locked=\"false\" SemiHidden=\"true\" UnhideWhenUsed=\"true\"\r\nName=\"page number\" />\r\n<w:LsdException Locked=\"false\" SemiHidden=\"true\" UnhideWhenUsed=\"true\"\r\nName=\"endnote reference\" />\r\n<w:LsdException Locked=\"false\" SemiHidden=\"true\" UnhideWhenUsed=\"true\"\r\nName=\"endnote text\" />\r\n<w:LsdException Locked=\"false\" SemiHidden=\"true\" UnhideWhenUsed=\"true\"\r\nName=\"table of authorities\" />\r\n<w:LsdException Locked=\"false\" SemiHidden=\"true\" UnhideWhenUsed=\"true\"\r\nName=\"macro\" />\r\n<w:LsdException Locked=\"false\" SemiHidden=\"true\" UnhideWhenUsed=\"true\"\r\nName=\"toa heading\" />\r\n<w:LsdException Locked=\"false\" SemiHidden=\"true\" UnhideWhenUsed=\"true\"\r\nName=\"List\" />\r\n<w:LsdException Locked=\"false\" SemiHidden=\"true\" UnhideWhenUsed=\"true\"\r\nName=\"List Bullet\" />\r\n<w:LsdException Locked=\"false\" SemiHidden=\"true\" UnhideWhenUsed=\"true\"\r\nName=\"List Number\" />\r\n<w:LsdException Locked=\"false\" SemiHidden=\"true\" UnhideWhenUsed=\"true\"\r\nName=\"List 2\" />\r\n<w:LsdException Locked=\"false\" SemiHidden=\"true\" UnhideWhenUsed=\"true\"\r\nName=\"List 3\" />\r\n<w:LsdException Locked=\"false\" SemiHidden=\"true\" UnhideWhenUsed=\"true\"\r\nName=\"List 4\" />\r\n<w:LsdException Locked=\"false\" SemiHidden=\"true\" UnhideWhenUsed=\"true\"\r\nName=\"List 5\" />\r\n<w:LsdException Locked=\"false\" SemiHidden=\"true\" UnhideWhenUsed=\"true\"\r\nName=\"List Bullet 2\" />\r\n<w:LsdException Locked=\"false\" SemiHidden=\"true\" UnhideWhenUsed=\"true\"\r\nName=\"List Bullet 3\" />\r\n<w:LsdException Locked=\"false\" SemiHidden=\"true\" UnhideWhenUsed=\"true\"\r\nName=\"List Bullet 4\" />\r\n<w:LsdException Locked=\"false\" SemiHidden=\"true\" UnhideWhenUsed=\"true\"\r\nName=\"List Bullet 5\" />\r\n<w:LsdException Locked=\"false\" SemiHidden=\"true\" UnhideWhenUsed=\"true\"\r\nName=\"List Number 2\" />\r\n<w:LsdException Locked=\"false\" SemiHidden=\"true\" UnhideWhenUsed=\"true\"\r\nName=\"List Number 3\" />\r\n<w:LsdException Locked=\"false\" SemiHidden=\"true\" UnhideWhenUsed=\"true\"\r\nName=\"List Number 4\" />\r\n<w:LsdException Locked=\"false\" SemiHidden=\"true\" UnhideWhenUsed=\"true\"\r\nName=\"List Number 5\" />\r\n<w:LsdException Locked=\"false\" Priority=\"10\" QFormat=\"true\" Name=\"Title\" />\r\n<w:LsdException Locked=\"false\" SemiHidden=\"true\" UnhideWhenUsed=\"true\"\r\nName=\"Closing\" />\r\n<w:LsdException Locked=\"false\" SemiHidden=\"true\" UnhideWhenUsed=\"true\"\r\nName=\"Signature\" />\r\n<w:LsdException Locked=\"false\" Priority=\"1\" SemiHidden=\"true\"\r\nUnhideWhenUsed=\"true\" Name=\"Default Paragraph Font\" />\r\n<w:LsdException Locked=\"false\" SemiHidden=\"true\" UnhideWhenUsed=\"true\"\r\nName=\"Body Text\" />\r\n<w:LsdException Locked=\"false\" SemiHidden=\"true\" UnhideWhenUsed=\"true\"\r\nName=\"Body Text Indent\" />\r\n<w:LsdException Locked=\"false\" SemiHidden=\"true\" UnhideWhenUsed=\"true\"\r\nName=\"List Continue\" />\r\n<w:LsdException Locked=\"false\" SemiHidden=\"true\" UnhideWhenUsed=\"true\"\r\nName=\"List Continue 2\" />\r\n<w:LsdException Locked=\"false\" SemiHidden=\"true\" UnhideWhenUsed=\"true\"\r\nName=\"List Continue 3\" />\r\n<w:LsdException Locked=\"false\" SemiHidden=\"true\" UnhideWhenUsed=\"true\"\r\nName=\"List Continue 4\" />\r\n<w:LsdException Locked=\"false\" SemiHidden=\"true\" UnhideWhenUsed=\"true\"\r\nName=\"List Continue 5\" />\r\n<w:LsdException Locked=\"false\" SemiHidden=\"true\" UnhideWhenUsed=\"true\"\r\nName=\"Message Header\" />\r\n<w:LsdException Locked=\"false\" Priority=\"11\" QFormat=\"true\" Name=\"Subtitle\" />\r\n<w:LsdException Locked=\"false\" SemiHidden=\"true\" UnhideWhenUsed=\"true\"\r\nName=\"Salutation\" />\r\n<w:LsdException Locked=\"false\" SemiHidden=\"true\" UnhideWhenUsed=\"true\"\r\nName=\"Date\" />\r\n<w:LsdException Locked=\"false\" SemiHidden=\"true\" UnhideWhenUsed=\"true\"\r\nName=\"Body Text First Indent\" />\r\n<w:LsdException Locked=\"false\" SemiHidden=\"true\" UnhideWhenUsed=\"true\"\r\nName=\"Body Text First Indent 2\" />\r\n<w:LsdException Locked=\"false\" SemiHidden=\"true\" UnhideWhenUsed=\"true\"\r\nName=\"Note Heading\" />\r\n<w:LsdException Locked=\"false\" SemiHidden=\"true\" UnhideWhenUsed=\"true\"\r\nName=\"Body Text 2\" />\r\n<w:LsdException Locked=\"false\" SemiHidden=\"true\" UnhideWhenUsed=\"true\"\r\nName=\"Body Text 3\" />\r\n<w:LsdException Locked=\"false\" SemiHidden=\"true\" UnhideWhenUsed=\"true\"\r\nName=\"Body Text Indent 2\" />\r\n<w:LsdException Locked=\"false\" SemiHidden=\"true\" UnhideWhenUsed=\"true\"\r\nName=\"Body Text Indent 3\" />\r\n<w:LsdException Locked=\"false\" SemiHidden=\"true\" UnhideWhenUsed=\"true\"\r\nName=\"Block Text\" />\r\n<w:LsdException Locked=\"false\" SemiHidden=\"true\" UnhideWhenUsed=\"true\"\r\nName=\"Hyperlink\" />\r\n<w:LsdException Locked=\"false\" SemiHidden=\"true\" UnhideWhenUsed=\"true\"\r\nName=\"FollowedHyperlink\" />\r\n<w:LsdException Locked=\"false\" Priority=\"22\" QFormat=\"true\" Name=\"Strong\" />\r\n<w:LsdException Locked=\"false\" Priority=\"20\" QFormat=\"true\" Name=\"Emphasis\" />\r\n<w:LsdException Locked=\"false\" SemiHidden=\"true\" UnhideWhenUsed=\"true\"\r\nName=\"Document Map\" />\r\n<w:LsdException Locked=\"false\" SemiHidden=\"true\" UnhideWhenUsed=\"true\"\r\nName=\"Plain Text\" />\r\n<w:LsdException Locked=\"false\" SemiHidden=\"true\" UnhideWhenUsed=\"true\"\r\nName=\"E-mail Signature\" />\r\n<w:LsdException Locked=\"false\" SemiHidden=\"true\" UnhideWhenUsed=\"true\"\r\nName=\"HTML Top of Form\" />\r\n<w:LsdException Locked=\"false\" SemiHidden=\"true\" UnhideWhenUsed=\"true\"\r\nName=\"HTML Bottom of Form\" />\r\n<w:LsdException Locked=\"false\" SemiHidden=\"true\" UnhideWhenUsed=\"true\"\r\nName=\"Normal (Web)\" />\r\n<w:LsdException Locked=\"false\" SemiHidden=\"true\" UnhideWhenUsed=\"true\"\r\nName=\"HTML Acronym\" />\r\n<w:LsdException Locked=\"false\" SemiHidden=\"true\" UnhideWhenUsed=\"true\"\r\nName=\"HTML Address\" />\r\n<w:LsdException Locked=\"false\" SemiHidden=\"true\" UnhideWhenUsed=\"true\"\r\nName=\"HTML Cite\" />\r\n<w:LsdException Locked=\"false\" SemiHidden=\"true\" UnhideWhenUsed=\"true\"\r\nName=\"HTML Code\" />\r\n<w:LsdException Locked=\"false\" SemiHidden=\"true\" UnhideWhenUsed=\"true\"\r\nName=\"HTML Definition\" />\r\n<w:LsdException Locked=\"false\" SemiHidden=\"true\" UnhideWhenUsed=\"true\"\r\nName=\"HTML Keyboard\" />\r\n<w:LsdException Locked=\"false\" SemiHidden=\"true\" UnhideWhenUsed=\"true\"\r\nName=\"HTML Preformatted\" />\r\n<w:LsdException Locked=\"false\" SemiHidden=\"true\" UnhideWhenUsed=\"true\"\r\nName=\"HTML Sample\" />\r\n<w:LsdException Locked=\"false\" SemiHidden=\"true\" UnhideWhenUsed=\"true\"\r\nName=\"HTML Typewriter\" />\r\n<w:LsdException Locked=\"false\" SemiHidden=\"true\" UnhideWhenUsed=\"true\"\r\nName=\"HTML Variable\" />\r\n<w:LsdException Locked=\"false\" SemiHidden=\"true\" UnhideWhenUsed=\"true\"\r\nName=\"Normal Table\" />\r\n<w:LsdException Locked=\"false\" SemiHidden=\"true\" UnhideWhenUsed=\"true\"\r\nName=\"annotation subject\" />\r\n<w:LsdException Locked=\"false\" SemiHidden=\"true\" UnhideWhenUsed=\"true\"\r\nName=\"No List\" />\r\n<w:LsdException Locked=\"false\" SemiHidden=\"true\" UnhideWhenUsed=\"true\"\r\nName=\"Outline List 1\" />\r\n<w:LsdException Locked=\"false\" SemiHidden=\"true\" UnhideWhenUsed=\"true\"\r\nName=\"Outline List 2\" />\r\n<w:LsdException Locked=\"false\" SemiHidden=\"true\" UnhideWhenUsed=\"true\"\r\nName=\"Outline List 3\" />\r\n<w:LsdException Locked=\"false\" SemiHidden=\"true\" UnhideWhenUsed=\"true\"\r\nName=\"Table Simple 1\" />\r\n<w:LsdException Locked=\"false\" SemiHidden=\"true\" UnhideWhenUsed=\"true\"\r\nName=\"Table Simple 2\" />\r\n<w:LsdException Locked=\"false\" SemiHidden=\"true\" UnhideWhenUsed=\"true\"\r\nName=\"Table Simple 3\" />\r\n<w:LsdException Locked=\"false\" SemiHidden=\"true\" UnhideWhenUsed=\"true\"\r\nName=\"Table Classic 1\" />\r\n<w:LsdException Locked=\"false\" SemiHidden=\"true\" UnhideWhenUsed=\"true\"\r\nName=\"Table Classic 2\" />\r\n<w:LsdException Locked=\"false\" SemiHidden=\"true\" UnhideWhenUsed=\"true\"\r\nName=\"Table Classic 3\" />\r\n<w:LsdException Locked=\"false\" SemiHidden=\"true\" UnhideWhenUsed=\"true\"\r\nName=\"Table Classic 4\" />\r\n<w:LsdException Locked=\"false\" SemiHidden=\"true\" UnhideWhenUsed=\"true\"\r\nName=\"Table Colorful 1\" />\r\n<w:LsdException Locked=\"false\" SemiHidden=\"true\" UnhideWhenUsed=\"true\"\r\nName=\"Table Colorful 2\" />\r\n<w:LsdException Locked=\"false\" SemiHidden=\"true\" UnhideWhenUsed=\"true\"\r\nName=\"Table Colorful 3\" />\r\n<w:LsdException Locked=\"false\" SemiHidden=\"true\" UnhideWhenUsed=\"true\"\r\nName=\"Table Columns 1\" />\r\n<w:LsdException Locked=\"false\" SemiHidden=\"true\" UnhideWhenUsed=\"true\"\r\nName=\"Table Columns 2\" />\r\n<w:LsdException Locked=\"false\" SemiHidden=\"true\" UnhideWhenUsed=\"true\"\r\nName=\"Table Columns 3\" />\r\n<w:LsdException Locked=\"false\" SemiHidden=\"true\" UnhideWhenUsed=\"true\"\r\nName=\"Table Columns 4\" />\r\n<w:LsdException Locked=\"false\" SemiHidden=\"true\" UnhideWhenUsed=\"true\"\r\nName=\"Table Columns 5\" />\r\n<w:LsdException Locked=\"false\" SemiHidden=\"true\" UnhideWhenUsed=\"true\"\r\nName=\"Table Grid 1\" />\r\n<w:LsdException Locked=\"false\" SemiHidden=\"true\" UnhideWhenUsed=\"true\"\r\nName=\"Table Grid 2\" />\r\n<w:LsdException Locked=\"false\" SemiHidden=\"true\" UnhideWhenUsed=\"true\"\r\nName=\"Table Grid 3\" />\r\n<w:LsdException Locked=\"false\" SemiHidden=\"true\" UnhideWhenUsed=\"true\"\r\nName=\"Table Grid 4\" />\r\n<w:LsdException Locked=\"false\" SemiHidden=\"true\" UnhideWhenUsed=\"true\"\r\nName=\"Table Grid 5\" />\r\n<w:LsdException Locked=\"false\" SemiHidden=\"true\" UnhideWhenUsed=\"true\"\r\nName=\"Table Grid 6\" />\r\n<w:LsdException Locked=\"false\" SemiHidden=\"true\" UnhideWhenUsed=\"true\"\r\nName=\"Table Grid 7\" />\r\n<w:LsdException Locked=\"false\" SemiHidden=\"true\" UnhideWhenUsed=\"true\"\r\nName=\"Table Grid 8\" />\r\n<w:LsdException Locked=\"false\" SemiHidden=\"true\" UnhideWhenUsed=\"true\"\r\nName=\"Table List 1\" />\r\n<w:LsdException Locked=\"false\" SemiHidden=\"true\" UnhideWhenUsed=\"true\"\r\nName=\"Table List 2\" />\r\n<w:LsdException Locked=\"false\" SemiHidden=\"true\" UnhideWhenUsed=\"true\"\r\nName=\"Table List 3\" />\r\n<w:LsdException Locked=\"false\" SemiHidden=\"true\" UnhideWhenUsed=\"true\"\r\nName=\"Table List 4\" />\r\n<w:LsdException Locked=\"false\" SemiHidden=\"true\" UnhideWhenUsed=\"true\"\r\nName=\"Table List 5\" />\r\n<w:LsdException Locked=\"false\" SemiHidden=\"true\" UnhideWhenUsed=\"true\"\r\nName=\"Table List 6\" />\r\n<w:LsdException Locked=\"false\" SemiHidden=\"true\" UnhideWhenUsed=\"true\"\r\nName=\"Table List 7\" />\r\n<w:LsdException Locked=\"false\" SemiHidden=\"true\" UnhideWhenUsed=\"true\"\r\nName=\"Table List 8\" />\r\n<w:LsdException Locked=\"false\" SemiHidden=\"true\" UnhideWhenUsed=\"true\"\r\nName=\"Table 3D effects 1\" />\r\n<w:LsdException Locked=\"false\" SemiHidden=\"true\" UnhideWhenUsed=\"true\"\r\nName=\"Table 3D effects 2\" />\r\n<w:LsdException Locked=\"false\" SemiHidden=\"true\" UnhideWhenUsed=\"true\"\r\nName=\"Table 3D effects 3\" />\r\n<w:LsdException Locked=\"false\" SemiHidden=\"true\" UnhideWhenUsed=\"true\"\r\nName=\"Table Contemporary\" />\r\n<w:LsdException Locked=\"false\" SemiHidden=\"true\" UnhideWhenUsed=\"true\"\r\nName=\"Table Elegant\" />\r\n<w:LsdException Locked=\"false\" SemiHidden=\"true\" UnhideWhenUsed=\"true\"\r\nName=\"Table Professional\" />\r\n<w:LsdException Locked=\"false\" SemiHidden=\"true\" UnhideWhenUsed=\"true\"\r\nName=\"Table Subtle 1\" />\r\n<w:LsdException Locked=\"false\" SemiHidden=\"true\" UnhideWhenUsed=\"true\"\r\nName=\"Table Subtle 2\" />\r\n<w:LsdException Locked=\"false\" SemiHidden=\"true\" UnhideWhenUsed=\"true\"\r\nName=\"Table Web 1\" />\r\n<w:LsdException Locked=\"false\" SemiHidden=\"true\" UnhideWhenUsed=\"true\"\r\nName=\"Table Web 2\" />\r\n<w:LsdException Locked=\"false\" SemiHidden=\"true\" UnhideWhenUsed=\"true\"\r\nName=\"Table Web 3\" />\r\n<w:LsdException Locked=\"false\" SemiHidden=\"true\" UnhideWhenUsed=\"true\"\r\nName=\"Balloon Text\" />\r\n<w:LsdException Locked=\"false\" Priority=\"39\" Name=\"Table Grid\" />\r\n<w:LsdException Locked=\"false\" SemiHidden=\"true\" UnhideWhenUsed=\"true\"\r\nName=\"Table Theme\" />\r\n<w:LsdException Locked=\"false\" SemiHidden=\"true\" Name=\"Placeholder Text\" />\r\n<w:LsdException Locked=\"false\" Priority=\"1\" QFormat=\"true\" Name=\"No Spacing\" />\r\n<w:LsdException Locked=\"false\" Priority=\"60\" Name=\"Light Shading\" />\r\n<w:LsdException Locked=\"false\" Priority=\"61\" Name=\"Light List\" />\r\n<w:LsdException Locked=\"false\" Priority=\"62\" Name=\"Light Grid\" />\r\n<w:LsdException Locked=\"false\" Priority=\"63\" Name=\"Medium Shading 1\" />\r\n<w:LsdException Locked=\"false\" Priority=\"64\" Name=\"Medium Shading 2\" />\r\n<w:LsdException Locked=\"false\" Priority=\"65\" Name=\"Medium List 1\" />\r\n<w:LsdException Locked=\"false\" Priority=\"66\" Name=\"Medium List 2\" />\r\n<w:LsdException Locked=\"false\" Priority=\"67\" Name=\"Medium Grid 1\" />\r\n<w:LsdException Locked=\"false\" Priority=\"68\" Name=\"Medium Grid 2\" />\r\n<w:LsdException Locked=\"false\" Priority=\"69\" Name=\"Medium Grid 3\" />\r\n<w:LsdException Locked=\"false\" Priority=\"70\" Name=\"Dark List\" />\r\n<w:LsdException Locked=\"false\" Priority=\"71\" Name=\"Colorful Shading\" />\r\n<w:LsdException Locked=\"false\" Priority=\"72\" Name=\"Colorful List\" />\r\n<w:LsdException Locked=\"false\" Priority=\"73\" Name=\"Colorful Grid\" />\r\n<w:LsdException Locked=\"false\" Priority=\"60\" Name=\"Light Shading Accent 1\" />\r\n<w:LsdException Locked=\"false\" Priority=\"61\" Name=\"Light List Accent 1\" />\r\n<w:LsdException Locked=\"false\" Priority=\"62\" Name=\"Light Grid Accent 1\" />\r\n<w:LsdException Locked=\"false\" Priority=\"63\" Name=\"Medium Shading 1 Accent 1\" />\r\n<w:LsdException Locked=\"false\" Priority=\"64\" Name=\"Medium Shading 2 Accent 1\" />\r\n<w:LsdException Locked=\"false\" Priority=\"65\" Name=\"Medium List 1 Accent 1\" />\r\n<w:LsdException Locked=\"false\" SemiHidden=\"true\" Name=\"Revision\" />\r\n<w:LsdException Locked=\"false\" Priority=\"34\" QFormat=\"true\"\r\nName=\"List Paragraph\" />\r\n<w:LsdException Locked=\"false\" Priority=\"29\" QFormat=\"true\" Name=\"Quote\" />\r\n<w:LsdException Locked=\"false\" Priority=\"30\" QFormat=\"true\"\r\nName=\"Intense Quote\" />\r\n<w:LsdException Locked=\"false\" Priority=\"66\" Name=\"Medium List 2 Accent 1\" />\r\n<w:LsdException Locked=\"false\" Priority=\"67\" Name=\"Medium Grid 1 Accent 1\" />\r\n<w:LsdException Locked=\"false\" Priority=\"68\" Name=\"Medium Grid 2 Accent 1\" />\r\n<w:LsdException Locked=\"false\" Priority=\"69\" Name=\"Medium Grid 3 Accent 1\" />\r\n<w:LsdException Locked=\"false\" Priority=\"70\" Name=\"Dark List Accent 1\" />\r\n<w:LsdException Locked=\"false\" Priority=\"71\" Name=\"Colorful Shading Accent 1\" />\r\n<w:LsdException Locked=\"false\" Priority=\"72\" Name=\"Colorful List Accent 1\" />\r\n<w:LsdException Locked=\"false\" Priority=\"73\" Name=\"Colorful Grid Accent 1\" />\r\n<w:LsdException Locked=\"false\" Priority=\"60\" Name=\"Light Shading Accent 2\" />\r\n<w:LsdException Locked=\"false\" Priority=\"61\" Name=\"Light List Accent 2\" />\r\n<w:LsdException Locked=\"false\" Priority=\"62\" Name=\"Light Grid Accent 2\" />\r\n<w:LsdException Locked=\"false\" Priority=\"63\" Name=\"Medium Shading 1 Accent 2\" />\r\n<w:LsdException Locked=\"false\" Priority=\"64\" Name=\"Medium Shading 2 Accent 2\" />\r\n<w:LsdException Locked=\"false\" Priority=\"65\" Name=\"Medium List 1 Accent 2\" />\r\n<w:LsdException Locked=\"false\" Priority=\"66\" Name=\"Medium List 2 Accent 2\" />\r\n<w:LsdException Locked=\"false\" Priority=\"67\" Name=\"Medium Grid 1 Accent 2\" />\r\n<w:LsdException Locked=\"false\" Priority=\"68\" Name=\"Medium Grid 2 Accent 2\" />\r\n<w:LsdException Locked=\"false\" Priority=\"69\" Name=\"Medium Grid 3 Accent 2\" />\r\n<w:LsdException Locked=\"false\" Priority=\"70\" Name=\"Dark List Accent 2\" />\r\n<w:LsdException Locked=\"false\" Priority=\"71\" Name=\"Colorful Shading Accent 2\" />\r\n<w:LsdException Locked=\"false\" Priority=\"72\" Name=\"Colorful List Accent 2\" />\r\n<w:LsdException Locked=\"false\" Priority=\"73\" Name=\"Colorful Grid Accent 2\" />\r\n<w:LsdException Locked=\"false\" Priority=\"60\" Name=\"Light Shading Accent 3\" />\r\n<w:LsdException Locked=\"false\" Priority=\"61\" Name=\"Light List Accent 3\" />\r\n<w:LsdException Locked=\"false\" Priority=\"62\" Name=\"Light Grid Accent 3\" />\r\n<w:LsdException Locked=\"false\" Priority=\"63\" Name=\"Medium Shading 1 Accent 3\" />\r\n<w:LsdException Locked=\"false\" Priority=\"64\" Name=\"Medium Shading 2 Accent 3\" />\r\n<w:LsdException Locked=\"false\" Priority=\"65\" Name=\"Medium List 1 Accent 3\" />\r\n<w:LsdException Locked=\"false\" Priority=\"66\" Name=\"Medium List 2 Accent 3\" />\r\n<w:LsdException Locked=\"false\" Priority=\"67\" Name=\"Medium Grid 1 Accent 3\" />\r\n<w:LsdException Locked=\"false\" Priority=\"68\" Name=\"Medium Grid 2 Accent 3\" />\r\n<w:LsdException Locked=\"false\" Priority=\"69\" Name=\"Medium Grid 3 Accent 3\" />\r\n<w:LsdException Locked=\"false\" Priority=\"70\" Name=\"Dark List Accent 3\" />\r\n<w:LsdException Locked=\"false\" Priority=\"71\" Name=\"Colorful Shading Accent 3\" />\r\n<w:LsdException Locked=\"false\" Priority=\"72\" Name=\"Colorful List Accent 3\" />\r\n<w:LsdException Locked=\"false\" Priority=\"73\" Name=\"Colorful Grid Accent 3\" />\r\n<w:LsdException Locked=\"false\" Priority=\"60\" Name=\"Light Shading Accent 4\" />\r\n<w:LsdException Locked=\"false\" Priority=\"61\" Name=\"Light List Accent 4\" />\r\n<w:LsdException Locked=\"false\" Priority=\"62\" Name=\"Light Grid Accent 4\" />\r\n<w:LsdException Locked=\"false\" Priority=\"63\" Name=\"Medium Shading 1 Accent 4\" />\r\n<w:LsdException Locked=\"false\" Priority=\"64\" Name=\"Medium Shading 2 Accent 4\" />\r\n<w:LsdException Locked=\"false\" Priority=\"65\" Name=\"Medium List 1 Accent 4\" />\r\n<w:LsdException Locked=\"false\" Priority=\"66\" Name=\"Medium List 2 Accent 4\" />\r\n<w:LsdException Locked=\"false\" Priority=\"67\" Name=\"Medium Grid 1 Accent 4\" />\r\n<w:LsdException Locked=\"false\" Priority=\"68\" Name=\"Medium Grid 2 Accent 4\" />\r\n<w:LsdException Locked=\"false\" Priority=\"69\" Name=\"Medium Grid 3 Accent 4\" />\r\n<w:LsdException Locked=\"false\" Priority=\"70\" Name=\"Dark List Accent 4\" />\r\n<w:LsdException Locked=\"false\" Priority=\"71\" Name=\"Colorful Shading Accent 4\" />\r\n<w:LsdException Locked=\"false\" Priority=\"72\" Name=\"Colorful List Accent 4\" />\r\n<w:LsdException Locked=\"false\" Priority=\"73\" Name=\"Colorful Grid Accent 4\" />\r\n<w:LsdException Locked=\"false\" Priority=\"60\" Name=\"Light Shading Accent 5\" />\r\n<w:LsdException Locked=\"false\" Priority=\"61\" Name=\"Light List Accent 5\" />\r\n<w:LsdException Locked=\"false\" Priority=\"62\" Name=\"Light Grid Accent 5\" />\r\n<w:LsdException Locked=\"false\" Priority=\"63\" Name=\"Medium Shading 1 Accent 5\" />\r\n<w:LsdException Locked=\"false\" Priority=\"64\" Name=\"Medium Shading 2 Accent 5\" />\r\n<w:LsdException Locked=\"false\" Priority=\"65\" Name=\"Medium List 1 Accent 5\" />\r\n<w:LsdException Locked=\"false\" Priority=\"66\" Name=\"Medium List 2 Accent 5\" />\r\n<w:LsdException Locked=\"false\" Priority=\"67\" Name=\"Medium Grid 1 Accent 5\" />\r\n<w:LsdException Locked=\"false\" Priority=\"68\" Name=\"Medium Grid 2 Accent 5\" />\r\n<w:LsdException Locked=\"false\" Priority=\"69\" Name=\"Medium Grid 3 Accent 5\" />\r\n<w:LsdException Locked=\"false\" Priority=\"70\" Name=\"Dark List Accent 5\" />\r\n<w:LsdException Locked=\"false\" Priority=\"71\" Name=\"Colorful Shading Accent 5\" />\r\n<w:LsdException Locked=\"false\" Priority=\"72\" Name=\"Colorful List Accent 5\" />\r\n<w:LsdException Locked=\"false\" Priority=\"73\" Name=\"Colorful Grid Accent 5\" />\r\n<w:LsdException Locked=\"false\" Priority=\"60\" Name=\"Light Shading Accent 6\" />\r\n<w:LsdException Locked=\"false\" Priority=\"61\" Name=\"Light List Accent 6\" />\r\n<w:LsdException Locked=\"false\" Priority=\"62\" Name=\"Light Grid Accent 6\" />\r\n<w:LsdException Locked=\"false\" Priority=\"63\" Name=\"Medium Shading 1 Accent 6\" />\r\n<w:LsdException Locked=\"false\" Priority=\"64\" Name=\"Medium Shading 2 Accent 6\" />\r\n<w:LsdException Locked=\"false\" Priority=\"65\" Name=\"Medium List 1 Accent 6\" />\r\n<w:LsdException Locked=\"false\" Priority=\"66\" Name=\"Medium List 2 Accent 6\" />\r\n<w:LsdException Locked=\"false\" Priority=\"67\" Name=\"Medium Grid 1 Accent 6\" />\r\n<w:LsdException Locked=\"false\" Priority=\"68\" Name=\"Medium Grid 2 Accent 6\" />\r\n<w:LsdException Locked=\"false\" Priority=\"69\" Name=\"Medium Grid 3 Accent 6\" />\r\n<w:LsdException Locked=\"false\" Priority=\"70\" Name=\"Dark List Accent 6\" />\r\n<w:LsdException Locked=\"false\" Priority=\"71\" Name=\"Colorful Shading Accent 6\" />\r\n<w:LsdException Locked=\"false\" Priority=\"72\" Name=\"Colorful List Accent 6\" />\r\n<w:LsdException Locked=\"false\" Priority=\"73\" Name=\"Colorful Grid Accent 6\" />\r\n<w:LsdException Locked=\"false\" Priority=\"19\" QFormat=\"true\"\r\nName=\"Subtle Emphasis\" />\r\n<w:LsdException Locked=\"false\" Priority=\"21\" QFormat=\"true\"\r\nName=\"Intense Emphasis\" />\r\n<w:LsdException Locked=\"false\" Priority=\"31\" QFormat=\"true\"\r\nName=\"Subtle Reference\" />\r\n<w:LsdException Locked=\"false\" Priority=\"32\" QFormat=\"true\"\r\nName=\"Intense Reference\" />\r\n<w:LsdException Locked=\"false\" Priority=\"33\" QFormat=\"true\" Name=\"Book Title\" />\r\n<w:LsdException Locked=\"false\" Priority=\"37\" SemiHidden=\"true\"\r\nUnhideWhenUsed=\"true\" Name=\"Bibliography\" />\r\n<w:LsdException Locked=\"false\" Priority=\"39\" SemiHidden=\"true\"\r\nUnhideWhenUsed=\"true\" QFormat=\"true\" Name=\"TOC Heading\" />\r\n<w:LsdException Locked=\"false\" Priority=\"41\" Name=\"Plain Table 1\" />\r\n<w:LsdException Locked=\"false\" Priority=\"42\" Name=\"Plain Table 2\" />\r\n<w:LsdException Locked=\"false\" Priority=\"43\" Name=\"Plain Table 3\" />\r\n<w:LsdException Locked=\"false\" Priority=\"44\" Name=\"Plain Table 4\" />\r\n<w:LsdException Locked=\"false\" Priority=\"45\" Name=\"Plain Table 5\" />\r\n<w:LsdException Locked=\"false\" Priority=\"40\" Name=\"Grid Table Light\" />\r\n<w:LsdException Locked=\"false\" Priority=\"46\" Name=\"Grid Table 1 Light\" />\r\n<w:LsdException Locked=\"false\" Priority=\"47\" Name=\"Grid Table 2\" />\r\n<w:LsdException Locked=\"false\" Priority=\"48\" Name=\"Grid Table 3\" />\r\n<w:LsdException Locked=\"false\" Priority=\"49\" Name=\"Grid Table 4\" />\r\n<w:LsdException Locked=\"false\" Priority=\"50\" Name=\"Grid Table 5 Dark\" />\r\n<w:LsdException Locked=\"false\" Priority=\"51\" Name=\"Grid Table 6 Colorful\" />\r\n<w:LsdException Locked=\"false\" Priority=\"52\" Name=\"Grid Table 7 Colorful\" />\r\n<w:LsdException Locked=\"false\" Priority=\"46\"\r\nName=\"Grid Table 1 Light Accent 1\" />\r\n<w:LsdException Locked=\"false\" Priority=\"47\" Name=\"Grid Table 2 Accent 1\" />\r\n<w:LsdException Locked=\"false\" Priority=\"48\" Name=\"Grid Table 3 Accent 1\" />\r\n<w:LsdException Locked=\"false\" Priority=\"49\" Name=\"Grid Table 4 Accent 1\" />\r\n<w:LsdException Locked=\"false\" Priority=\"50\" Name=\"Grid Table 5 Dark Accent 1\" />\r\n<w:LsdException Locked=\"false\" Priority=\"51\"\r\nName=\"Grid Table 6 Colorful Accent 1\" />\r\n<w:LsdException Locked=\"false\" Priority=\"52\"\r\nName=\"Grid Table 7 Colorful Accent 1\" />\r\n<w:LsdException Locked=\"false\" Priority=\"46\"\r\nName=\"Grid Table 1 Light Accent 2\" />\r\n<w:LsdException Locked=\"false\" Priority=\"47\" Name=\"Grid Table 2 Accent 2\" />\r\n<w:LsdException Locked=\"false\" Priority=\"48\" Name=\"Grid Table 3 Accent 2\" />\r\n<w:LsdException Locked=\"false\" Priority=\"49\" Name=\"Grid Table 4 Accent 2\" />\r\n<w:LsdException Locked=\"false\" Priority=\"50\" Name=\"Grid Table 5 Dark Accent 2\" />\r\n<w:LsdException Locked=\"false\" Priority=\"51\"\r\nName=\"Grid Table 6 Colorful Accent 2\" />\r\n<w:LsdException Locked=\"false\" Priority=\"52\"\r\nName=\"Grid Table 7 Colorful Accent 2\" />\r\n<w:LsdException Locked=\"false\" Priority=\"46\"\r\nName=\"Grid Table 1 Light Accent 3\" />\r\n<w:LsdException Locked=\"false\" Priority=\"47\" Name=\"Grid Table 2 Accent 3\" />\r\n<w:LsdException Locked=\"false\" Priority=\"48\" Name=\"Grid Table 3 Accent 3\" />\r\n<w:LsdException Locked=\"false\" Priority=\"49\" Name=\"Grid Table 4 Accent 3\" />\r\n<w:LsdException Locked=\"false\" Priority=\"50\" Name=\"Grid Table 5 Dark Accent 3\" />\r\n<w:LsdException Locked=\"false\" Priority=\"51\"\r\nName=\"Grid Table 6 Colorful Accent 3\" />\r\n<w:LsdException Locked=\"false\" Priority=\"52\"\r\nName=\"Grid Table 7 Colorful Accent 3\" />\r\n<w:LsdException Locked=\"false\" Priority=\"46\"\r\nName=\"Grid Table 1 Light Accent 4\" />\r\n<w:LsdException Locked=\"false\" Priority=\"47\" Name=\"Grid Table 2 Accent 4\" />\r\n<w:LsdException Locked=\"false\" Priority=\"48\" Name=\"Grid Table 3 Accent 4\" />\r\n<w:LsdException Locked=\"false\" Priority=\"49\" Name=\"Grid Table 4 Accent 4\" />\r\n<w:LsdException Locked=\"false\" Priority=\"50\" Name=\"Grid Table 5 Dark Accent 4\" />\r\n<w:LsdException Locked=\"false\" Priority=\"51\"\r\nName=\"Grid Table 6 Colorful Accent 4\" />\r\n<w:LsdException Locked=\"false\" Priority=\"52\"\r\nName=\"Grid Table 7 Colorful Accent 4\" />\r\n<w:LsdException Locked=\"false\" Priority=\"46\"\r\nName=\"Grid Table 1 Light Accent 5\" />\r\n<w:LsdException Locked=\"false\" Priority=\"47\" Name=\"Grid Table 2 Accent 5\" />\r\n<w:LsdException Locked=\"false\" Priority=\"48\" Name=\"Grid Table 3 Accent 5\" />\r\n<w:LsdException Locked=\"false\" Priority=\"49\" Name=\"Grid Table 4 Accent 5\" />\r\n<w:LsdException Locked=\"false\" Priority=\"50\" Name=\"Grid Table 5 Dark Accent 5\" />\r\n<w:LsdException Locked=\"false\" Priority=\"51\"\r\nName=\"Grid Table 6 Colorful Accent 5\" />\r\n<w:LsdException Locked=\"false\" Priority=\"52\"\r\nName=\"Grid Table 7 Colorful Accent 5\" />\r\n<w:LsdException Locked=\"false\" Priority=\"46\"\r\nName=\"Grid Table 1 Light Accent 6\" />\r\n<w:LsdException Locked=\"false\" Priority=\"47\" Name=\"Grid Table 2 Accent 6\" />\r\n<w:LsdException Locked=\"false\" Priority=\"48\" Name=\"Grid Table 3 Accent 6\" />\r\n<w:LsdException Locked=\"false\" Priority=\"49\" Name=\"Grid Table 4 Accent 6\" />\r\n<w:LsdException Locked=\"false\" Priority=\"50\" Name=\"Grid Table 5 Dark Accent 6\" />\r\n<w:LsdException Locked=\"false\" Priority=\"51\"\r\nName=\"Grid Table 6 Colorful Accent 6\" />\r\n<w:LsdException Locked=\"false\" Priority=\"52\"\r\nName=\"Grid Table 7 Colorful Accent 6\" />\r\n<w:LsdException Locked=\"false\" Priority=\"46\" Name=\"List Table 1 Light\" />\r\n<w:LsdException Locked=\"false\" Priority=\"47\" Name=\"List Table 2\" />\r\n<w:LsdException Locked=\"false\" Priority=\"48\" Name=\"List Table 3\" />\r\n<w:LsdException Locked=\"false\" Priority=\"49\" Name=\"List Table 4\" />\r\n<w:LsdException Locked=\"false\" Priority=\"50\" Name=\"List Table 5 Dark\" />\r\n<w:LsdException Locked=\"false\" Priority=\"51\" Name=\"List Table 6 Colorful\" />\r\n<w:LsdException Locked=\"false\" Priority=\"52\" Name=\"List Table 7 Colorful\" />\r\n<w:LsdException Locked=\"false\" Priority=\"46\"\r\nName=\"List Table 1 Light Accent 1\" />\r\n<w:LsdException Locked=\"false\" Priority=\"47\" Name=\"List Table 2 Accent 1\" />\r\n<w:LsdException Locked=\"false\" Priority=\"48\" Name=\"List Table 3 Accent 1\" />\r\n<w:LsdException Locked=\"false\" Priority=\"49\" Name=\"List Table 4 Accent 1\" />\r\n<w:LsdException Locked=\"false\" Priority=\"50\" Name=\"List Table 5 Dark Accent 1\" />\r\n<w:LsdException Locked=\"false\" Priority=\"51\"\r\nName=\"List Table 6 Colorful Accent 1\" />\r\n<w:LsdException Locked=\"false\" Priority=\"52\"\r\nName=\"List Table 7 Colorful Accent 1\" />\r\n<w:LsdException Locked=\"false\" Priority=\"46\"\r\nName=\"List Table 1 Light Accent 2\" />\r\n<w:LsdException Locked=\"false\" Priority=\"47\" Name=\"List Table 2 Accent 2\" />\r\n<w:LsdException Locked=\"false\" Priority=\"48\" Name=\"List Table 3 Accent 2\" />\r\n<w:LsdException Locked=\"false\" Priority=\"49\" Name=\"List Table 4 Accent 2\" />\r\n<w:LsdException Locked=\"false\" Priority=\"50\" Name=\"List Table 5 Dark Accent 2\" />\r\n<w:LsdException Locked=\"false\" Priority=\"51\"\r\nName=\"List Table 6 Colorful Accent 2\" />\r\n<w:LsdException Locked=\"false\" Priority=\"52\"\r\nName=\"List Table 7 Colorful Accent 2\" />\r\n<w:LsdException Locked=\"false\" Priority=\"46\"\r\nName=\"List Table 1 Light Accent 3\" />\r\n<w:LsdException Locked=\"false\" Priority=\"47\" Name=\"List Table 2 Accent 3\" />\r\n<w:LsdException Locked=\"false\" Priority=\"48\" Name=\"List Table 3 Accent 3\" />\r\n<w:LsdException Locked=\"false\" Priority=\"49\" Name=\"List Table 4 Accent 3\" />\r\n<w:LsdException Locked=\"false\" Priority=\"50\" Name=\"List Table 5 Dark Accent 3\" />\r\n<w:LsdException Locked=\"false\" Priority=\"51\"\r\nName=\"List Table 6 Colorful Accent 3\" />\r\n<w:LsdException Locked=\"false\" Priority=\"52\"\r\nName=\"List Table 7 Colorful Accent 3\" />\r\n<w:LsdException Locked=\"false\" Priority=\"46\"\r\nName=\"List Table 1 Light Accent 4\" />\r\n<w:LsdException Locked=\"false\" Priority=\"47\" Name=\"List Table 2 Accent 4\" />\r\n<w:LsdException Locked=\"false\" Priority=\"48\" Name=\"List Table 3 Accent 4\" />\r\n<w:LsdException Locked=\"false\" Priority=\"49\" Name=\"List Table 4 Accent 4\" />\r\n<w:LsdException Locked=\"false\" Priority=\"50\" Name=\"List Table 5 Dark Accent 4\" />\r\n<w:LsdException Locked=\"false\" Priority=\"51\"\r\nName=\"List Table 6 Colorful Accent 4\" />\r\n<w:LsdException Locked=\"false\" Priority=\"52\"\r\nName=\"List Table 7 Colorful Accent 4\" />\r\n<w:LsdException Locked=\"false\" Priority=\"46\"\r\nName=\"List Table 1 Light Accent 5\" />\r\n<w:LsdException Locked=\"false\" Priority=\"47\" Name=\"List Table 2 Accent 5\" />\r\n<w:LsdException Locked=\"false\" Priority=\"48\" Name=\"List Table 3 Accent 5\" />\r\n<w:LsdException Locked=\"false\" Priority=\"49\" Name=\"List Table 4 Accent 5\" />\r\n<w:LsdException Locked=\"false\" Priority=\"50\" Name=\"List Table 5 Dark Accent 5\" />\r\n<w:LsdException Locked=\"false\" Priority=\"51\"\r\nName=\"List Table 6 Colorful Accent 5\" />\r\n<w:LsdException Locked=\"false\" Priority=\"52\"\r\nName=\"List Table 7 Colorful Accent 5\" />\r\n<w:LsdException Locked=\"false\" Priority=\"46\"\r\nName=\"List Table 1 Light Accent 6\" />\r\n<w:LsdException Locked=\"false\" Priority=\"47\" Name=\"List Table 2 Accent 6\" />\r\n<w:LsdException Locked=\"false\" Priority=\"48\" Name=\"List Table 3 Accent 6\" />\r\n<w:LsdException Locked=\"false\" Priority=\"49\" Name=\"List Table 4 Accent 6\" />\r\n<w:LsdException Locked=\"false\" Priority=\"50\" Name=\"List Table 5 Dark Accent 6\" />\r\n<w:LsdException Locked=\"false\" Priority=\"51\"\r\nName=\"List Table 6 Colorful Accent 6\" />\r\n<w:LsdException Locked=\"false\" Priority=\"52\"\r\nName=\"List Table 7 Colorful Accent 6\" />\r\n</w:LatentStyles>\r\n</xml><![endif]--><!--[if gte mso 10]>\r\n<style>\r\n/* Style Definitions */\r\ntable.MsoNormalTable\r\n{mso-style-name:\"Table Normal\";\r\nmso-tstyle-rowband-size:0;\r\nmso-tstyle-colband-size:0;\r\nmso-style-noshow:yes;\r\nmso-style-priority:99;\r\nmso-style-parent:\"\";\r\nmso-padding-alt:0cm 5.4pt 0cm 5.4pt;\r\nmso-para-margin:0cm;\r\nmso-para-margin-bottom:.0001pt;\r\nmso-pagination:widow-orphan;\r\nfont-size:11.0pt;\r\nfont-family:\"Calibri\",sans-serif;\r\nmso-ascii-font-family:Calibri;\r\nmso-ascii-theme-font:minor-latin;\r\nmso-hansi-font-family:Calibri;\r\nmso-hansi-theme-font:minor-latin;\r\nmso-bidi-font-family:\"Times New Roman\";\r\nmso-bidi-theme-font:minor-bidi;\r\nmso-ansi-language:EN-GB;\r\nmso-fareast-language:EN-US;}\r\n</style>\r\n<![endif]--><span style=\"font-size:11.0pt;font-family:&#xA;&quot;Calibri&quot;,sans-serif;mso-ascii-theme-font:minor-latin;mso-fareast-font-family:&#xA;Calibri;mso-fareast-theme-font:minor-latin;mso-hansi-theme-font:minor-latin;&#xA;mso-bidi-font-family:&quot;Times New Roman&quot;;mso-bidi-theme-font:minor-bidi;&#xA;color:#1F497D;mso-ansi-language:EN-GB;mso-fareast-language:EN-US;mso-bidi-language:&#xA;AR-SA\" lang=\"EN-GB\">The call deadline was Tuesday 19 March 2020 17 Pm. </span></p>\r\n<p style=\"margin: 0px 0px 13.33px;\"><span style=\"margin: 0px;\" lang=\"EN-GB\"><font size=\"3\" face=\"Calibri\">A  total of 156 proposals were submitted in response to this call. The  number of proposals for each topic/type of action is shown below. </font></span>&nbsp;</p>\r\n<table width=\"277\" height=\"110\" cellspacing=\"0\" cellpadding=\"0\" border=\"0\">\r\n    <colgroup><col style=\"mso-width-source:userset;mso-width-alt:6030;width:127pt\" width=\"170\" />  <col style=\"mso-width-source:userset;mso-width-alt:2958;width:62pt\" width=\"83\" />  <col style=\"width:48pt\" width=\"64\" />  </colgroup>\r\n    <tbody>\r\n        <tr style=\"height:14.4pt\" height=\"19\">\r\n            <td class=\"xl65\" style=\"height:14.4pt;width:127pt\" width=\"170\" height=\"19\">MIGRATION-04-2020</td>\r\n            <td class=\"xl65\" style=\"border-left:none;width:62pt\" width=\"83\">IA-LS</td>\r\n            <td class=\"xl66\" style=\"border-left:none;width:48pt\" width=\"64\" align=\"right\">20</td>\r\n        </tr>\r\n        <tr style=\"height:14.4pt\" height=\"19\">\r\n            <td class=\"xl65\" style=\"height:14.4pt;border-top:none\" height=\"19\">&nbsp;</td>\r\n            <td class=\"xl65\" style=\"border-top:none;border-left:none\">RIA</td>\r\n            <td class=\"xl66\" style=\"border-top:none;border-left:none\" align=\"right\">38</td>\r\n        </tr>\r\n        <tr style=\"height:14.4pt\" height=\"19\">\r\n            <td class=\"xl65\" style=\"height:14.4pt;border-top:none\" height=\"19\">MIGRATION-05-2018-2020</td>\r\n            <td class=\"xl65\" style=\"border-top:none;border-left:none\">IA</td>\r\n            <td class=\"xl66\" style=\"border-top:none;border-left:none\" align=\"right\">16</td>\r\n        </tr>\r\n        <tr style=\"height:14.4pt\" height=\"19\">\r\n            <td class=\"xl65\" style=\"height:14.4pt;border-top:none\" height=\"19\">MIGRATION-09-2020</td>\r\n            <td class=\"xl65\" style=\"border-top:none;border-left:none\">RIA</td>\r\n            <td class=\"xl66\" style=\"border-top:none;border-left:none\" align=\"right\">74</td>\r\n        </tr>\r\n        <tr style=\"height:14.4pt\" height=\"19\">\r\n            <td class=\"xl65\" style=\"height:14.4pt;border-top:none\" height=\"19\">MIGRATION-10-2020</td>\r\n            <td class=\"xl65\" style=\"border-top:none;border-left:none\">CSA</td>\r\n            <td class=\"xl66\" style=\"border-top:none;border-left:none\" align=\"right\">8</td>\r\n        </tr>\r\n    </tbody>\r\n</table>\r\n<p>&nbsp;</p>"
+        },
+        {
+          "approvalDate": "Mar 20, 2020 11:14:14 AM",
+          "lastChangeDate": "Mar 20, 2020 11:14:14 AM",
+          "content": "<p>&nbsp;</p>\r\n<p style=\"margin: 0px 0px 13.33px;\"><span style=\"margin: 0px;\" lang=\"EN-GB\"><font size=\"3\" face=\"Calibri\">A  total of 156 proposals were submitted in response to this call. The  number of proposals for each topic/type of action is shown below. </font></span>&nbsp;</p>\r\n<table width=\"277\" height=\"110\" cellspacing=\"0\" cellpadding=\"0\" border=\"0\">\r\n    <colgroup><col style=\"mso-width-source:userset;mso-width-alt:6030;width:127pt\" width=\"170\" />  <col style=\"mso-width-source:userset;mso-width-alt:2958;width:62pt\" width=\"83\" />  <col style=\"width:48pt\" width=\"64\" />  </colgroup>\r\n    <tbody>\r\n        <tr style=\"height:14.4pt\" height=\"19\">\r\n            <td class=\"xl65\" style=\"height:14.4pt;width:127pt\" width=\"170\" height=\"19\">MIGRATION-04-2020</td>\r\n            <td class=\"xl65\" style=\"border-left:none;width:62pt\" width=\"83\">IA-LS</td>\r\n            <td class=\"xl66\" style=\"border-left:none;width:48pt\" width=\"64\" align=\"right\">20</td>\r\n        </tr>\r\n        <tr style=\"height:14.4pt\" height=\"19\">\r\n            <td class=\"xl65\" style=\"height:14.4pt;border-top:none\" height=\"19\">&nbsp;</td>\r\n            <td class=\"xl65\" style=\"border-top:none;border-left:none\">RIA</td>\r\n            <td class=\"xl66\" style=\"border-top:none;border-left:none\" align=\"right\">38</td>\r\n        </tr>\r\n        <tr style=\"height:14.4pt\" height=\"19\">\r\n            <td class=\"xl65\" style=\"height:14.4pt;border-top:none\" height=\"19\">MIGRATION-05-2018-2020</td>\r\n            <td class=\"xl65\" style=\"border-top:none;border-left:none\">IA</td>\r\n            <td class=\"xl66\" style=\"border-top:none;border-left:none\" align=\"right\">16</td>\r\n        </tr>\r\n        <tr style=\"height:14.4pt\" height=\"19\">\r\n            <td class=\"xl65\" style=\"height:14.4pt;border-top:none\" height=\"19\">MIGRATION-09-2020</td>\r\n            <td class=\"xl65\" style=\"border-top:none;border-left:none\">RIA</td>\r\n            <td class=\"xl66\" style=\"border-top:none;border-left:none\" align=\"right\">74</td>\r\n        </tr>\r\n        <tr style=\"height:14.4pt\" height=\"19\">\r\n            <td class=\"xl65\" style=\"height:14.4pt;border-top:none\" height=\"19\">MIGRATION-10-2020</td>\r\n            <td class=\"xl65\" style=\"border-top:none;border-left:none\">CSA</td>\r\n            <td class=\"xl66\" style=\"border-top:none;border-left:none\" align=\"right\">8</td>\r\n        </tr>\r\n    </tbody>\r\n</table>\r\n<p>&nbsp;</p>"
+        },
+        {
+          "approvalDate": "Mar 12, 2020 11:14:14 AM",
+          "lastChangeDate": "Mar 12, 2020 11:14:14 AM",
+          "content": "<p><span style=\"color:#1F497D;mso-ansi-language:&#xA;EN-GB\" lang=\"EN-GB\">Dear applicants,</span></p>\r\n<p>&nbsp;</p>\r\n<p class=\"MsoNormal\"><span style=\"color:#1F497D;mso-ansi-language:&#xA;EN-GB\" lang=\"EN-GB\">In order to take into account the impact of COVID-19 and the precautionary measures applied by different Member States, it has been decided to extend the call deadline by one week to<u> 19/03/2020 at 17.00.00 Brussels local time</u>. </span></p>\r\n<p class=\"MsoNormal\"><span style=\"color:#1F497D;mso-ansi-language:&#xA;EN-GB\" lang=\"EN-GB\">Please note that proposals already submitted can be re-opened and modified until the new deadline. </span></p>\r\n<p>&nbsp;</p>"
+        },
+        {
+          "approvalDate": "Mar 12, 2020 9:56:27 AM",
+          "lastChangeDate": "Mar 12, 2020 9:56:27 AM",
+          "content": "The submission session is now available for: MIGRATION-04-2020(RIA), MIGRATION-10-2020(CSA), MIGRATION-05-2018-2020(IA), MIGRATION-09-2020(RIA), MIGRATION-04-2020(IA-LS)"
+        },
+        {
+          "approvalDate": "Nov 5, 2019 12:30:44 AM",
+          "lastChangeDate": "Nov 5, 2019 12:30:44 AM",
+          "content": "The submission session is now available for: MIGRATION-04-2020(RIA), MIGRATION-10-2020(CSA), MIGRATION-05-2018-2020(IA), MIGRATION-09-2020(RIA), MIGRATION-04-2020(IA-LS)"
+        },
+        {
+          "approvalDate": "Mar 15, 2019 12:13:23 PM",
+          "lastChangeDate": "Mar 15, 2019 12:13:23 PM",
+          "content": "<p>&nbsp;</p>\r\n<p style=\"margin: 0px 0px 13.33px;\"><span lang=\"EN-GB\" style=\"margin: 0px;\"><font face=\"Calibri\" size=\"3\">A total of 104 proposals were submitted in response to this call. The number of proposals for each topic/type of action is shown below. </font></span></p>\r\n<p>&nbsp;</p>\r\n<p style=\"margin: 0px 0px 13.33px;\"><span style=\"margin: 0px;\"><font face=\"Calibri\"><font size=\"3\">DT-MIGRATION-06-2018-2019 (IA): 43<span style=\"margin: 0px;\">&nbsp;&nbsp; </span></font></font></span></p>\r\n<p>&nbsp;</p>\r\n<p style=\"margin: 0px 0px 13.33px;\"><span style=\"margin: 0px;\"><font face=\"Calibri\" size=\"3\">MIGRATION-01-2019 (RIA):20</font></span></p>\r\n<p>&nbsp;</p>\r\n<p style=\"margin: 0px 0px 13.33px;\"><span style=\"margin: 0px;\"><font face=\"Calibri\"><font size=\"3\">MIGRATION-03-2019 (RIA):29<span style=\"margin: 0px;\">&nbsp;&nbsp;&nbsp; </span></font></font></span></p>\r\n<p>&nbsp;</p>\r\n<p style=\"margin: 0px 0px 13.33px;\"><span style=\"margin: 0px;\"><font face=\"Calibri\"><font size=\"3\">MIGRATION-07-2019 (RIA):12<span style=\"margin: 0px;\">&nbsp;&nbsp;&nbsp; </span></font></font></span></p>\r\n<p>&nbsp;</p>"
+        },
+        {
+          "approvalDate": "Feb 15, 2019 1:49:35 PM",
+          "lastChangeDate": "Feb 15, 2019 1:49:35 PM",
+          "content": "<p>&nbsp;</p>\r\n<p class=\"MsoPlainText\" style=\"margin: 0cm 0cm 0pt\"><font size=\"3\"><font face=\"Calibri\">Corrigendum to previous call update on Canadian funding of Canadian consortium partners in EU funded Horizon 2020 Societal Challenge 6 projects under the Migration Call<o:p></o:p></font></font></p>\r\n<p class=\"MsoPlainText\" style=\"margin: 0cm 0cm 0pt\"><o:p><font size=\"3\" face=\"Calibri\">&nbsp;</font></o:p></p>\r\n<p class=\"MsoPlainText\" style=\"margin: 0cm 0cm 0pt\"><font size=\"3\" face=\"Calibri\">The Canadian Social Science and Research Council makes awards available to researchers under specific conditions. For detailed information on the application process for funding, please visit the website of the Canadian Social Science and Research Council: </font><a href=\"http://www.sshrc-crsh.gc.ca/funding-financement/programs-programmes/horizon_2020-eng.aspx\"><font color=\"#0000ff\" size=\"3\" face=\"Calibri\">http://www.sshrc-crsh.gc.ca/funding-financement/programs-programmes/horizon_2020-eng.aspx</font></a><o:p></o:p></p>\r\n<p class=\"MsoPlainText\" style=\"margin: 0cm 0cm 0pt\"><font size=\"3\" face=\"Calibri\">For evaluation purposes, applicants from Canada will be regarded as any other legal entities established in countries not eligible to receive funding automatically through Horizon 2020 grants. The rules and exceptions on eligible countries are described in Annex A of the Work Programme.</font><o:p></o:p></p>\r\n<p>&nbsp;</p>"
+        },
+        {
+          "approvalDate": "Jan 9, 2019 11:18:54 AM",
+          "lastChangeDate": "Jan 9, 2019 11:18:54 AM",
+          "content": "<p><b><span style=\"color: black\">Canadian funding of Canadian consortium partners in EU funded Horizon 2020 Societal Challenge 6 projects under the Migration Call</span></b></p>\r\n<p><span style=\"color: black; quot: \">The European Commission has an arrangement with the Canadian Social Science and Research Council whereby Canada funds Canadian consortium partners in projects selected under the Migration Call of the Horizon 2020 Societal Challenge 6 Work Programme. </span></p>"
+        },
+        {
+          "approvalDate": "Nov 6, 2018 12:30:11 AM",
+          "lastChangeDate": "Nov 6, 2018 12:30:11 AM",
+          "content": "The submission session is now available for: MIGRATION-07-2019(RIA), MIGRATION-01-2019(RIA), DT-MIGRATION-06-2018-2019(IA), MIGRATION-03-2019(RIA)"
+        },
+        {
+          "approvalDate": "Mar 16, 2018 4:04:18 PM",
+          "lastChangeDate": "Mar 16, 2018 4:04:18 PM",
+          "content": "<p>&nbsp;<span style=\"color:#1F497D\">The call deadline was Tuesday 13 March 2018  17 Pm. A total of 79&nbsp; proposals were submitted in response to this call.  The number of proposals for each topic&nbsp; and budget is shown below: </span></p>\r\n<p>DT-MIGRATION-06-2018-2019 : 31 ( IA) 12M</p>\r\n<p>MIGRATION-02-2018 :11( RIA) 9M</p>\r\n<p>MIGRATION-05-2018-2020 : 23 ( RIA) 6M</p>\r\n<p>MIGRATION-08-2018 : 14 ( RIA ) 9 M</p>"
+        },
+        {
+          "approvalDate": "Feb 28, 2018 11:05:57 AM",
+          "lastChangeDate": "Feb 28, 2018 11:05:57 AM",
+          "content": "<p>&nbsp;</p>\r\n<div><i><span style=\"color: #1f497d\">Dear applicants,</span></i></div>\r\n<div><i><span style=\"color: #1f497d\">&nbsp;</span></i></div>\r\n<div><i><span style=\"color: #1f497d\">We bring to your attention the following notice regarding page limits applicable to proposals. </span></i></div>\r\n<div>&nbsp;</div>\r\n<div><i><span style=\"font-size: 12pt; color: #1f497d\">Applicants are allowed to remove the page break in the cover page of the template for the technical annex,&nbsp;i.e. the proposal text can start on the cover page. </span></i></div>\r\n<div>&nbsp;</div>\r\n<div><i><span style=\"font-size: 12pt; color: #1f497d\">We sincerely apologise for any inconvenience caused by the late notice on this.</span></i></div>\r\n<div>&nbsp;</div>\r\n<div><i><span style=\"color: #1f497d\">With kind regards, </span></i></div>\r\n<div><i><span style=\"color: #1f497d\">European Commission - Participant Portal Submission System team</span></i></div>"
+        },
+        {
+          "approvalDate": "Nov 7, 2017 12:30:04 AM",
+          "lastChangeDate": "Nov 7, 2017 12:30:04 AM",
+          "content": "The submission session is now available for: MIGRATION-05-2018-2020(RIA), MIGRATION-02-2018(RIA), DT-MIGRATION-06-2018-2019(IA), MIGRATION-08-2018(RIA)"
+        }
+      ],
+      "hasForthcomingTopics": false,
+      "hasOpenTopics": false,
+      "allClosedTopics": true
+    }
+  }
+}

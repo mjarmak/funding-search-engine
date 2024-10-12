@@ -83,7 +83,7 @@ public class CallDataLoader {
         }
     }
 
-    public void loadData(String fileName) {
+    public void loadData(String fileName, boolean skipUpdate) {
         total = 0;
 
         resetIndexes();
@@ -149,7 +149,7 @@ public class CallDataLoader {
             List<Call> calls = new ArrayList<>();
             String[] row;
             while ((row = reader.readNext()) != null) {
-                Call call = getCall(row);
+                Call call = getCall(row, skipUpdate);
                 processSave(calls, call, fileName);
             }
             log.info("Saving last batch of " + calls.size() + " items");
@@ -209,7 +209,7 @@ public class CallDataLoader {
         }
     }
 
-    private Call getCall(String[] row) throws IOException {
+    private Call getCall(String[] row, boolean skipUpdate) throws IOException {
         if (row[identifierIndex] == null || row[identifierIndex].isEmpty()) {
             return null;
         }
@@ -257,8 +257,14 @@ public class CallDataLoader {
         try {
             Optional<Call> existingCallOptional = callRepository.findByReference(call.getReference());
             if (existingCallOptional.isPresent() && call.getIdentifier().equals(existingCallOptional.get().getIdentifier())) {
-                log.debug("Updating call: " + call.getIdentifier());
+
                 Call existingCall = existingCallOptional.get();
+
+                if (skipUpdate) {
+                    return existingCall;
+                }
+
+                log.debug("Updating call: " + call.getIdentifier());
                 for (LongText longText : call.getLongTexts()) {
                     Optional<LongText> existingLongText = existingCall.getLongTexts().stream()
                             .filter(lt -> lt.getType().equals(longText.getType()))

@@ -1,0 +1,159 @@
+{
+  "TopicDetails": {
+    "type": 1,
+    "ccm2Id": 46905886,
+    "identifier": "HORIZON-MSCA-2025-COFUND-01-01",
+    "title": "MSCA COFUND 2025",
+    "publicationDateLong": 1713391200000,
+    "callIdentifier": "HORIZON-MSCA-2025-COFUND-01",
+    "callTitle": "MSCA COFUND 2025",
+    "callccm2Id": 46905900,
+    "allowPartnerSearch": true,
+    "frameworkProgramme": {
+      "id": 43108390,
+      "abbreviation": "HORIZON",
+      "description": "Horizon Europe (HORIZON)"
+    },
+    "programmeDivision": [
+      {
+        "id": 43108473,
+        "abbreviation": "HORIZON.1.2",
+        "description": "Marie Skłodowska-Curie Actions (MSCA)"
+      }
+    ],
+    "topicMGAs": [
+      {
+        "id": 43251971,
+        "abbreviation": "HORIZON-AG-UN",
+        "description": "HORIZON Unit Grant"
+      }
+    ],
+    "keywords": [
+
+    ],
+    "sme": false,
+    "actions": [
+      {
+        "status": {
+          "id": 31094501,
+          "abbreviation": "Forthcoming",
+          "description": "Forthcoming"
+        },
+        "types": [
+          {
+            "typeOfAction": "HORIZON-TMA-MSCA-Cofund-P HORIZON TMA MSCA Cofund Postdoctoral programme",
+            "typeOfMGA": [
+              {
+                "id": 43251971,
+                "abbreviation": "HORIZON-AG-UN",
+                "description": "HORIZON Unit Grant"
+              }
+            ]
+          }
+        ],
+        "plannedOpeningDate": "1737586800000",
+        "submissionProcedure": {
+
+        },
+        "deadlineDates": [
+          "1750716000000"
+        ]
+      },
+      {
+        "status": {
+          "id": 31094501,
+          "abbreviation": "Forthcoming",
+          "description": "Forthcoming"
+        },
+        "types": [
+          {
+            "typeOfAction": "HORIZON-TMA-MSCA-Cofund-P HORIZON TMA MSCA Cofund Postdoctoral programme",
+            "typeOfMGA": [
+              {
+                "id": 43251971,
+                "abbreviation": "HORIZON-AG-UN",
+                "description": "HORIZON Unit Grant"
+              }
+            ]
+          },
+          {
+            "typeOfAction": "HORIZON-TMA-MSCA-Cofund-D HORIZON TMA MSCA Cofund Doctoral programme",
+            "typeOfMGA": [
+              {
+                "id": 43251971,
+                "abbreviation": "HORIZON-AG-UN",
+                "description": "HORIZON Unit Grant"
+              }
+            ]
+          }
+        ],
+        "plannedOpeningDate": "1737586800000",
+        "submissionProcedure": {
+
+        },
+        "deadlineDates": [
+          "1750716000000"
+        ]
+      }
+    ],
+    "latestInfos": [
+
+    ],
+    "budgetOverviewJSONItem": {
+      "budgetTopicActionMap": {
+        "128459": {
+          "action": "HORIZON TMA MSCA Cofund Postdoctoral programme",
+          "plannedOpeningDate": "1737586800000",
+          "deadlineModel": "single-stage",
+          "deadlineDates": [
+            "1750716000000"
+          ],
+          "budgetYearMap": {
+            "2025": 101820280
+          },
+          "expectedGrants": 0,
+          "minContribution": 0,
+          "maxContribution": 0
+        },
+        "128460": {
+          "action": "HORIZON TMA MSCA Cofund Doctoral programme",
+          "plannedOpeningDate": "1737586800000",
+          "deadlineModel": "single-stage",
+          "deadlineDates": [
+            "1750716000000"
+          ],
+          "budgetYearMap": {
+            "2025": 101820280
+          },
+          "expectedGrants": 0,
+          "minContribution": 0,
+          "maxContribution": 0
+        }
+      },
+      "budgetYearsColumns": [
+        "2025"
+      ]
+    },
+    "description": "test",
+    "conditions": "test",
+    "supportInfo": "test",
+    "sepTemplate": "test",
+    "links": [
+
+    ],
+    "additionalDossiers": [
+
+    ],
+    "infoPackDossiers": [
+
+    ],
+    "callDetailsJSONItem": {
+      "latestInfos": [
+
+      ],
+      "hasForthcomingTopics": false,
+      "hasOpenTopics": false,
+      "allClosedTopics": false
+    }
+  }
+}

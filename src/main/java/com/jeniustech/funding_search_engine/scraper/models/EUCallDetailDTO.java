@@ -3,23 +3,21 @@ package com.jeniustech.funding_search_engine.scraper.models;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jeniustech.funding_search_engine.exceptions.MapperException;
-import lombok.Builder;
-import lombok.Value;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-@Value
+@Getter
 public class EUCallDetailDTO {
 
-    TopicDetailsDTO topicDetails;
-
-    @JsonCreator
-    public EUCallDetailDTO(@JsonProperty("TopicDetails") TopicDetailsDTO topicDetails) {
-        this.topicDetails = topicDetails;
-    }
+    @JsonProperty("TopicDetails") TopicDetailsDTO topicDetails;
 
     @JsonIgnore
     public String getTitle(String defaultTitle) {
@@ -35,10 +33,21 @@ public class EUCallDetailDTO {
 
     @JsonIgnore
     private BudgetItem getBudget() {
-        for (Map.Entry<String, List<BudgetItem>> entry : topicDetails.budgetOverview.budgetTopicActionMap.entrySet()) {
-
-            for (BudgetItem budgetItem : entry.getValue()) {
-                if (budgetItem.action.equals(topicDetails.identifier + " - " + getActionType())) {
+        String actionString = topicDetails.identifier + " - " + getActionType();
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+        for (Map.Entry<String, Object> entry : topicDetails.budgetOverview.budgetTopicActionMap.entrySet()) {
+            Object budgetItemOrList = entry.getValue();
+            if (budgetItemOrList instanceof List<?>) {
+                for (Object o : (List<?>) budgetItemOrList) {
+                    BudgetItem budgetItem = objectMapper.convertValue(o, BudgetItem.class);
+                    if (budgetItem.action.contains(actionString) || actionString.contains(budgetItem.action)) {
+                        return budgetItem;
+                    }
+                }
+            } else if (budgetItemOrList instanceof LinkedHashMap<?,?>) {
+                BudgetItem budgetItem = objectMapper.convertValue(budgetItemOrList, BudgetItem.class);
+                if (budgetItem.action.contains(actionString) || actionString.contains(budgetItem.action)) {
                     return budgetItem;
                 }
             }
@@ -94,6 +103,10 @@ public class EUCallDetailDTO {
         if (
                 topicDetails.actions.get(0).submissionProcedure == null ||
                 topicDetails.actions.get(0).submissionProcedure.description == null) {
+            BudgetItem budget = getBudget();
+            if (budget.getDeadlineModel() != null) {
+                return budget.getDeadlineModel();
+            }
             throw new MapperException("Submission procedure is not found");
         }
         return topicDetails.actions.get(0).submissionProcedure.description;
@@ -135,16 +148,6 @@ public class EUCallDetailDTO {
     }
 
     @JsonIgnore
-    public String getConditions() {
-        return topicDetails.conditions;
-    }
-
-    @JsonIgnore
-    public String getSupportInformation() {
-        return topicDetails.supportInformation;
-    }
-
-    @JsonIgnore
     public String getDestinationDetails() {
         return topicDetails.destinationDetails;
     }
@@ -155,106 +158,56 @@ public class EUCallDetailDTO {
     }
 
 
-    @Value
-    @Builder
+    @Getter
     public static class TopicDetailsDTO {
 
-        String identifier;
-        String title;
-        String callTitle;
-        String description;
+        @JsonProperty("identifier") String identifier;
+        @JsonProperty("title") String title;
+        @JsonProperty("callTitle") String callTitle;
+        @JsonProperty("description") String description;
         String destinationDetails;
         String missionDetails;
 
         String beneficiaryAdministration;
         String furtherInformation;
         String conditions;
-        String supportInformation;
 
-        List<ActionItem> actions;
-
-        BudgetOverviewDTO budgetOverview;
-
-        @JsonCreator
-        public TopicDetailsDTO(@JsonProperty("identifier") String identifier,
-                               @JsonProperty("title") String title,
-                               @JsonProperty("callTitle") String callTitle,
-                               @JsonProperty("description") String description,
-                               String destinationDetails,
-                               String missionDetails,
-                               String beneficiaryAdministration,
-                               String furtherInformation,
-                               String conditions,
-                               String supportInformation,
-                               @JsonProperty("actions") List<ActionItem> actions,
-                               @JsonProperty("budgetOverviewJSONItem") BudgetOverviewDTO budgetOverview
-        ) {
-            this.identifier = identifier;
-            this.title = title;
-            this.callTitle = callTitle;
-            this.description = description;
-            this.destinationDetails = destinationDetails;
-            this.missionDetails = missionDetails;
-            this.beneficiaryAdministration = beneficiaryAdministration;
-            this.furtherInformation = furtherInformation;
-            this.conditions = conditions;
-            this.supportInformation = supportInformation;
-            this.actions = actions;
-            this.budgetOverview = budgetOverview;
-        }
+        @JsonProperty("actions") List<ActionItem> actions;
+        @JsonProperty("budgetOverviewJSONItem") BudgetOverviewDTO budgetOverview;
     }
 
-    @Value
+    @Getter
     public static class BudgetOverviewDTO {
 
-        Map<String, List<BudgetItem>> budgetTopicActionMap;
+        Map<String, Object> budgetTopicActionMap;
 
         @JsonCreator
-        public BudgetOverviewDTO(@JsonProperty("budgetTopicActionMap") Map<String, List<BudgetItem>> budgetTopicActionMap) {
-            this.budgetTopicActionMap = budgetTopicActionMap;
+        public BudgetOverviewDTO(@JsonProperty("budgetTopicActionMap") Object budgetTopicActionMap) {
+            ObjectMapper mapper = new ObjectMapper();
+            this.budgetTopicActionMap = mapper.convertValue(budgetTopicActionMap, Map.class);
         }
 
     }
 
-    @Value
+    @Getter
     public static class BudgetItem {
 
-        String action;
-        Integer expectedGrants;
-        String minContribution;
-        String maxContribution;
-        Map<String, String> budgetYearMap;
-
-        @JsonCreator
-        public BudgetItem(@JsonProperty("action") String action,
-                          @JsonProperty("expectedGrants") Integer expectedGrants,
-                          @JsonProperty("minContribution") String minContribution,
-                          @JsonProperty("maxContribution") String maxContribution,
-                          Map<String, String> budgetYearMap
-        ) {
-            this.action = action;
-            this.expectedGrants = expectedGrants;
-            this.minContribution = minContribution;
-            this.maxContribution = maxContribution;
-            this.budgetYearMap = budgetYearMap;
-        }
-
+        @JsonProperty("action") String action;
+        @JsonProperty("expectedGrants") Integer expectedGrants;
+        @JsonProperty("minContribution") String minContribution;
+        @JsonProperty("maxContribution") String maxContribution;
+        @JsonProperty("deadlineModel") String deadlineModel;
+        @JsonProperty("budgetYearMap") Map<String, String> budgetYearMap;
     }
 
-    @Value
+    @Getter
     public static class ActionItem {
 
-        List<Object> types;
+        @JsonProperty("types") List<Object> types;
         MGATypeOrSubmissionProcedure submissionProcedure;
-
-        @JsonCreator
-        public ActionItem(@JsonProperty("types") List<Object> types, MGATypeOrSubmissionProcedure submissionProcedure) {
-            this.types = types;
-            this.submissionProcedure = submissionProcedure;
-        }
     }
 
-    @Value
+    @Getter
     public static class ActionType {
         String typeOfAction;
         List<MGATypeOrSubmissionProcedure> typeOfMGA;
@@ -270,18 +223,12 @@ public class EUCallDetailDTO {
         }
     }
 
-    @Value
+    @Getter
+    @AllArgsConstructor
+    @NoArgsConstructor
     public static class MGATypeOrSubmissionProcedure {
-        String abbreviation;
-        String description;
-
-        @JsonCreator
-        public MGATypeOrSubmissionProcedure(
-                @JsonProperty("abbreviation") String abbreviation,
-                @JsonProperty("description") String description) {
-            this.abbreviation = abbreviation;
-            this.description = description;
-        }
+         @JsonProperty("abbreviation") String abbreviation;
+         @JsonProperty("description") String description;
     }
 
 }

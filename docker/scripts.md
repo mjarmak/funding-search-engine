@@ -73,3 +73,30 @@ truncate table organisation_contact_info;
 truncate table location_coordinates CASCADE;
 truncate table organisations CASCADE;
 ```
+
+
+## Test scripts
+```
+select organisation_id ,count(id) from organisation_contact_info oci group by organisation_id  ;
+select vat_number ,count(id) from organisations o  group by vat_number  ;
+select reference_id ,count(id) from organisations o  group by reference_id  ;
+select name ,count(id) from organisations o  group by name  ;
+select short_name ,count(id) from organisations o  group by short_name  ;
+select count(id) from organisations o ;
+```
+
+
+````log book view
+select
+  CASE
+    WHEN type = 0 THEN 'SEARCH CALL'
+    WHEN type = 1 THEN 'EXPORT EXCEL'
+    WHEN type = 2 THEN 'EXPORT PDF'
+    WHEN type = 3 THEN 'SEARCH PROJECT'
+    WHEN type = 4 THEN 'SEARCH PARTNER'
+    ELSE 'UNKNOWN' 
+  END AS type,
+log_text,
+created_at as date
+from log_book lb where user_id IN (22,26,27,28,19)
+````

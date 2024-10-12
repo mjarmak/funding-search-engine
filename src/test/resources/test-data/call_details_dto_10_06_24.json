@@ -1,0 +1,79 @@
+{
+  "TopicDetails" : {
+    "type" : 1,
+    "ccm2Id" : 46907355,
+    "identifier" : "HORIZON-WIDERA-2025-ACCESS-01-01-two-stage",
+    "title" : "Teaming for Excellence",
+    "publicationDateLong" : 1713391200000,
+    "callIdentifier" : "HORIZON-WIDERA-2025-ACCESS-01",
+    "callTitle" : "Teaming for Excellence",
+    "callccm2Id" : 46907372,
+    "allowPartnerSearch" : true,
+    "frameworkProgramme" : {
+      "id" : 43108390,
+      "abbreviation" : "HORIZON",
+      "description" : "Horizon Europe (HORIZON)"
+    },
+    "programmeDivision" : [ {
+      "id" : 43121707,
+      "abbreviation" : "HORIZON.4.1",
+      "description" : "Widening participation and spreading excellence"
+    } ],
+    "topicMGAs" : [ {
+      "id" : 43027846,
+      "abbreviation" : "HORIZON-AG",
+      "description" : "HORIZON Action Grant Budget-Based"
+    } ],
+    "keywords" : [ ],
+    "sme" : false,
+    "actions" : [ {
+      "status" : {
+        "id" : 31094501,
+        "abbreviation" : "Forthcoming",
+        "description" : "Forthcoming"
+      },
+      "types" : [ {
+        "typeOfAction" : "HORIZON-CSA HORIZON Coordination and Support Actions",
+        "typeOfMGA" : [ {
+          "id" : 43027846,
+          "abbreviation" : "HORIZON-AG",
+          "description" : "HORIZON Action Grant Budget-Based"
+        } ]
+      } ],
+      "plannedOpeningDate" : "1733180400000",
+      "submissionProcedure" : { },
+      "deadlineDates" : [ "1744236000000", "1768863600000" ]
+    } ],
+    "latestInfos" : [ ],
+    "budgetOverviewJSONItem" : {
+      "budgetTopicActionMap" : {
+        "130667" : {
+          "action" : "HORIZON Coordination and Support Actions",
+          "plannedOpeningDate" : "1733180400000",
+          "deadlineModel" : "two-stage",
+          "deadlineDates" : [ "1744236000000", "1768863600000" ],
+          "budgetYearMap" : {
+            "2025" : 270000000
+          },
+          "expectedGrants" : 18,
+          "minContribution" : 8000000,
+          "maxContribution" : 15000000
+        }
+      },
+      "budgetYearsColumns" : [ "2025" ]
+    },
+    "description" : "test",
+    "conditions" : "test",
+    "supportInfo" : "test",
+    "sepTemplate" : "test",
+    "links" : [ ],
+    "additionalDossiers" : [ ],
+    "infoPackDossiers" : [ ],
+    "callDetailsJSONItem" : {
+      "latestInfos" : [ ],
+      "hasForthcomingTopics" : false,
+      "hasOpenTopics" : false,
+      "allClosedTopics" : false
+    }
+  }
+}

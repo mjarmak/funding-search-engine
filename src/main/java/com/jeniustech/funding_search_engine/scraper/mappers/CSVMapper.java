@@ -35,8 +35,6 @@ public interface CSVMapper {
 
                 .beneficiaryAdministration(callDetailDTO.getBeneficiaryAdministration())
                 .furtherInformation(callDetailDTO.getFurtherInformation())
-                .conditions(callDetailDTO.getConditions())
-                .supportInformation(callDetailDTO.getSupportInformation())
                 .build();
     }
 
@@ -52,6 +50,7 @@ public interface CSVMapper {
                 .startDate(item.getStartDate())
                 .budgetMin(item.getBudget())
                 .budgetMax(item.getBudget())
+                .submissionProcedure(item.getDeadlineModel())
                 .projectNumber(null)
                 .pathId(item.getCCM2Id())
                 .reference(item.getReference())

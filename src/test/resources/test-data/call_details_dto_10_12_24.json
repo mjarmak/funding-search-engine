@@ -1,0 +1,139 @@
+{
+  "TopicDetails": {
+    "type": 0,
+    "ccm2Id": 47060148,
+    "cftId": 0,
+    "identifier": "ERC-2025-SyG",
+    "title": "ERC SYNERGY GRANTS",
+    "publicationDateLong": 1720656000000,
+    "callIdentifier": "ERC-2025-SyG",
+    "callTitle": "Call for proposals for ERC Synergy Grant",
+    "callccm2Id": 47060163,
+    "allowPartnerSearch": true,
+    "frameworkProgramme": {
+      "id": 43108390,
+      "abbreviation": "HORIZON",
+      "description": "Horizon Europe Framework Programme (HORIZON)"
+    },
+    "programmeDivision": [
+      {
+        "id": 43108406,
+        "abbreviation": "HORIZON.1.1",
+        "description": "European Research Council (ERC)"
+      },
+      {
+        "id": 43108394,
+        "abbreviation": "HORIZON.1",
+        "description": "Excellent Science"
+      }
+    ],
+    "topicMGAs": [
+
+    ],
+    "tags": [
+      "SyG",
+      "SyG2025",
+      "ERC",
+      "European Research Council",
+      "Synergy",
+      "Horizon Europe",
+      "Excellence Science",
+      "Frontier research",
+      "Excellence"
+    ],
+    "sme": false,
+    "actions": [
+      {
+        "status": {
+          "id": 31094502,
+          "abbreviation": "Open",
+          "description": "Open"
+        },
+        "types": [
+          {
+            "typeOfAction": "HORIZON-ERC-SYG HORIZON ERC Synergy Grants",
+            "typeOfMGA": [
+              {
+                "id": 43027846,
+                "abbreviation": "HORIZON-AG",
+                "description": "HORIZON Action Grant Budget-Based"
+              }
+            ]
+          }
+        ],
+        "plannedOpeningDate": "11 July 2024",
+        "submissionProcedure": {
+          "id": 31094504,
+          "abbreviation": "single-stage",
+          "description": "single-stage"
+        },
+        "deadlineDates": [
+          "06 November 2024"
+        ]
+      }
+    ],
+    "latestInfos": [
+
+    ],
+    "budgetOverviewJSONItem": {
+      "budgetTopicActionMap": {
+        "3542094": [
+          {
+            "action": "ERC-2025-SyG - HORIZON-ERC-SYG HORIZON ERC Synergy Grants",
+            "plannedOpeningDate": "11 July 2024",
+            "deadlineModel": "single-stage",
+            "deadlineDates": [
+              "06 November 2024"
+            ],
+            "budgetYearMap": {
+              "2025": 500000000
+            },
+            "expectedGrants": 48,
+            "minContribution": 0,
+            "maxContribution": 14000000,
+            "budgetTopicActionMap": {
+
+            }
+          }
+        ]
+      },
+      "budgetYearsColumns": [
+        "2025"
+      ]
+    },
+    "description": "test",
+    "links": [
+      {
+        "callIdentifier": "ERC-2025-SyG",
+        "status": "Open",
+        "criterionType": "SubFundingScheme",
+        "criterionTypeDescription": "subfunding schemes",
+        "criterionCode": "HORIZON-ERC-SYG",
+        "criterionDescription": "HORIZON ERC Synergy Grants",
+        "url": "https://ec.europa.eu/research/participants/submission/manage/screen/submission/create-draft/37548?topic=ERC-2025-SyG",
+        "startDate": "Jul 11, 2024 12:00:00 AM",
+        "endDate": "Nov 6, 2024 5:00:00 PM",
+        "mgaDescription": "HORIZON Action Grant Budget-Based",
+        "mgaCode": "HORIZON-AG"
+      }
+    ],
+    "additionalDossiers": [
+
+    ],
+    "infoPackDossiers": [
+
+    ],
+    "callDetailsJSONItem": {
+      "latestInfos": [
+        {
+          "approvalDate": "Jul 11, 2024 12:00:00 AM",
+          "lastChangeDate": "Jul 11, 2024 12:00:00 AM",
+          "content": "The submission session is now available for: ERC-2025-SyG(HORIZON-ERC-SYG)"
+        }
+      ],
+      "hasForthcomingTopics": false,
+      "hasOpenTopics": true,
+      "allClosedTopics": false
+    }
+  }
+}

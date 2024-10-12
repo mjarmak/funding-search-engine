@@ -26,7 +26,7 @@ public class NotificationScheduleConfig {
         System.out.println("Task executed at 5 AM");
         scrapeController.scrapeAndNotify(
                 List.of("query-upcoming"),
-                new ArrayList<>(), directory
+                new ArrayList<>(), directory, true
         );
     }
 }

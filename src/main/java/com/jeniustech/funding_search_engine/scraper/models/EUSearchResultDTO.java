@@ -1,13 +1,11 @@
 package com.jeniustech.funding_search_engine.scraper.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.Builder;
-import lombok.Value;
+import lombok.Getter;
 
 import java.util.List;
 
-@Value
-@Builder
+@Getter
 public class EUSearchResultDTO {
 
     int pageSize;

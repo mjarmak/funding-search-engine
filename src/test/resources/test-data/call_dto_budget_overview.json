@@ -1,0 +1,65 @@
+{
+  "budgetTopicActionMap":{
+    "3464831":[
+      {
+        "action":"EUAF-2023-TRAI-04 - EUAF-PJG EUAF Project Grants",
+        "plannedOpeningDate":"09 March 2023",
+        "deadlineModel":"single-stage",
+        "deadlineDates":[
+          "11 May 2023"
+        ],
+        "budgetYearMap":{
+          "2023":900000
+        },
+        "budgetTopicActionMap":{
+
+        }
+      },
+      {
+        "action":"EUAF-2023-TRAI-03 - EUAF-PJG EUAF Project Grants",
+        "plannedOpeningDate":"09 March 2023",
+        "deadlineModel":"single-stage",
+        "deadlineDates":[
+          "11 May 2023"
+        ],
+        "budgetYearMap":{
+          "2023":900000
+        },
+        "budgetTopicActionMap":{
+
+        }
+      },
+      {
+        "action":"EUAF-2023-TRAI-02 - EUAF-PJG EUAF Project Grants",
+        "plannedOpeningDate":"09 March 2023",
+        "deadlineModel":"single-stage",
+        "deadlineDates":[
+          "11 May 2023"
+        ],
+        "budgetYearMap":{
+          "2023":900000
+        },
+        "budgetTopicActionMap":{
+
+        }
+      },
+      {
+        "action":"EUAF-2023-TRAI-01 - EUAF-PJG EUAF Project Grants",
+        "plannedOpeningDate":"09 March 2023",
+        "deadlineModel":"single-stage",
+        "deadlineDates":[
+          "11 May 2023"
+        ],
+        "budgetYearMap":{
+          "2023":900000
+        },
+        "budgetTopicActionMap":{
+
+        }
+      }
+    ]
+  },
+  "budgetYearsColumns":[
+    "2023"
+  ]
+}
