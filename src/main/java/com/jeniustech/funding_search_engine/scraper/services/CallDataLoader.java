@@ -83,6 +83,26 @@ public class CallDataLoader {
         }
     }
 
+    public void updateProjectNumbers() {
+        log.info("Updating project numbers");
+        int pageNumber = 0;
+        int pageSize = 1000;
+        Sort sort = Sort.sort(Project.class).by(Project::getId).descending();
+        Pageable pageable = PageRequest.of(pageNumber, pageSize, sort);
+        List<Call> calls = callRepository.findAll(pageable).getContent();
+        while (!calls.isEmpty()) {
+            log.info("Updating project numbers for batch of " + calls.size() + " items");
+            for (Call call : calls) {
+                if (call.getProjectNumber() == null || call.getProjectNumber() == 0) {
+                    call.setProjectNumber((short) call.getProjects().size());
+                }
+            }
+            callRepository.saveAll(calls);
+            pageNumber++;
+            calls = callRepository.findAll(PageRequest.of(pageNumber, pageSize, sort)).getContent();
+        }
+    }
+
     public void loadData(String fileName, boolean skipUpdate) {
         total = 0;
 

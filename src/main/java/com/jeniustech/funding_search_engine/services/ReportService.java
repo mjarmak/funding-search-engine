@@ -25,6 +25,7 @@ import com.jeniustech.funding_search_engine.entities.UserData;
 import com.jeniustech.funding_search_engine.exceptions.CallNotFoundException;
 import com.jeniustech.funding_search_engine.exceptions.ReportException;
 import com.jeniustech.funding_search_engine.exceptions.UserNotFoundException;
+import com.jeniustech.funding_search_engine.mappers.CallMapper;
 import com.jeniustech.funding_search_engine.repository.CallRepository;
 import com.jeniustech.funding_search_engine.repository.UserDataRepository;
 import com.jeniustech.funding_search_engine.util.DetailFormatter;
@@ -74,6 +75,8 @@ public class ReportService {
             addHeader(document, path);
 
             List<Call> calls = callRepository.findAllById(callIds);
+            CallMapper.sortByEndDate(calls);
+
             if (calls.isEmpty()) {
                 throw new CallNotFoundException("Calls not found");
             }

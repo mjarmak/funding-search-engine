@@ -6,6 +6,7 @@ import com.jeniustech.funding_search_engine.entities.Call;
 import com.jeniustech.funding_search_engine.entities.LongText;
 import com.jeniustech.funding_search_engine.entities.UserCallJoin;
 
+import java.util.Comparator;
 import java.util.List;
 
 public interface CallMapper {
@@ -78,5 +79,12 @@ public interface CallMapper {
                 .budgetMax(call.getBudgetMaxDisplayString())
                 .projectNumber(call.getProjectNumber())
                 .build();
+    }
+
+    static void sortByEndDate(List<Call> calls) {
+        if (calls == null) {
+            return;
+        }
+        calls.sort(Comparator.comparing(Call::getEndDate, Comparator.nullsFirst(Comparator.naturalOrder())).reversed());
     }
 }

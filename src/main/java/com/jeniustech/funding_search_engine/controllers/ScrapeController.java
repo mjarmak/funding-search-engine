@@ -47,6 +47,12 @@ public class ScrapeController {
     }
 
     @PreAuthorize("hasRole('admin-server')")
+    @GetMapping("/calls/updateProjectNumbers")
+    public void updateProjectNumbers() {
+        callDataLoader.updateProjectNumbers();
+    }
+
+    @PreAuthorize("hasRole('admin-server')")
     @GetMapping("/partners/scrape")
     public void scrapePartners(
             @RequestParam(value = "files") List<String> files,

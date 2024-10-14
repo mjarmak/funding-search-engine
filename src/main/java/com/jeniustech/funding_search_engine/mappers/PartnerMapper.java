@@ -151,4 +151,11 @@ public interface PartnerMapper {
                 .joinType(type)
                 .build();
     }
+
+    static void sortByName(List<Organisation> partners) {
+        if (partners == null) {
+            return;
+        }
+        partners.sort(Comparator.comparing(Organisation::getName, Comparator.nullsLast(Comparator.naturalOrder())));
+    }
 }

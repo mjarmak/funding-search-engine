@@ -5,13 +5,17 @@ import com.jeniustech.funding_search_engine.entities.Organisation;
 import com.jeniustech.funding_search_engine.entities.Project;
 import com.jeniustech.funding_search_engine.entities.UserData;
 import com.jeniustech.funding_search_engine.exceptions.UserNotFoundException;
+import com.jeniustech.funding_search_engine.mappers.CallMapper;
 import com.jeniustech.funding_search_engine.mappers.NumberMapper;
+import com.jeniustech.funding_search_engine.mappers.PartnerMapper;
+import com.jeniustech.funding_search_engine.mappers.ProjectMapper;
 import com.jeniustech.funding_search_engine.repository.CallRepository;
 import com.jeniustech.funding_search_engine.repository.OrganisationRepository;
 import com.jeniustech.funding_search_engine.repository.ProjectRepository;
 import com.jeniustech.funding_search_engine.repository.UserDataRepository;
 import com.jeniustech.funding_search_engine.util.StringUtil;
 import lombok.RequiredArgsConstructor;
+import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -29,6 +33,8 @@ import static com.jeniustech.funding_search_engine.enums.LogTypeEnum.EXPORT_EXCE
 @RequiredArgsConstructor
 public class ExportService {
 
+    private static final int WIDTH_MEDIUM = 256 * 20;
+
     private final CallRepository callRepository;
     private final ProjectRepository projectRepository;
     private final OrganisationRepository partnerRepository;
@@ -40,6 +46,7 @@ public class ExportService {
         ValidatorService.validateUserExcelExport(userData, logService.getCountByUserIdAndType(userData.getId(), EXPORT_EXCEL));
 
         List<Call> calls = callRepository.findAllById(callIds);
+        CallMapper.sortByEndDate(calls);
 
         try (Workbook workbook = new XSSFWorkbook(); ByteArrayOutputStream out = new ByteArrayOutputStream()) {
             Sheet sheet = workbook.createSheet("CALLS");
@@ -72,6 +79,17 @@ public class ExportService {
                 dataRow.createCell(9).setCellValue(StringUtil.valueOrDefault(call.getInnovilyseUrl(), ""));
             }
 
+            sheet.setColumnWidth(0, WIDTH_MEDIUM);
+            sheet.setColumnWidth(1, WIDTH_MEDIUM * 2);
+            sheet.setColumnWidth(2, WIDTH_MEDIUM);
+            sheet.setColumnWidth(3, WIDTH_MEDIUM);
+            sheet.setColumnWidth(4, WIDTH_MEDIUM);
+            sheet.setColumnWidth(5, WIDTH_MEDIUM * 2);
+            sheet.setColumnWidth(6, WIDTH_MEDIUM);
+            sheet.setColumnWidth(7, WIDTH_MEDIUM * 2);
+            sheet.setColumnWidth(8, WIDTH_MEDIUM * 2);
+            sheet.setColumnWidth(9, WIDTH_MEDIUM * 2);
+
             workbook.write(out);
             logService.addLog(userData, EXPORT_EXCEL, calls.size() + "call");
             return new ByteArrayInputStream(out.toByteArray());
@@ -83,6 +101,7 @@ public class ExportService {
         ValidatorService.validateUserExcelExport(userData, logService.getCountByUserIdAndType(userData.getId(), EXPORT_EXCEL));
 
         List<Project> items = projectRepository.findAllById(ids);
+        ProjectMapper.sortByEndDate(items);
 
         return generateProjectExcel(userData, items);
     }
@@ -149,6 +168,20 @@ public class ExportService {
                 dataRow.createCell(13).setCellValue(StringUtil.valueOrDefault(project.getInnovilyseUrl(), ""));
             }
 
+            sheet.setColumnWidth(0, WIDTH_MEDIUM);
+            sheet.setColumnWidth(1, WIDTH_MEDIUM * 2);
+            sheet.setColumnWidth(2, WIDTH_MEDIUM * 2);
+            sheet.setColumnWidth(3, WIDTH_MEDIUM);
+            sheet.setColumnWidth(4, WIDTH_MEDIUM);
+            sheet.setColumnWidth(5, WIDTH_MEDIUM);
+            sheet.setColumnWidth(6, WIDTH_MEDIUM);
+            sheet.setColumnWidth(7, WIDTH_MEDIUM);
+            sheet.setColumnWidth(8, WIDTH_MEDIUM);
+            sheet.setColumnWidth(10, WIDTH_MEDIUM);
+            sheet.setColumnWidth(11, WIDTH_MEDIUM);
+            sheet.setColumnWidth(12, WIDTH_MEDIUM * 2);
+            sheet.setColumnWidth(13, WIDTH_MEDIUM * 2);
+
             workbook.write(out);
             logService.addLog(userData, EXPORT_EXCEL, items.size() + "project");
             return new ByteArrayInputStream(out.toByteArray());
@@ -160,6 +193,7 @@ public class ExportService {
         ValidatorService.validateUserExcelExport(userData, logService.getCountByUserIdAndType(userData.getId(), EXPORT_EXCEL));
 
         List<Organisation> partners = partnerRepository.findAllById(ids);
+        PartnerMapper.sortByName(partners);
 
         try (Workbook workbook = new XSSFWorkbook(); ByteArrayOutputStream out = new ByteArrayOutputStream()) {
             Sheet sheet = workbook.createSheet("PARTNERS");
@@ -197,6 +231,17 @@ public class ExportService {
                 dataRow.createCell(11).setCellValue(StringUtil.valueOrDefault(partner.getWebSiteUrl(), ""));
                 dataRow.createCell(12).setCellValue(StringUtil.valueOrDefault(partner.getInnovilyseUrl(), ""));
             }
+
+            sheet.setColumnWidth(0, WIDTH_MEDIUM * 2);
+            sheet.setColumnWidth(1, WIDTH_MEDIUM * 2);
+            sheet.setColumnWidth(2, WIDTH_MEDIUM);
+            sheet.setColumnWidth(3, WIDTH_MEDIUM);
+            sheet.setColumnWidth(5, WIDTH_MEDIUM / 2);
+            sheet.setColumnWidth(6, WIDTH_MEDIUM);
+            sheet.setColumnWidth(7, WIDTH_MEDIUM * 2);
+            sheet.setColumnWidth(8, WIDTH_MEDIUM);
+            sheet.setColumnWidth(11, WIDTH_MEDIUM * 2);
+            sheet.setColumnWidth(12, WIDTH_MEDIUM * 2);
 
             workbook.write(out);
             logService.addLog(userData, EXPORT_EXCEL, partners.size() + "partner");

@@ -94,4 +94,11 @@ public interface ProjectMapper {
         }
         return projects.stream().map(ProjectMapper::mapToGraphMeshChild).toList();
     }
+
+    static void sortByEndDate(List<Project> projects) {
+        if (projects == null) {
+            return;
+        }
+        projects.sort(Comparator.comparing(Project::getEndDate, Comparator.nullsFirst(Comparator.naturalOrder())).reversed());
+    }
 }
