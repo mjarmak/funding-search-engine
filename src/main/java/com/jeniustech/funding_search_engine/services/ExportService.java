@@ -217,19 +217,19 @@ public class ExportService {
             for (int i = 0; i < partners.size(); i++) {
                 Row dataRow = sheet.createRow(i + 1);
                 Organisation partner = partners.get(i);
-                dataRow.createCell(0).setCellValue(StringUtil.valueOrDefault(partner.getName(), ""));
-                dataRow.createCell(1).setCellValue(StringUtil.valueOrDefault(partner.getShortName(), ""));
-                dataRow.createCell(2).setCellValue(StringUtil.valueOrDefault(NumberMapper.formatNumberWithCommas(partner.getFundingEU()), ""));
-                dataRow.createCell(3).setCellValue(StringUtil.valueOrDefault(NumberMapper.formatNumberWithCommas(partner.getFundingOrganisation()), ""));
-                dataRow.createCell(4).setCellValue(partner.getProjectNumber());
-                dataRow.createCell(5).setCellValue(StringUtil.valueOrDefault(partner.getCountryCode(), ""));
-                dataRow.createCell(6).setCellValue(StringUtil.valueOrDefault(partner.getTypeName(), ""));
-                dataRow.createCell(7).setCellValue(StringUtil.valueOrDefault(partner.getAddressString(), ""));
-                dataRow.createCell(8).setCellValue(StringUtil.valueOrDefault(partner.getVatNumber(), ""));
-                dataRow.createCell(9).setCellValue(StringUtil.valueOrDefault(partner.getNutsCode(), ""));
-                dataRow.createCell(10).setCellValue(partner.isSme());
-                dataRow.createCell(11).setCellValue(StringUtil.valueOrDefault(partner.getWebSiteUrl(), ""));
-                dataRow.createCell(12).setCellValue(StringUtil.valueOrDefault(partner.getInnovilyseUrl(), ""));
+                dataRow.createCell(0, CellType.STRING).setCellValue(StringUtil.valueOrDefault(partner.getName(), ""));
+                dataRow.createCell(1, CellType.STRING).setCellValue(StringUtil.valueOrDefault(partner.getShortName(), ""));
+                dataRow.createCell(2, CellType.NUMERIC).setCellValue(StringUtil.valueOrDefault(NumberMapper.formatNumberWithCommas(partner.getFundingEU()), ""));
+                dataRow.createCell(3, CellType.NUMERIC).setCellValue(StringUtil.valueOrDefault(NumberMapper.formatNumberWithCommas(partner.getFundingOrganisation()), ""));
+                dataRow.createCell(4, CellType.NUMERIC).setCellValue(partner.getProjectNumber());
+                dataRow.createCell(5, CellType.STRING).setCellValue(StringUtil.valueOrDefault(partner.getCountryCode(), ""));
+                dataRow.createCell(6, CellType.STRING).setCellValue(StringUtil.valueOrDefault(partner.getTypeName(), ""));
+                dataRow.createCell(7, CellType.STRING).setCellValue(StringUtil.valueOrDefault(partner.getAddressString(), ""));
+                dataRow.createCell(8, CellType.STRING).setCellValue(StringUtil.valueOrDefault(partner.getVatNumber(), ""));
+                dataRow.createCell(9, CellType.STRING).setCellValue(StringUtil.valueOrDefault(partner.getNutsCode(), ""));
+                dataRow.createCell(10, CellType.STRING).setCellValue(partner.isSme());
+                dataRow.createCell(11, CellType.STRING).setCellValue(StringUtil.valueOrDefault(partner.getWebSiteUrl(), ""));
+                dataRow.createCell(12, CellType.STRING).setCellValue(StringUtil.valueOrDefault(partner.getInnovilyseUrl(), ""));
             }
 
             sheet.setColumnWidth(0, WIDTH_MEDIUM * 2);
