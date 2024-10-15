@@ -11,6 +11,7 @@ public interface DateMapper {
     DateTimeFormatter csvDateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
     DateTimeFormatter solrFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'");
     DateTimeFormatter displayFormatter = DateTimeFormatter.ofPattern("dd MMM yyyy HH:mm");
+    DateTimeFormatter dateDisplayFormatter = DateTimeFormatter.ofPattern("dd MMM yyyy");
     DateTimeFormatter solrCSVFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSXXXX");
 
     static LocalDateTime map(Timestamp timestamp) {
@@ -85,7 +86,7 @@ public interface DateMapper {
         if (localDate == null) {
             return null;
         }
-        return localDate.atStartOfDay().format(displayFormatter);
+        return localDate.format(dateDisplayFormatter);
     }
 
     static String formatToDisplay(LocalDateTime localDateTime) {
@@ -94,8 +95,14 @@ public interface DateMapper {
         }
         return localDateTime.format(displayFormatter);
     }
-    static String formatToDisplay(Timestamp timestamp) {
-        return formatToDisplay(map(timestamp));
+
+    static LocalDateTime convertParisToLocal(LocalDateTime date, String timezone) {
+        if (date == null) {
+            return null;
+        }
+        ZoneId zoneId = ZoneId.of(timezone);
+        ZonedDateTime zonedDateTime = date.atZone(ZoneId.of("Europe/Paris")).withZoneSameInstant(zoneId);
+        return zonedDateTime.toLocalDateTime();
     }
 
 }

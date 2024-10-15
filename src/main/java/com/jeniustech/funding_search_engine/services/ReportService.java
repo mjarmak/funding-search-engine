@@ -54,7 +54,7 @@ public class ReportService {
     @Value("${ui.url}")
     private String uiUrl;
 
-    public ByteArrayInputStream generatePdf(List<Long> callIds, String subjectId, String path) throws ReportException {
+    public ByteArrayInputStream generatePdf(List<Long> callIds, String subjectId, String path, String timezone) throws ReportException {
         UserData userData = userDataRepository.findBySubjectId(subjectId).orElseThrow(() -> new UserNotFoundException("User not found"));
         ValidatorService.validateUserPDFExport(userData, logService.getCountByUserIdAndType(userData.getId(), EXPORT_PDF));
 
@@ -93,7 +93,7 @@ public class ReportService {
             }
 
             for (Call call : calls) {
-                writeCall(document, call);
+                writeCall(document, call, timezone);
                 if (calls.indexOf(call) != calls.size() - 1) {
                     newPage(document);
                 }
@@ -114,7 +114,7 @@ public class ReportService {
         document.add(new AreaBreak());
     }
 
-    private void writeCall(Document document, Call call) {
+    private void writeCall(Document document, Call call, String timezone) {
 
         document.add(getTitle("Call Identifier").setDestination(call.getId().toString()));
         Rectangle rect = new Rectangle(0, 0, 523, 10);
@@ -133,7 +133,7 @@ public class ReportService {
         addInfoField(document, call.getActionType(), "Action Type");
         addInfoField(document, call.getBudgetRangeString() + " EUR", "Budget");
 
-        addDateRange(document, call.getStartDateDisplay(), call.getEndDateDisplay(), call.getEndDate2Display(), "Proposal Submission Period");
+        addDateRange(document, call.getStartDateDisplay(timezone), call.getEndDateDisplay(timezone), call.getEndDate2Display(timezone), "Proposal Submission Period (" + timezone + ")");
 
         addInfoField(document, call.getTypeOfMGADescription(), "Type of MGA");
 

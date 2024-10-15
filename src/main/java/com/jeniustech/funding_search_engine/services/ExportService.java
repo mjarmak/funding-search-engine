@@ -41,7 +41,7 @@ public class ExportService {
     private final UserDataRepository userDataRepository;
     private final LogService logService;
 
-    public ByteArrayInputStream generateCallExcel(List<Long> callIds, String subjectId) throws IOException {
+    public ByteArrayInputStream generateCallExcel(List<Long> callIds, String subjectId, String timezone) throws IOException {
         UserData userData = userDataRepository.findBySubjectId(subjectId).orElseThrow(() -> new UserNotFoundException("User not found"));
         ValidatorService.validateUserExcelExport(userData, logService.getCountByUserIdAndType(userData.getId(), EXPORT_EXCEL));
 
@@ -55,9 +55,9 @@ public class ExportService {
             Row headerRow = sheet.createRow(0);
             headerRow.createCell(0).setCellValue("Call Identifier");
             headerRow.createCell(1).setCellValue("Topic");
-            headerRow.createCell(2).setCellValue("Open Date (UTC)");
-            headerRow.createCell(3).setCellValue("Submission Deadline 1 (UTC)");
-            headerRow.createCell(4).setCellValue("Submission Deadline 2 (UTC)");
+            headerRow.createCell(2).setCellValue("Open Date (" + timezone + ")");
+            headerRow.createCell(3).setCellValue("Submission Deadline 1 (" + timezone + ")");
+            headerRow.createCell(4).setCellValue("Submission Deadline 2 (" + timezone + ")");
             headerRow.createCell(5).setCellValue("Action Type");
             headerRow.createCell(6).setCellValue("Budget (EUR)");
             headerRow.createCell(7).setCellValue("Type Of MGA");
@@ -69,9 +69,9 @@ public class ExportService {
                 Call call = calls.get(i);
                 dataRow.createCell(0).setCellValue(StringUtil.valueOrDefault(call.getIdentifier(), ""));
                 dataRow.createCell(1).setCellValue(StringUtil.valueOrDefault(call.getTitle(), ""));
-                dataRow.createCell(2).setCellValue(StringUtil.valueOrDefault(call.getStartDateDisplay(), ""));
-                dataRow.createCell(3).setCellValue(StringUtil.valueOrDefault(call.getEndDateDisplay(), ""));
-                dataRow.createCell(4).setCellValue(StringUtil.valueOrDefault(call.getEndDate2Display(), ""));
+                dataRow.createCell(2).setCellValue(StringUtil.valueOrDefault(call.getStartDateDisplay(timezone), ""));
+                dataRow.createCell(3).setCellValue(StringUtil.valueOrDefault(call.getEndDateDisplay(timezone), ""));
+                dataRow.createCell(4).setCellValue(StringUtil.valueOrDefault(call.getEndDate2Display(timezone), ""));
                 dataRow.createCell(5).setCellValue(call.getActionType());
                 dataRow.createCell(6).setCellValue(call.getBudgetRangeString());
                 dataRow.createCell(7).setCellValue(StringUtil.valueOrDefault(call.getTypeOfMGADescription(), ""));
@@ -134,9 +134,9 @@ public class ExportService {
             headerRow.createCell(1).setCellValue("Title");
             headerRow.createCell(2).setCellValue("Call Identifier");
             headerRow.createCell(3).setCellValue("Call Budget (EUR)");
-            headerRow.createCell(4).setCellValue("Start Date (UTC)");
-            headerRow.createCell(5).setCellValue("End Date (UTC)");
-            headerRow.createCell(6).setCellValue("Sign Date (UTC)");
+            headerRow.createCell(4).setCellValue("Start Date");
+            headerRow.createCell(5).setCellValue("End Date");
+            headerRow.createCell(6).setCellValue("Sign Date");
             headerRow.createCell(7).setCellValue("Funding EU (EUR)");
             headerRow.createCell(8).setCellValue("Funding Organisation (EUR)");
             headerRow.createCell(9).setCellValue("Status");

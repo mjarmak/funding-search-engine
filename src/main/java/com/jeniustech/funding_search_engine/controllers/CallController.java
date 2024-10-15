@@ -124,11 +124,12 @@ public class CallController implements IDataController<CallDTO> {
     @PostMapping("/excel")
     public ResponseEntity<InputStreamResource> downloadCallExcel(
             @RequestBody List<Long> ids,
+            @RequestHeader(value = "X-User-Timezone", required = false, defaultValue = "Europe/Paris") String timezone,
             @AuthenticationPrincipal Jwt jwt
     ) throws IOException {
         JwtModel jwtModel = UserDataMapper.map(jwt);
 
-        ByteArrayInputStream in = exportService.generateCallExcel(ids, jwtModel.getUserId());
+        ByteArrayInputStream in = exportService.generateCallExcel(ids, jwtModel.getUserId(), timezone);
 
         HttpHeaders headers = new HttpHeaders();
         headers.add("Content-Disposition", "attachment; filename=data.xlsx");
@@ -142,12 +143,13 @@ public class CallController implements IDataController<CallDTO> {
     @PostMapping("/pdf")
     public ResponseEntity<InputStreamResource> generatePdf(
             @RequestBody List<Long> callIds,
+            @RequestHeader(value = "X-User-Timezone", required = false, defaultValue = "Europe/Paris") String timezone,
             @AuthenticationPrincipal Jwt jwt,
             @RequestParam String imageUrl
     ) throws ReportException {
         JwtModel jwtModel = UserDataMapper.map(jwt);
 
-        ByteArrayInputStream bis = reportService.generatePdf(callIds, jwtModel.getUserId(), imageUrl);
+        ByteArrayInputStream bis = reportService.generatePdf(callIds, jwtModel.getUserId(), imageUrl, timezone);
 
         HttpHeaders headers = new HttpHeaders();
         headers.add("Content-Disposition", "inline; filename=data.pdf");
@@ -162,12 +164,13 @@ public class CallController implements IDataController<CallDTO> {
     @GetMapping("/{callId}/pdf")
     public ResponseEntity<InputStreamResource> generatePdf(
             @PathVariable Long callId,
+            @RequestHeader(value = "X-User-Timezone", required = false, defaultValue = "Europe/Paris") String timezone,
             @AuthenticationPrincipal Jwt jwt,
             @RequestParam String imageUrl
     ) throws ReportException {
         JwtModel jwtModel = UserDataMapper.map(jwt);
 
-        ByteArrayInputStream bis = reportService.generatePdf(List.of(callId), jwtModel.getUserId(), imageUrl);
+        ByteArrayInputStream bis = reportService.generatePdf(List.of(callId), jwtModel.getUserId(), imageUrl, timezone);
 
         HttpHeaders headers = new HttpHeaders();
         headers.add("Content-Disposition", "inline; filename=data.pdf");
@@ -182,6 +185,7 @@ public class CallController implements IDataController<CallDTO> {
     @GetMapping("/{id}/projects/excel")
     public ResponseEntity<InputStreamResource> getProjectsExcel(
             @PathVariable Long id,
+            @RequestHeader(value = "X-User-Timezone", required = false, defaultValue = "Europe/Paris") String timezone,
             @AuthenticationPrincipal Jwt jwt
     ) throws IOException {
         JwtModel jwtModel = UserDataMapper.map(jwt);

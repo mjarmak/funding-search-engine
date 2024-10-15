@@ -88,6 +88,8 @@ select count(id) from organisations o ;
 
 ````log book view
 select
+    ud.first_name || ' ' || ud.last_name as user,
+    ud.email as email,
   CASE
     WHEN type = 0 THEN 'SEARCH CALL'
     WHEN type = 1 THEN 'EXPORT EXCEL'
@@ -97,6 +99,8 @@ select
     ELSE 'UNKNOWN' 
   END AS type,
 log_text,
-created_at as date
-from log_book lb where user_id IN (22,26,27,28,19)
+lb.created_at as date
+from log_book lb
+left join user_data ud on lb.user_id = ud.id
+where user_id IN (22,26,27,28,19)
 ````

@@ -166,16 +166,16 @@ public class Call {
         return UrlTypeEnum.getInnovilyseUrl("call", id);
     }
 
-    public String getEndDate2Display() {
-        return DateMapper.formatToDisplay(endDate2);
+    public String getEndDate2Display(String timezone) {
+        return DateMapper.formatToDisplay(DateMapper.convertParisToLocal(DateMapper.map(endDate2), timezone));
     }
 
-    public String getStartDateDisplay() {
-        return DateMapper.formatToDisplay(startDate);
+    public String getStartDateDisplay(String timezone) {
+        return DateMapper.formatToDisplay(DateMapper.convertParisToLocal(DateMapper.map(startDate), timezone));
     }
 
-    public String getEndDateDisplay() {
-        return DateMapper.formatToDisplay(endDate);
+    public String getEndDateDisplay(String timezone) {
+        return DateMapper.formatToDisplay(DateMapper.convertParisToLocal(DateMapper.map(endDate), timezone));
     }
 
     public LongText getLongTextByType(LongTextTypeEnum type) {
