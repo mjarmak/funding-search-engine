@@ -25,6 +25,12 @@ public interface PartnerMapper {
         }
         return mapToDetails(organisation.getPartnerData(), isSearch, isFavorite);
     }
+    static List<PartnerDTO> mapToDetails(List<Organisation> organisations, boolean isSearch, boolean isFavorite) {
+        if (organisations == null) {
+            return null;
+        }
+        return organisations.stream().map(c -> mapToDetails(c, isSearch, isFavorite)).toList();
+    }
     static PartnerDTO mapToDetails(Organisation organisation, boolean isSearch, boolean isFavorite) {
         if (organisation == null) {
             return null;

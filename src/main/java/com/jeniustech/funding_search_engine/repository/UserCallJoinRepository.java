@@ -11,8 +11,8 @@ import java.util.Optional;
 
 public interface UserCallJoinRepository extends JpaRepository<UserCallJoin, Long> {
 
-    @Query("SELECT ucj FROM UserCallJoin ucj WHERE ucj.callData.id = :callId AND ucj.userData.id = :userId AND ucj.type = :type")
-    Optional<UserCallJoin> findByReferenceIdAndUserIdAndType(Long callId, Long userId, UserJoinTypeEnum type);
+    @Query("SELECT ucj FROM UserCallJoin ucj WHERE ucj.callData.id = :id AND ucj.userData.id = :userId AND ucj.type = :type")
+    Optional<UserCallJoin> findByReferenceIdAndUserIdAndType(Long id, Long userId, UserJoinTypeEnum type);
 
     @Query("SELECT ucj FROM UserCallJoin ucj WHERE ucj.userData.id = :userId AND ucj.type = :type")
     List<UserCallJoin> findByUserIdAndType(Long userId, UserJoinTypeEnum type, Pageable pageable);

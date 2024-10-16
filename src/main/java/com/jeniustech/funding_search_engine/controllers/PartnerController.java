@@ -4,7 +4,7 @@ import com.jeniustech.funding_search_engine.dto.search.PartnerDTO;
 import com.jeniustech.funding_search_engine.dto.search.ProjectDTO;
 import com.jeniustech.funding_search_engine.dto.search.SearchDTO;
 import com.jeniustech.funding_search_engine.enums.LogTypeEnum;
-import com.jeniustech.funding_search_engine.enums.StatusFilterEnum;
+import com.jeniustech.funding_search_engine.enums.PartnerQueryTypeEnum;
 import com.jeniustech.funding_search_engine.mappers.UserDataMapper;
 import com.jeniustech.funding_search_engine.models.JwtModel;
 import com.jeniustech.funding_search_engine.services.ExportService;
@@ -43,17 +43,25 @@ public class PartnerController implements IDataController<PartnerDTO> {
     @GetMapping("/search")
     public ResponseEntity<SearchDTO<PartnerDTO>> search(
             @RequestParam @Size(min = 2, max = 255) String query,
-            @RequestParam(required = true, defaultValue = "0") int pageNumber,
-            @RequestParam(required = true, defaultValue = "20") int pageSize,
-            @RequestParam(required = false, name = "status", defaultValue = "UPCOMING,OPEN,CLOSED"
-            ) List<StatusFilterEnum> statusFilters,
+            @RequestParam(defaultValue = "0") int pageNumber,
+            @RequestParam(defaultValue = "20") int pageSize,
+            @RequestParam(defaultValue = "NAME") PartnerQueryTypeEnum queryType,
             @AuthenticationPrincipal Jwt jwt
     ) {
         JwtModel jwtModel = UserDataMapper.map(jwt);
-        return ResponseEntity.ok(partnerService.search(
-                jwtModel.getUserId(),
-                query
-        ));
+        if (queryType.equals(PartnerQueryTypeEnum.NAME)) {
+            return ResponseEntity.ok(partnerService.searchByName(
+                    jwtModel.getUserId(),
+                    query,
+                    pageNumber,
+                    pageSize
+            ));
+        } else {
+            return ResponseEntity.ok(partnerService.searchByTopic(
+                    jwtModel.getUserId(),
+                    query
+            ));
+        }
     }
 
     @GetMapping("/{id}")

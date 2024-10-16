@@ -11,8 +11,8 @@ import java.util.Optional;
 
 public interface UserPartnerJoinRepository extends JpaRepository<UserPartnerJoin, Long> {
 
-    @Query("SELECT ucj FROM UserPartnerJoin ucj WHERE ucj.partnerData.id = :callId AND ucj.userData.id = :userId AND ucj.type = :type")
-    Optional<UserPartnerJoin> findByReferenceIdAndUserIdAndType(Long callId, Long userId, UserJoinTypeEnum type);
+    @Query("SELECT ucj FROM UserPartnerJoin ucj WHERE ucj.partnerData.id = :id AND ucj.userData.id = :userId AND ucj.type = :type")
+    Optional<UserPartnerJoin> findByReferenceIdAndUserIdAndType(Long id, Long userId, UserJoinTypeEnum type);
 
     @Query("SELECT ucj FROM UserPartnerJoin ucj WHERE ucj.userData.id = :userId AND ucj.type = :type")
     List<UserPartnerJoin> findByUserIdAndType(Long userId, UserJoinTypeEnum type, Pageable pageable);

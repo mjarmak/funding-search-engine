@@ -133,7 +133,7 @@ public class PartnerService extends IDataService<PartnerDTO> {
         return searchItems(keywords);
     }
 
-    public SearchDTO<PartnerDTO> search(String subjectId, String query) {
+    public SearchDTO<PartnerDTO> searchByTopic(String subjectId, String query) {
         UserData userData = getUserOrNotFound(subjectId);
         ValidatorService.validateUserSearch(userData);
 
@@ -148,6 +148,37 @@ public class PartnerService extends IDataService<PartnerDTO> {
         return SearchDTO.<PartnerDTO>builder()
                 .results(results)
                 .totalResults((long) results.size())
+                .build();
+    }
+
+    public SearchDTO<PartnerDTO> searchByName(String subjectId, String query, int pageNumber, int pageSize) {
+        UserData userData = getUserOrNotFound(subjectId);
+        ValidatorService.validateUserSearch(userData);
+
+        if (userData.getMainActiveSubscription().isTrial()) {
+            throw new SubscriptionPlanException("Trial users cannot search for partners");
+        }
+        logService.addLog(userData, LogTypeEnum.SEARCH_PARTNER, query);
+
+        List<PartnerDTO> results = PartnerMapper.mapToDetails(
+                organisationRepository.search(
+                        query,
+                        PageRequest.of(pageNumber, pageSize)
+                ), true, false);
+
+        setFavorites(userData, results);
+
+        long technicalTotalResults = organisationRepository.countSearch(query.toLowerCase());
+        long totalResults = technicalTotalResults;
+
+        if (userData.getMainActiveSubscription().isTrial()) {
+            totalResults = Math.min(technicalTotalResults, 5);
+        }
+
+        return SearchDTO.<PartnerDTO>builder()
+                .results(results)
+                .totalResults(totalResults)
+                .technicalTotalResults(technicalTotalResults)
                 .build();
     }
 
