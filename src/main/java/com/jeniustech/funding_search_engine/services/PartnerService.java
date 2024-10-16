@@ -162,7 +162,7 @@ public class PartnerService extends IDataService<PartnerDTO> {
 
         List<PartnerDTO> results = PartnerMapper.mapToDetails(
                 organisationRepository.search(
-                        query,
+                        query.toLowerCase(),
                         PageRequest.of(pageNumber, pageSize)
                 ), true, false);
 
