@@ -86,6 +86,10 @@ public class Project {
                 + ")";
     }
 
+    public String getFrameworkProgramName() {
+        return frameworkProgram != null ? frameworkProgram.getName() : null;
+    }
+
     public String getLongTextsToString() {
         StringBuilder longTextsString = new StringBuilder();
         for (LongText longText : longTexts) {

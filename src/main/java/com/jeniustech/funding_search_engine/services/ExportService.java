@@ -15,10 +15,10 @@ import com.jeniustech.funding_search_engine.repository.ProjectRepository;
 import com.jeniustech.funding_search_engine.repository.UserDataRepository;
 import com.jeniustech.funding_search_engine.util.StringUtil;
 import lombok.RequiredArgsConstructor;
-import org.apache.poi.ss.usermodel.CellType;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.hssf.util.HSSFColor;
+import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.ss.util.CellRangeAddress;
+import org.apache.poi.xssf.usermodel.XSSFColor;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.stereotype.Service;
 
@@ -34,6 +34,7 @@ import static com.jeniustech.funding_search_engine.enums.LogTypeEnum.EXPORT_EXCE
 public class ExportService {
 
     private static final int WIDTH_MEDIUM = 256 * 20;
+    XSSFColor PRIMARY_COLOR = new XSSFColor(new byte[]{(byte) 78, (byte) 85, (byte) 243}, null);
 
     private final CallRepository callRepository;
     private final ProjectRepository projectRepository;
@@ -90,6 +91,8 @@ public class ExportService {
             sheet.setColumnWidth(8, WIDTH_MEDIUM * 2);
             sheet.setColumnWidth(9, WIDTH_MEDIUM * 2);
 
+            setHeaderStyle(workbook, sheet, headerRow);
+
             workbook.write(out);
             logService.addLog(userData, EXPORT_EXCEL, calls.size() + "call");
             return new ByteArrayInputStream(out.toByteArray());
@@ -140,10 +143,11 @@ public class ExportService {
             headerRow.createCell(7).setCellValue("Funding EU (EUR)");
             headerRow.createCell(8).setCellValue("Funding Organisation (EUR)");
             headerRow.createCell(9).setCellValue("Status");
-            headerRow.createCell(10).setCellValue("Funding Scheme");
-            headerRow.createCell(11).setCellValue("Legal Basis");
-            headerRow.createCell(12).setCellValue("EU Portal URL");
-            headerRow.createCell(13).setCellValue("URL");
+            headerRow.createCell(10).setCellValue("Framework Program");
+            headerRow.createCell(11).setCellValue("Funding Scheme");
+            headerRow.createCell(12).setCellValue("Legal Basis");
+            headerRow.createCell(13).setCellValue("EU Portal URL");
+            headerRow.createCell(14).setCellValue("URL");
 
             for (int i = 0; i < items.size(); i++) {
                 Project project = items.get(i);
@@ -162,10 +166,11 @@ public class ExportService {
                 dataRow.createCell(7).setCellValue(StringUtil.valueOrDefault(NumberMapper.formatNumberWithCommas(project.getFundingEU()), ""));
                 dataRow.createCell(8).setCellValue(StringUtil.valueOrDefault(NumberMapper.formatNumberWithCommas(project.getFundingOrganisation()), ""));
                 dataRow.createCell(9).setCellValue(StringUtil.valueOrDefault(project.getStatusName(), ""));
-                dataRow.createCell(10).setCellValue(StringUtil.valueOrDefault(project.getFundingSchemeName(), ""));
-                dataRow.createCell(11).setCellValue(StringUtil.valueOrDefault(project.getLegalBasis(), ""));
-                dataRow.createCell(12).setCellValue(StringUtil.valueOrDefault(project.getUrl(), ""));
-                dataRow.createCell(13).setCellValue(StringUtil.valueOrDefault(project.getInnovilyseUrl(), ""));
+                dataRow.createCell(10).setCellValue(StringUtil.valueOrDefault(project.getFrameworkProgramName(), ""));
+                dataRow.createCell(11).setCellValue(StringUtil.valueOrDefault(project.getFundingSchemeName(), ""));
+                dataRow.createCell(12).setCellValue(StringUtil.valueOrDefault(project.getLegalBasis(), ""));
+                dataRow.createCell(13).setCellValue(StringUtil.valueOrDefault(project.getUrl(), ""));
+                dataRow.createCell(14).setCellValue(StringUtil.valueOrDefault(project.getInnovilyseUrl(), ""));
             }
 
             sheet.setColumnWidth(0, WIDTH_MEDIUM);
@@ -179,8 +184,11 @@ public class ExportService {
             sheet.setColumnWidth(8, WIDTH_MEDIUM);
             sheet.setColumnWidth(10, WIDTH_MEDIUM);
             sheet.setColumnWidth(11, WIDTH_MEDIUM);
-            sheet.setColumnWidth(12, WIDTH_MEDIUM * 2);
+            sheet.setColumnWidth(12, WIDTH_MEDIUM);
             sheet.setColumnWidth(13, WIDTH_MEDIUM * 2);
+            sheet.setColumnWidth(14, WIDTH_MEDIUM * 2);
+
+            setHeaderStyle(workbook, sheet, headerRow);
 
             workbook.write(out);
             logService.addLog(userData, EXPORT_EXCEL, items.size() + "project");
@@ -221,7 +229,7 @@ public class ExportService {
                 dataRow.createCell(1, CellType.STRING).setCellValue(StringUtil.valueOrDefault(partner.getShortName(), ""));
                 dataRow.createCell(2, CellType.NUMERIC).setCellValue(StringUtil.valueOrDefault(NumberMapper.formatNumberWithCommas(partner.getFundingEU()), ""));
                 dataRow.createCell(3, CellType.NUMERIC).setCellValue(StringUtil.valueOrDefault(NumberMapper.formatNumberWithCommas(partner.getFundingOrganisation()), ""));
-                dataRow.createCell(4, CellType.NUMERIC).setCellValue(partner.getProjectNumber());
+                dataRow.createCell(4, CellType.NUMERIC).setCellValue(StringUtil.valueOrDefault(partner.getProjectNumber(), ""));
                 dataRow.createCell(5, CellType.STRING).setCellValue(StringUtil.valueOrDefault(partner.getCountryCode(), ""));
                 dataRow.createCell(6, CellType.STRING).setCellValue(StringUtil.valueOrDefault(partner.getTypeName(), ""));
                 dataRow.createCell(7, CellType.STRING).setCellValue(StringUtil.valueOrDefault(partner.getAddressString(), ""));
@@ -243,9 +251,33 @@ public class ExportService {
             sheet.setColumnWidth(11, WIDTH_MEDIUM * 2);
             sheet.setColumnWidth(12, WIDTH_MEDIUM * 2);
 
+            setHeaderStyle(workbook, sheet, headerRow);
+
             workbook.write(out);
             logService.addLog(userData, EXPORT_EXCEL, partners.size() + "partner");
             return new ByteArrayInputStream(out.toByteArray());
         }
     }
+
+    private void setHeaderStyle(Workbook workbook, Sheet sheet, Row headerRow) {
+        final int numberOfCells = headerRow.getPhysicalNumberOfCells();
+        sheet.setAutoFilter(new CellRangeAddress(0, 0, 0, numberOfCells - 1));
+
+        sheet.createFreezePane(0, 1);
+        CellStyle headerStyle = workbook.createCellStyle();
+
+        headerStyle.setFillForegroundColor(PRIMARY_COLOR);
+        headerStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+
+        Font font = workbook.createFont();
+        font.setColor(HSSFColor.HSSFColorPredefined.WHITE.getIndex());
+        font.setBold(true);
+
+        headerStyle.setFont(font);
+
+        for (int i = 0; i < numberOfCells; i++) {
+            headerRow.getCell(i).setCellStyle(headerStyle);
+        }
+    }
+
 }

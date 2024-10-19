@@ -79,6 +79,13 @@ public interface StringUtil {
     }
 
 
+    static String valueOrDefault(Object value, Object defaultValue) {
+        if (value == null) {
+            return null;
+        } else {
+            return valueOrDefault(value.toString(), defaultValue);
+        }
+    }
     static String valueOrDefault(String value, Object defaultValue) {
         if (isNotEmpty(value)) {
             return value;

@@ -83,6 +83,13 @@ select reference_id ,count(id) from organisations o  group by reference_id  ;
 select name ,count(id) from organisations o  group by name  ;
 select short_name ,count(id) from organisations o  group by short_name  ;
 select count(id) from organisations o ;
+
+# fp7 should have 118 for VUB
+select * from organisations o 
+inner join projects p on p.framework_program = 8
+inner join organisation_project_join opj on opj.project_id = p.id and opj.organisation_id = o.id 
+where o.id = 999902094;
+
 ```
 
 
@@ -104,3 +111,6 @@ from log_book lb
 left join user_data ud on lb.user_id = ud.id
 where user_id IN (22,26,27,28,19)
 ````
+
+## Back up db
+tar -czvf db_main_backup.tar.gz db_main
