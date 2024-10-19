@@ -58,18 +58,23 @@ public class ScrapeController {
             @RequestParam(value = "files") List<String> files,
             @RequestParam(required = false, defaultValue = "false") boolean oldFormat,
             @RequestParam(required = false, defaultValue = "false") boolean skipUpdate,
+            @RequestParam(required = false, defaultValue = "false") boolean onlyValidate,
             @RequestParam(required = false, defaultValue = "10000") int rowsPerFile
             ) {
         log.info("Scraping partners");
         log.info("Skipping update: {}", skipUpdate);
+        log.info("Old format: {}", oldFormat);
+        log.info("Only validate: {}", onlyValidate);
         for (String file : files) {
-            organisationDataLoader.splitFileAndLoadData(file, oldFormat, skipUpdate, rowsPerFile);
+            organisationDataLoader.splitFileAndLoadData(file, oldFormat, skipUpdate, rowsPerFile, onlyValidate);
             adminLogService.addLog(AdminLogType.SCRAPE_SUCCESS, file);
         }
         log.info("Updating funding information");
-        partnerScraperService.updateFundingInformation();
-        adminLogService.addLog(AdminLogType.PARTNER_FUNDING_UPDATE, "Funding information updated");
-        log.info("Funding information updated");
+        if (!onlyValidate) {
+            partnerScraperService.updateFundingInformation();
+            adminLogService.addLog(AdminLogType.PARTNER_FUNDING_UPDATE, "Funding information updated");
+            log.info("Funding information updated");
+        }
     }
 
     @PreAuthorize("hasRole('admin-server')")
@@ -88,12 +93,15 @@ public class ScrapeController {
             @RequestParam(value = "files") List<String> files,
             @RequestParam(value = "oldFormat", required = false, defaultValue = "false") boolean oldFormat,
             @RequestParam(value = "skipUpdate", required = false, defaultValue = "false") boolean skipUpdate,
+            @RequestParam(required = false, defaultValue = "false") boolean onlyValidate,
             @RequestParam(required = false, defaultValue = "10000") int rowsPerFile
             ) {
         log.info("Scraping projects");
         log.info("Skipping update: {}", skipUpdate);
+        log.info("Old format: {}", oldFormat);
+        log.info("Only validate: {}", onlyValidate);
         for (String file : files) {
-            projectDataLoader.splitFileAndLoadData(file, oldFormat, skipUpdate, rowsPerFile);
+            projectDataLoader.splitFileAndLoadData(file, oldFormat, skipUpdate, rowsPerFile, onlyValidate);
             adminLogService.addLog(AdminLogType.SCRAPE_SUCCESS, file);
         }
     }

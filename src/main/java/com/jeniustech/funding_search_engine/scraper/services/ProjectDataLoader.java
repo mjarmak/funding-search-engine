@@ -69,14 +69,14 @@ public class ProjectDataLoader {
     int OBJECTIVE_INDEX = -1;
     int RCN_INDEX = -1;
 
-    public void splitFileAndLoadData(String fileName, boolean oldFormat, boolean skipUpdate, int rowsPerFile) {
+    public void splitFileAndLoadData(String fileName, boolean oldFormat, boolean skipUpdate, int rowsPerFile, boolean onlyValidate) {
         fileName = csvService.preprocessCSV(fileName, oldFormat);
 
         List<String> splitFileNames = CSVSplitter.splitCSVFile(fileName, rowsPerFile);
 
         for (String splitFileName : splitFileNames) {
             log.info("Loading data from " + splitFileName);
-            loadData(splitFileName, oldFormat, skipUpdate);
+            loadData(splitFileName, oldFormat, skipUpdate, onlyValidate);
         }
     }
 
@@ -96,7 +96,7 @@ public class ProjectDataLoader {
         }
     }
 
-    public void loadData(String fileName, boolean oldFormat, boolean skipUpdate) {
+    public void loadData(String fileName, boolean oldFormat, boolean skipUpdate, boolean onlyValidate) {
         total = 0;
 
         resetIndexes();
@@ -167,13 +167,19 @@ public class ProjectDataLoader {
             List<Project> projects = new ArrayList<>();
             String[] row;
             while ((row = reader.readNext()) != null) {
-                Project project = getProject(row, skipUpdate);
-                processSave(projects, project, fileName);
+                Project project = getProject(row, skipUpdate, onlyValidate);
+                if (!onlyValidate) {
+                    processSave(projects, project, fileName);
+                } else {
+                    total++;
+                    if (total % 1000 == 0) {
+                        log.info("Validated " + total + " items");
+                    }
+                }
             }
             log.info("Saving last batch of " + projects.size() + " items");
             save(projects, fileName);
         } catch (IOException | DataIntegrityViolationException | CsvValidationException e) {
-//            e.printStackTrace();
             log.error(e.getMessage());
             throw new ScraperException(e.getMessage());
         }
@@ -216,7 +222,7 @@ public class ProjectDataLoader {
         }
     }
 
-    private Project getProject(String[] row, boolean skipUpdate) {
+    private Project getProject(String[] row, boolean skipUpdate, boolean onlyValidate) {
         if (row[ID_INDEX] == null) {
             return null; // skip empty rows
         }
@@ -241,11 +247,17 @@ public class ProjectDataLoader {
                 .build();
 
         // set call
-        setMainCall(project, callIdentifier);
+        if (!onlyValidate) {
+            setMainCall(project, callIdentifier);
+        }
 
         // set long text
         project.setLongTexts(new ArrayList<>());
         addDescriptionIfPresent(row, OBJECTIVE_INDEX, project, LongTextTypeEnum.PROJECT_OBJECTIVE);
+
+        if (onlyValidate) {
+            return project;
+        }
 
         Optional<Project> existingProjectOptional = findProject(row);
         if (existingProjectOptional.isPresent()) {

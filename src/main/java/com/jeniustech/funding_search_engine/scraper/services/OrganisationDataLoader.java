@@ -69,18 +69,18 @@ public class OrganisationDataLoader {
     int EC_CONTRIBUTION_INDEX = -1;
     int TOTAL_COST_INDEX = -1;
 
-    public void splitFileAndLoadData(String fileName, boolean oldFormat, boolean skipUpdate, int rowsPerFile) {
+    public void splitFileAndLoadData(String fileName, boolean oldFormat, boolean skipUpdate, int rowsPerFile, boolean onlyValidate) {
         fileName = csvService.preprocessCSV(fileName, oldFormat);
 
         List<String> splitFileNames = CSVSplitter.splitCSVFile(fileName, rowsPerFile);
 
         for (String splitFileName : splitFileNames) {
             log.info("Loading data from " + splitFileName);
-            loadData(splitFileName, oldFormat, skipUpdate);
+            loadData(splitFileName, oldFormat, skipUpdate, onlyValidate);
         }
     }
 
-    private void loadData(String fileName, boolean oldFormat, boolean skipUpdate) {
+    private void loadData(String fileName, boolean oldFormat, boolean skipUpdate, boolean onlyValidate) {
         duplicates = 0;
         total = 0;
 
@@ -158,8 +158,15 @@ public class OrganisationDataLoader {
             List<Organisation> organisations = new ArrayList<>();
             String[] row;
             while ((row = reader.readNext()) != null) {
-                Organisation organisation = getOrganisation(row, oldFormat, skipUpdate);
-                processSave(organisations, organisation, fileName);
+                Organisation organisation = getOrganisation(row, oldFormat, skipUpdate, onlyValidate);
+                if (!onlyValidate) {
+                    processSave(organisations, organisation, fileName);
+                } else {
+                    total++;
+                    if (total % 1000 == 0) {
+                        log.info("Validated " + total + " items");
+                    }
+                }
             }
             log.info("Saving last batch of " + organisations.size() + " items");
             save(organisations, fileName);
@@ -221,7 +228,7 @@ public class OrganisationDataLoader {
         }
     }
 
-    private Organisation getOrganisation(String[] row, boolean oldFormat, boolean skipUpdate) {
+    private Organisation getOrganisation(String[] row, boolean oldFormat, boolean skipUpdate, boolean onlyValidate) {
         if (row[NAME_INDEX] == null) {
             return null; // skip empty rows
         }
@@ -238,13 +245,15 @@ public class OrganisationDataLoader {
                 .build();
 
         // set project, organisationProjectJoins
-        setProjectLink(
-                row,
-                organisation,
-                OrganisationProjectJoinTypeEnum.valueOfName(row[ROLE_INDEX]),
-                getFundingOrganisation(TOTAL_COST_INDEX, NET_EC_CONTRIBUTION_INDEX, EC_CONTRIBUTION_INDEX, row),
-                getBudget(row, NET_EC_CONTRIBUTION_INDEX, EC_CONTRIBUTION_INDEX)
-        );
+        if (!onlyValidate) {
+            setProjectLink(
+                    row,
+                    organisation,
+                    OrganisationProjectJoinTypeEnum.valueOfName(row[ROLE_INDEX]),
+                    getFundingOrganisation(TOTAL_COST_INDEX, NET_EC_CONTRIBUTION_INDEX, EC_CONTRIBUTION_INDEX, row),
+                    getBudget(row, NET_EC_CONTRIBUTION_INDEX, EC_CONTRIBUTION_INDEX)
+            );
+        }
 
         // set address
         setAddress(row, organisation);
@@ -254,6 +263,10 @@ public class OrganisationDataLoader {
 
         // set contactInfo
         setContactInfo(row, organisation);
+
+        if (onlyValidate) {
+            return organisation;
+        }
 
         Optional<Organisation> existingOrganisationOptional = findOrganisation(organisation);
         if (existingOrganisationOptional.isPresent()) {
