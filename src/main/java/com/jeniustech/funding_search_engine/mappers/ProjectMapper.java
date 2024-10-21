@@ -95,10 +95,10 @@ public interface ProjectMapper {
         return projects.stream().map(ProjectMapper::mapToGraphMeshChild).toList();
     }
 
-    static void sortByEndDate(List<Project> projects) {
+    static List<Project> sortByStartDate(List<Project> projects) {
         if (projects == null) {
-            return;
+            return null;
         }
-        projects.sort(Comparator.comparing(Project::getEndDate, Comparator.nullsFirst(Comparator.naturalOrder())).reversed());
+        return projects.stream().sorted(Comparator.comparing(Project::getStartDate, Comparator.nullsFirst(Comparator.naturalOrder())).reversed()).toList();
     }
 }

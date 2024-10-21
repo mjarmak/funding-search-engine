@@ -104,7 +104,6 @@ public class ExportService {
         ValidatorService.validateUserExcelExport(userData, logService.getCountByUserIdAndType(userData.getId(), EXPORT_EXCEL));
 
         List<Project> items = projectRepository.findAllById(ids);
-        ProjectMapper.sortByEndDate(items);
 
         return generateProjectExcel(userData, items);
     }
@@ -128,6 +127,9 @@ public class ExportService {
     }
 
     private ByteArrayInputStream generateProjectExcel(UserData userData, List<Project> items) throws IOException {
+        // copy immutable list to avoid sorting the original list
+        items = ProjectMapper.sortByStartDate(items);
+
         try (Workbook workbook = new XSSFWorkbook(); ByteArrayOutputStream out = new ByteArrayOutputStream()) {
             Sheet sheet = workbook.createSheet("PROJECTS");
 
