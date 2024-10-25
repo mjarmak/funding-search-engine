@@ -118,6 +118,8 @@ public class ProjectSolrClientService implements ISolrClientService<ProjectDTO> 
             solrQuery.addField("*");
             solrQuery.addField("score");
             solrQuery.setSort("score", SolrQuery.ORDER.desc);
+            // set def type to dismax
+            solrQuery.set("defType", "dismax");
             solrQuery.addFilterQuery("{!frange l=2}query($q)");
 
             if (!statusFilters.isEmpty() && statusFilters.size() < 3) {

@@ -1,8 +1,8 @@
 ### Run in order:
 ```
-docker build -t funding-search-engine:0.1.6 .
-docker tag funding-search-engine:0.1.6 jeniustech/funding-search-engine:0.1.6
-docker push jeniustech/funding-search-engine:0.1.6
+docker build -t funding-search-engine:0.1.61 .
+docker tag funding-search-engine:0.1.61 jeniustech/funding-search-engine:0.1.61
+docker push jeniustech/funding-search-engine:0.1.61
 
 ```
 
@@ -95,6 +95,7 @@ where o.id = 999902094;
 
 ````log book view
 select
+    ud.id as user_id,
     ud.first_name || ' ' || ud.last_name as user,
     ud.email as email,
   CASE
@@ -110,6 +111,7 @@ lb.created_at as date
 from log_book lb
 left join user_data ud on lb.user_id = ud.id
 where user_id IN (22,26,27,28,19)
+order by date desc 
 ````
 
 ## Back up db
