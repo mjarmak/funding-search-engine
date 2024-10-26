@@ -51,12 +51,6 @@ public class ProjectController implements IDataController<ProjectDTO> {
             @RequestParam(required = false, name = "program", defaultValue =
                     "HORIZON," +
                             "H2020," +
-                            "FP1," +
-                            "FP2," +
-                            "FP3," +
-                            "FP4," +
-                            "FP5," +
-                            "FP6," +
                             "FP7"
             ) List<FrameworkProgramEnum> programFilters,
             @AuthenticationPrincipal Jwt jwt

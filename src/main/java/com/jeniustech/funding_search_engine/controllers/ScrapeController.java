@@ -1,6 +1,7 @@
 package com.jeniustech.funding_search_engine.controllers;
 
 import com.jeniustech.funding_search_engine.enums.AdminLogType;
+import com.jeniustech.funding_search_engine.enums.FrameworkProgramEnum;
 import com.jeniustech.funding_search_engine.scraper.services.*;
 import com.jeniustech.funding_search_engine.services.AdminLogService;
 import com.jeniustech.funding_search_engine.services.NotificationService;
@@ -107,8 +108,14 @@ public class ScrapeController {
     }
     @PreAuthorize("hasRole('admin-server')")
     @GetMapping("/projects/solr")
-    public void loadProjectsSolr() {
-        projectDataLoader.loadSolrData();
+    public void loadProjectsSolr(
+            @RequestParam(required = false, name = "program", defaultValue =
+                    "HORIZON," +
+                            "H2020," +
+                            "FP7"
+            ) List<FrameworkProgramEnum> frameworkPrograms
+            ) {
+        projectDataLoader.loadSolrData(frameworkPrograms);
     }
 
     public void scrapeAndNotify(List<String> queries, List<String> files, String destination, boolean skipUpdate) {

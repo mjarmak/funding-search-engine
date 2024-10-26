@@ -65,10 +65,10 @@ public class Project {
     @Enumerated(EnumType.ORDINAL)
     private FundingSchemeEnum fundingScheme;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "project", fetch = FetchType.LAZY)
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "project", fetch = FetchType.LAZY, orphanRemoval = true)
     private List<LongText> longTexts;
 
-    @OneToMany(mappedBy = "project", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "project", fetch = FetchType.LAZY, orphanRemoval = true)
     private List<OrganisationProjectJoin> organisationProjectJoins;
 
     @CreationTimestamp

@@ -80,14 +80,16 @@ public class ProjectDataLoader {
         }
     }
 
-    public void loadSolrData() {
+    public void loadSolrData(List<FrameworkProgramEnum> frameworkPrograms) {
         log.info("Loading projects to solr");
         // do in batch of 1000
         int pageNumber = 0;
         int pageSize = BATCH_SIZE;
         Sort sort = Sort.sort(Project.class).by(Project::getId).descending();
         Pageable pageable = PageRequest.of(pageNumber, pageSize, sort);
-        List<Project> projects = projectRepository.findAll(pageable).getContent();
+        List<Project> projects = projectRepository.findAllByFrameworkProgram(
+                frameworkPrograms,
+                pageable);
         while (!projects.isEmpty()) {
             log.info("Saving batch of " + projects.size() + " items");
             projectSolrClientService.add(SolrMapper.mapToSolrDocument(projects), 100_000);
