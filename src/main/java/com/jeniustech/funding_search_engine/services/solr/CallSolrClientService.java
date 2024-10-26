@@ -107,7 +107,7 @@ public class CallSolrClientService implements ISolrClientService<CallDTO> {
             solrQuery.setSort("score", SolrQuery.ORDER.desc);
             // set def type to dismax
             solrQuery.set("defType", "dismax");
-            solrQuery.addFilterQuery("{!frange l=2}query($q)");
+            solrQuery.addFilterQuery("{!frange l=1}query($q)");
 
             if (!statusFilters.isEmpty() && statusFilters.size() < 3) {
                 List<String> filters = new ArrayList<>();
