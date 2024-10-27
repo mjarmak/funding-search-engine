@@ -53,6 +53,13 @@ public class ScrapeController {
         callDataLoader.updateProjectNumbers();
     }
 
+
+    @PreAuthorize("hasRole('admin-server')")
+    @GetMapping("/partners/solr")
+    public void loadPartnerSolr() {
+        organisationDataLoader.loadSolrData();
+    }
+
     @PreAuthorize("hasRole('admin-server')")
     @GetMapping("/partners/scrape")
     public void scrapePartners(
@@ -80,7 +87,7 @@ public class ScrapeController {
 
     @PreAuthorize("hasRole('admin-server')")
     @GetMapping("/partners/scrape/updateFundingInformation")
-    public void scrapePartners() {
+    public void updatePartnerFundingInformation() {
         log.info("Updating funding information");
         partnerScraperService.updateFundingInformation();
         adminLogService.addLog(AdminLogType.PARTNER_FUNDING_UPDATE, "Funding information updated");

@@ -1,11 +1,15 @@
 package com.jeniustech.funding_search_engine.mappers;
 
 import com.jeniustech.funding_search_engine.constants.solr.CallColumns;
+import com.jeniustech.funding_search_engine.constants.solr.PartnerColumns;
 import com.jeniustech.funding_search_engine.constants.solr.ProjectColumns;
 import com.jeniustech.funding_search_engine.dto.search.CallDTO;
+import com.jeniustech.funding_search_engine.dto.search.PartnerDTO;
 import com.jeniustech.funding_search_engine.dto.search.ProjectDTO;
 import com.jeniustech.funding_search_engine.entities.Call;
+import com.jeniustech.funding_search_engine.entities.Organisation;
 import com.jeniustech.funding_search_engine.entities.Project;
+import com.jeniustech.funding_search_engine.enums.OrganisationTypeEnum;
 import com.jeniustech.funding_search_engine.scraper.util.ScraperStringUtil;
 import com.jeniustech.funding_search_engine.util.StringUtil;
 import org.apache.solr.common.SolrDocument;
@@ -108,7 +112,37 @@ public interface SolrMapper {
                 .build(
                 );
     }
-    static List<SolrInputDocument> mapToSolrDocument(List<Project> projects) {
+
+
+    static List<PartnerDTO> mapToPartner(List<SolrDocument> solrDocuments) {
+        if (solrDocuments == null) {
+            return null;
+        }
+        return solrDocuments.stream()
+                .map(SolrMapper::mapToPartner)
+                .toList();
+    }
+
+    static PartnerDTO mapToPartner(SolrDocument solrDocument) {
+        Object scoreField = solrDocument.getFieldValue(PartnerColumns.SCORE);
+        return PartnerDTO.builder()
+                .id((Long) solrDocument.getFieldValue(PartnerColumns.ID))
+                .name(valueOrDefault((String) solrDocument.getFieldValue(PartnerColumns.NAME), null))
+                .shortName(valueOrDefault((String) solrDocument.getFieldValue(PartnerColumns.SHORT_NAME), null))
+                .vatNumber(valueOrDefault((String) solrDocument.getFieldValue(PartnerColumns.VAT_NUMBER), null))
+                .typeName(valueOrDefault(OrganisationTypeEnum.getDisplayName((String) solrDocument.getFieldValue(PartnerColumns.TYPE)), null))
+                .sme(Boolean.valueOf((String) solrDocument.getFieldValue(PartnerColumns.SME)))
+//                .locationCoordinates(mapToLocationCoordinates(solrDocument))
+                .totalFundingOrganisation(NumberMapper.shortenNumber((Float) solrDocument.getFieldValue(PartnerColumns.FUNDING_ORGANISATION), 1))
+                .totalFundingEU(NumberMapper.shortenNumber((Float) solrDocument.getFieldValue(PartnerColumns.FUNDING_EU), 1))
+                .projectNumber(Short.valueOf(((Integer) solrDocument.getFieldValue(PartnerColumns.PROJECT_NUMBER)).toString()))
+                .score(scoreField != null ? (Float) scoreField : 0)
+                .build();
+
+
+    }
+
+    static List<SolrInputDocument> mapProjectsToSolrDocument(List<Project> projects) {
         if (projects == null) {
             return null;
         }
@@ -173,6 +207,56 @@ public interface SolrMapper {
         return solrDocuments.stream()
                 .map(SolrMapper::mapToProject)
                 .toList();
+    }
+
+
+
+    static List<SolrInputDocument> mapPartnersToSolrDocument(List<Organisation> organisations) {
+        if (organisations == null) {
+            return null;
+        }
+        return organisations.stream()
+                .map(SolrMapper::mapToSolrDocument)
+                .toList();
+    }
+    static SolrInputDocument mapToSolrDocument(Organisation organisation) {
+        SolrInputDocument document = new SolrInputDocument();
+
+        document.addField(PartnerColumns.ID, organisation.getId());
+
+        if (StringUtil.isNotEmpty(organisation.getName())) {
+            document.addField(PartnerColumns.NAME, organisation.getName());
+        }
+        if (StringUtil.isNotEmpty(organisation.getShortName())) {
+            document.addField(PartnerColumns.SHORT_NAME, organisation.getShortName());
+        }
+        if (StringUtil.isNotEmpty(organisation.getVatNumber())) {
+            document.addField(PartnerColumns.VAT_NUMBER, organisation.getVatNumber());
+        }
+        if (StringUtil.isNotEmpty(organisation.getType())) {
+            document.addField(PartnerColumns.TYPE, organisation.getType().getName());
+        }
+        if (StringUtil.isNotEmpty(organisation.getSme())) {
+            document.addField(PartnerColumns.SME, organisation.isSme());
+        }
+        if (organisation.getLocationCoordinates() != null) {
+            if (StringUtil.isNotEmpty(organisation.getLocationCoordinates().getX())) {
+                document.addField(PartnerColumns.LOCATION_COORDINATES_X, organisation.getLocationCoordinates().getX());
+            }
+            if (StringUtil.isNotEmpty(organisation.getLocationCoordinates().getY())) {
+                document.addField(PartnerColumns.LOCATION_COORDINATES_Y, organisation.getLocationCoordinates().getY());
+            }
+        }
+        if (StringUtil.isNotEmpty(organisation.getProjectNumber())) {
+            document.addField(PartnerColumns.PROJECT_NUMBER, organisation.getProjectNumber());
+        }
+        if (StringUtil.isNotEmpty(organisation.getFundingOrganisation())) {
+            document.addField(PartnerColumns.FUNDING_ORGANISATION, organisation.getFundingOrganisationString());
+        }
+        if (StringUtil.isNotEmpty(organisation.getFundingEU())) {
+            document.addField(PartnerColumns.FUNDING_EU, organisation.getFundingEUString());
+        }
+        return document;
     }
 
 }

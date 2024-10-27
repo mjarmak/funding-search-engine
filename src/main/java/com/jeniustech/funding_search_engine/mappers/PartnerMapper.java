@@ -53,7 +53,7 @@ public interface PartnerMapper {
                 .name(organisation.getName())
                 .shortName(organisation.getShortName())
                 .address(isSearch ? null : AddressMapper.mapToDTO(organisation.getAddress()))
-                .typeName(organisation.getType() != null ? organisation.getType().getName() : null)
+                .typeName(organisation.getType() != null ? organisation.getType().getDisplayName() : null)
                 .sme(isSearch ? null : organisation.isSme())
                 .vatNumber(isSearch ? null : organisation.getVatNumber())
                 .nutsCode(isSearch ? null : organisation.getNutsCode())

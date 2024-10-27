@@ -13,7 +13,7 @@ public interface NumberMapper {
         return shortenNumber(new BigDecimal(number), 1);
     }
 
-    static String shortenNumber(String number, int decimalPoints) {
+    static String shortenNumber(Float number, int decimalPoints) {
         if (number == null) {
             return null;
         }

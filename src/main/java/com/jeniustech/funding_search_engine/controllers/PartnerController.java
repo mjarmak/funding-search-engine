@@ -10,6 +10,7 @@ import com.jeniustech.funding_search_engine.models.JwtModel;
 import com.jeniustech.funding_search_engine.services.ExportService;
 import com.jeniustech.funding_search_engine.services.PartnerService;
 import com.jeniustech.funding_search_engine.services.UserDataService;
+import com.jeniustech.funding_search_engine.services.solr.PartnerSolrClientService;
 import jakarta.validation.constraints.Size;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.InputStreamResource;
@@ -32,6 +33,7 @@ public class PartnerController implements IDataController<PartnerDTO> {
     private final PartnerService partnerService;
     private final UserDataService userDataService;
     private final ExportService exportService;
+    private final PartnerSolrClientService partnerSolrClientService;
 
     @GetMapping("/{id}/graph/network")
     public ResponseEntity<PartnerDTO> getGraphMesh(
@@ -50,12 +52,13 @@ public class PartnerController implements IDataController<PartnerDTO> {
     ) {
         JwtModel jwtModel = UserDataMapper.map(jwt);
         if (queryType.equals(PartnerQueryTypeEnum.NAME)) {
-            return ResponseEntity.ok(partnerService.searchByName(
-                    jwtModel.getUserId(),
-                    query,
-                    pageNumber,
-                    pageSize
-            ));
+            return ResponseEntity.ok(
+                    partnerSolrClientService.search(
+                            query,
+                            pageNumber,
+                            pageSize,
+                            jwtModel
+                    ));
         } else {
             return ResponseEntity.ok(partnerService.searchByTopic(
                     jwtModel.getUserId(),
@@ -74,7 +77,7 @@ public class PartnerController implements IDataController<PartnerDTO> {
     @GetMapping("/{id}/favorite")
     public ResponseEntity<Void> favorite(@PathVariable Long id,
                                          @AuthenticationPrincipal Jwt jwt
-                             ) {
+    ) {
         JwtModel jwtModel = UserDataMapper.map(jwt);
         partnerService.favorite(id, jwtModel.getUserId());
         return ResponseEntity.noContent().build();
@@ -83,7 +86,7 @@ public class PartnerController implements IDataController<PartnerDTO> {
     @DeleteMapping("/{id}/favorite")
     public ResponseEntity<Void> unFavorite(@PathVariable Long id,
                                            @AuthenticationPrincipal Jwt jwt
-                               ) {
+    ) {
         JwtModel jwtModel = UserDataMapper.map(jwt);
         partnerService.unFavorite(id, jwtModel.getUserId());
         return ResponseEntity.noContent().build();

@@ -92,7 +92,7 @@ public class ProjectDataLoader {
                 pageable);
         while (!projects.isEmpty()) {
             log.info("Saving batch of " + projects.size() + " items");
-            projectSolrClientService.add(SolrMapper.mapToSolrDocument(projects), 100_000);
+            projectSolrClientService.add(SolrMapper.mapProjectsToSolrDocument(projects), 100_000);
             pageNumber++;
             projects = projectRepository.findAll(PageRequest.of(pageNumber, pageSize, sort)).getContent();
         }

@@ -85,6 +85,9 @@ public class Organisation {
     }
 
     public boolean isSme() {
+        if (sme == null) {
+            return false;
+        }
         return BooleanEnum.TRUE.equals(this.sme);
     }
 
@@ -122,7 +125,7 @@ public class Organisation {
         if (type == null) {
             return null;
         }
-        return type.getName();
+        return type.getDisplayName();
     }
 
     public String getWebSiteUrl() {
@@ -159,5 +162,18 @@ public class Organisation {
         return ScraperStringUtil.isDifferent(other.getId(), this.getId())
                 || ScraperStringUtil.isDifferent(other.getName(), this.getName(), false)
                 || ScraperStringUtil.isDifferent(other.getShortName(), this.getShortName(), false);
+    }
+
+    public String getFundingOrganisationString() {
+        if (fundingOrganisation == null || fundingOrganisation.compareTo(BigDecimal.ZERO) == 0) {
+            return null;
+        }
+        return fundingOrganisation.stripTrailingZeros().toPlainString();
+    }
+    public String getFundingEUString() {
+        if (fundingEU == null || fundingEU.compareTo(BigDecimal.ZERO) == 0) {
+            return null;
+        }
+        return fundingEU.stripTrailingZeros().toPlainString();
     }
 }

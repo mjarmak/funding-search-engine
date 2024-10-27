@@ -6,11 +6,13 @@ import com.jeniustech.funding_search_engine.exceptions.OrganisationNotFoundExcep
 import com.jeniustech.funding_search_engine.exceptions.ProjectNotFoundException;
 import com.jeniustech.funding_search_engine.exceptions.ScraperException;
 import com.jeniustech.funding_search_engine.mappers.DateMapper;
+import com.jeniustech.funding_search_engine.mappers.SolrMapper;
 import com.jeniustech.funding_search_engine.repository.OrganisationRepository;
 import com.jeniustech.funding_search_engine.repository.ProjectRepository;
 import com.jeniustech.funding_search_engine.scraper.constants.excel.OrganisationCSVColumns;
 import com.jeniustech.funding_search_engine.scraper.util.CSVSplitter;
 import com.jeniustech.funding_search_engine.services.CSVService;
+import com.jeniustech.funding_search_engine.services.solr.PartnerSolrClientService;
 import com.opencsv.CSVParserBuilder;
 import com.opencsv.CSVReader;
 import com.opencsv.CSVReaderBuilder;
@@ -19,6 +21,9 @@ import jakarta.annotation.Nullable;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.io.FileReader;
@@ -40,6 +45,7 @@ import static com.jeniustech.funding_search_engine.util.StringUtil.valueOrDefaul
 public class OrganisationDataLoader {
 
     private final ProjectRepository projectRepository;
+    private final PartnerSolrClientService partnerSolrClientService;
     private final OrganisationRepository organisationRepository;
     private final CSVService csvService;
 
@@ -77,6 +83,22 @@ public class OrganisationDataLoader {
         for (String splitFileName : splitFileNames) {
             log.info("Loading data from " + splitFileName);
             loadData(splitFileName, oldFormat, skipUpdate, onlyValidate);
+        }
+    }
+
+    public void loadSolrData() {
+        log.info("Loading organisations to solr");
+        // do in batch of 1000
+        int pageNumber = 0;
+        int pageSize = 1000;
+        Sort sort = Sort.sort(Project.class).by(Project::getId).descending();
+        Pageable pageable = PageRequest.of(pageNumber, pageSize, sort);
+        List<Organisation> organisations = organisationRepository.findAll(pageable).getContent();
+        while (!organisations.isEmpty()) {
+            log.info("Saving batch of " + organisations.size() + " items");
+            partnerSolrClientService.add(SolrMapper.mapPartnersToSolrDocument(organisations), 100_000);
+            pageNumber++;
+            organisations = organisationRepository.findAll(PageRequest.of(pageNumber, pageSize, sort)).getContent();
         }
     }
 
