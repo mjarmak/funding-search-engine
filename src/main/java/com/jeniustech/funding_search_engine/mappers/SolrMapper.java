@@ -131,7 +131,7 @@ public interface SolrMapper {
                 .shortName(valueOrDefault((String) solrDocument.getFieldValue(PartnerColumns.SHORT_NAME), null))
                 .vatNumber(valueOrDefault((String) solrDocument.getFieldValue(PartnerColumns.VAT_NUMBER), null))
                 .typeName(valueOrDefault(OrganisationTypeEnum.getDisplayName((String) solrDocument.getFieldValue(PartnerColumns.TYPE)), null))
-                .sme(Boolean.valueOf((String) solrDocument.getFieldValue(PartnerColumns.SME)))
+//                .sme(Boolean.valueOf((String) solrDocument.getFieldValue(PartnerColumns.SME)))
 //                .locationCoordinates(mapToLocationCoordinates(solrDocument))
                 .totalFundingOrganisation(NumberMapper.shortenNumber((Float) solrDocument.getFieldValue(PartnerColumns.FUNDING_ORGANISATION), 1))
                 .totalFundingEU(NumberMapper.shortenNumber((Float) solrDocument.getFieldValue(PartnerColumns.FUNDING_EU), 1))

@@ -4,6 +4,7 @@ import com.jeniustech.funding_search_engine.dto.search.PartnerDTO;
 import com.jeniustech.funding_search_engine.dto.search.SearchDTO;
 import com.jeniustech.funding_search_engine.entities.UserData;
 import com.jeniustech.funding_search_engine.enums.LogTypeEnum;
+import com.jeniustech.funding_search_engine.enums.OrganisationTypeEnum;
 import com.jeniustech.funding_search_engine.exceptions.DocumentSaveException;
 import com.jeniustech.funding_search_engine.exceptions.SearchException;
 import com.jeniustech.funding_search_engine.exceptions.SubscriptionPlanException;
@@ -26,6 +27,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 @Service
 public class PartnerSolrClientService implements ISolrClientService<PartnerDTO> {
@@ -62,7 +64,7 @@ public class PartnerSolrClientService implements ISolrClientService<PartnerDTO> 
         }
     }
 
-    public SearchDTO<PartnerDTO> search(String query, int pageNumber, int pageSize, JwtModel jwtModel) throws SearchException {
+    public SearchDTO<PartnerDTO> search(String query, int pageNumber, int pageSize, JwtModel jwtModel, List<OrganisationTypeEnum> entityTypeFilters) throws SearchException {
         UserData userData = this.userDataRepository.findBySubjectId(jwtModel.getUserId()).orElseThrow(() -> new UserNotFoundException("User not found"));
 
         ValidatorService.validateUserSearch(userData);
@@ -89,20 +91,9 @@ public class PartnerSolrClientService implements ISolrClientService<PartnerDTO> 
             solrQuery.set("defType", "dismax");
             solrQuery.addFilterQuery("{!frange l=1}query($q)");
 
-//            if (!statusFilters.isEmpty() && statusFilters.size() < 3) {
-//                List<String> filters = new ArrayList<>();
-//                for (StatusFilterEnum statusFilter : statusFilters) {
-//                    switch (statusFilter) {
-//                        case UPCOMING -> filters.add("(start_date:[NOW TO *])");
-//                        case OPEN ->
-//                                filters.add("((start_date:[* TO NOW] AND end_date:[NOW TO *]) OR (start_date:[* TO NOW] AND end_date_2:[NOW TO *]))");
-//                        case CLOSED ->
-//                                filters.add("((end_date:[* TO NOW] AND -end_date_2:*) OR (end_date:[* TO NOW] AND end_date_2:[* TO NOW]))");
-//                    }
-//                }
-//                // join with 'OR'
-//                solrQuery.addFilterQuery(String.join(" OR ", filters));
-//            }
+            if (!entityTypeFilters.isEmpty() && entityTypeFilters.size() < 5) {
+                solrQuery.addFilterQuery("type:(" + entityTypeFilters.stream().map(OrganisationTypeEnum::getName).collect(Collectors.joining(" ")) + ")");
+            }
 
             QueryResponse response = this.solrClient.query(solrQuery);
             List<PartnerDTO> results = SolrMapper.mapToPartner(response.getResults());

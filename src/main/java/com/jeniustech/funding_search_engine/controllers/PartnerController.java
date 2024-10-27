@@ -4,6 +4,7 @@ import com.jeniustech.funding_search_engine.dto.search.PartnerDTO;
 import com.jeniustech.funding_search_engine.dto.search.ProjectDTO;
 import com.jeniustech.funding_search_engine.dto.search.SearchDTO;
 import com.jeniustech.funding_search_engine.enums.LogTypeEnum;
+import com.jeniustech.funding_search_engine.enums.OrganisationTypeEnum;
 import com.jeniustech.funding_search_engine.enums.PartnerQueryTypeEnum;
 import com.jeniustech.funding_search_engine.mappers.UserDataMapper;
 import com.jeniustech.funding_search_engine.models.JwtModel;
@@ -48,6 +49,8 @@ public class PartnerController implements IDataController<PartnerDTO> {
             @RequestParam(defaultValue = "0") int pageNumber,
             @RequestParam(defaultValue = "20") int pageSize,
             @RequestParam(defaultValue = "NAME") PartnerQueryTypeEnum queryType,
+            @RequestParam(required = false, name = "entityType", defaultValue = "PUB,PRC,OTH,HES,REC"
+            ) List<OrganisationTypeEnum> entityTypeFilters,
             @AuthenticationPrincipal Jwt jwt
     ) {
         JwtModel jwtModel = UserDataMapper.map(jwt);
@@ -57,7 +60,8 @@ public class PartnerController implements IDataController<PartnerDTO> {
                             query,
                             pageNumber,
                             pageSize,
-                            jwtModel
+                            jwtModel,
+                            entityTypeFilters
                     ));
         } else {
             return ResponseEntity.ok(partnerService.searchByTopic(
