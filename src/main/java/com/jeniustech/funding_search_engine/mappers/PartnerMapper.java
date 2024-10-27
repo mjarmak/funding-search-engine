@@ -44,7 +44,7 @@ public interface PartnerMapper {
         }
         return map(organisationProjectJoin.getOrganisation(), null, null, organisationProjectJoin.getFundingOrganisationDisplayString(), organisationProjectJoin.getFundingEUDisplayString(), organisationProjectJoin.getType(), isSearch, isFavorite);
     }
-    static PartnerDTO map(Organisation organisation, Integer projectsMatched, Integer score, String fundingOrganisation, String fundingEU, OrganisationProjectJoinTypeEnum joinType, boolean isSearch, boolean isFavorite) {
+    static PartnerDTO map(Organisation organisation, Integer projectsMatched, Float score, String fundingOrganisation, String fundingEU, OrganisationProjectJoinTypeEnum joinType, boolean isSearch, boolean isFavorite) {
         if (organisation == null) {
             return null;
         }

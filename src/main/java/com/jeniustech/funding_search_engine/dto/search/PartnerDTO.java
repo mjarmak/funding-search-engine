@@ -29,7 +29,7 @@ public class PartnerDTO extends SearchItemDTO {
     private List<ProjectDTO> projects;
 
     private Integer projectsMatched;
-    private Integer maxScore;
+    private Float maxScore;
 
     private String fundingOrganisation;
     private String fundingEU;

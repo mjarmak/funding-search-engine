@@ -66,7 +66,8 @@ public class PartnerController implements IDataController<PartnerDTO> {
         } else {
             return ResponseEntity.ok(partnerService.searchByTopic(
                     jwtModel.getUserId(),
-                    query
+                    query,
+                    entityTypeFilters
             ));
         }
     }

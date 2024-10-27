@@ -5,6 +5,7 @@ import com.jeniustech.funding_search_engine.dto.search.ProjectDTO;
 import com.jeniustech.funding_search_engine.dto.search.SearchDTO;
 import com.jeniustech.funding_search_engine.entities.*;
 import com.jeniustech.funding_search_engine.enums.LogTypeEnum;
+import com.jeniustech.funding_search_engine.enums.OrganisationTypeEnum;
 import com.jeniustech.funding_search_engine.enums.UserJoinTypeEnum;
 import com.jeniustech.funding_search_engine.exceptions.CallNotFoundException;
 import com.jeniustech.funding_search_engine.exceptions.NLPException;
@@ -130,10 +131,10 @@ public class PartnerService extends IDataService<PartnerDTO> {
 
         Call call = callRepository.findById(callId).orElseThrow(() -> new CallNotFoundException("Call " + callId + " not found"));
         String keywords = getKeywords(call);
-        return searchItems(keywords);
+        return searchItems(keywords, null);
     }
 
-    public SearchDTO<PartnerDTO> searchByTopic(String subjectId, String query) {
+    public SearchDTO<PartnerDTO> searchByTopic(String subjectId, String query, List<OrganisationTypeEnum> entityTypeFilters) {
         UserData userData = getUserOrNotFound(subjectId);
         ValidatorService.validateUserSearch(userData);
 
@@ -141,7 +142,7 @@ public class PartnerService extends IDataService<PartnerDTO> {
             throw new SubscriptionPlanException("Trial users cannot search for partners");
         }
         logService.addLog(userData, LogTypeEnum.SEARCH_PARTNER, query);
-        List<PartnerDTO> results = searchItems(query);
+        List<PartnerDTO> results = searchItems(query, entityTypeFilters);
 
         setFavorites(userData, results);
 
@@ -192,7 +193,7 @@ public class PartnerService extends IDataService<PartnerDTO> {
         }
     }
 
-    public List<PartnerDTO> searchItems(String keywords) {
+    public List<PartnerDTO> searchItems(String keywords, List<OrganisationTypeEnum> entityTypeFilters) {
         SearchDTO<ProjectDTO> projectDTOSearchDTO = projectSolrClientService.simpleSearch(keywords, 0, 10);
 
         List<ProjectDTO> projectDTOS = projectDTOSearchDTO.getResults();
@@ -202,23 +203,25 @@ public class PartnerService extends IDataService<PartnerDTO> {
         List<PartnerDTO> partners = new ArrayList<>();
         for (OrganisationProjectJoin join : organisationProjectJoins) {
             Long projectId = join.getProject().getId();
-            ProjectDTO projectDTO = projectDTOS.stream().filter(p -> p.getId().equals(projectId)).findFirst().orElseThrow();
+            Float projectScore = projectDTOS.stream().filter(p -> p.getId().equals(projectId)).findFirst().orElseThrow().getScore();
             Optional<PartnerDTO> partner = partners.stream().filter(p -> p.getId().equals(join.getOrganisation().getId())).findFirst();
             if (partner.isEmpty()) {
-                partners.add(
-                        PartnerMapper.map(
-                                join.getOrganisation(),
-                                1,
-                                projectDTO.getScore().intValue(),
-                                null,
-                                null,
-                                null,
-                                true,
-                                false
-                        ));
+                if (entityTypeFilters == null || entityTypeFilters.contains(join.getOrganisation().getType())) {
+                    partners.add(
+                            PartnerMapper.map(
+                                    join.getOrganisation(),
+                                    1,
+                                    projectScore,
+                                    null,
+                                    null,
+                                    null,
+                                    true,
+                                    false
+                            ));
+                }
             } else {
                 partner.get().setProjectsMatched(partner.get().getProjectsMatched() + 1);
-                partner.get().setMaxScore((int) (partner.get().getMaxScore() + projectDTO.getScore()));
+                partner.get().setMaxScore(partner.get().getMaxScore() + projectScore);
             }
         }
         partners.sort((p1, p2) -> Float.compare(p2.getMaxScore(), p1.getMaxScore()));
