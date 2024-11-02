@@ -10,6 +10,7 @@ import java.time.LocalDate;
 
 import static com.jeniustech.funding_search_engine.mappers.DateMapper.toUTC;
 import static com.jeniustech.funding_search_engine.scraper.util.ScraperStringUtil.removeUselessHtmlData;
+import static com.jeniustech.funding_search_engine.util.StringUtil.removeQuotes;
 
 public interface StringUtil {
     static boolean isNotEmpty(String row) {
@@ -94,8 +95,6 @@ public interface StringUtil {
         }
     }
 
-
-
     static String processString(Object str, boolean isDateString) {
         if (str == null) {
             return "";
@@ -135,6 +134,62 @@ public interface StringUtil {
         out = out.replaceAll("\\s+", " ");
         out = out.replace(" ", "");
         return out;
+    }
+
+    static String processQuery(String query) {
+        if (query == null) {
+            return "";
+        }
+        boolean exactMatch = isQuotedTwice(query);
+        String queryProcessed = removeQuotes(query);
+        queryProcessed = queryProcessed.replace(",", " ");
+        queryProcessed = queryProcessed.replace(":", "");
+        if (exactMatch) {
+            queryProcessed = surroundWithQuotes(queryProcessed);
+        }
+        return queryProcessed;
+//        if (!isQuoted(query)) {
+//            return query;
+//        }
+//        String queryProcessed = query;
+//        if (query.contains(",")) {
+//            queryProcessed = query.replace(",", " AND ");
+//            queryProcessed = queryProcessed.replace("AND AND", "AND");
+////            queryProcessed = surroundWithQuotes(queryProcessed);
+//        }
+//        return queryProcessed;
+    }
+
+    static boolean isQuotedTwice(String query) {
+        if (query == null || query.length() < 4) {
+            return false;
+        }
+        return query.charAt(0) == '"'
+                && query.charAt(query.length() - 1) == '"'
+                && query.charAt(1) == '"'
+                && query.charAt(query.length() - 2) == '"';
+    }
+
+    static String removeQuotes(String query) {
+        if (query == null) {
+            return "";
+        }
+        if (!isQuoted(query)) {
+            return query;
+        }
+        String queryProcessed = query;
+        if (query.contains("\"")) {
+            queryProcessed = query.replace("\"", "");
+        }
+        return queryProcessed;
+    }
+
+    private static String surroundWithQuotes(String queryProcessed) {
+        return "\"" + queryProcessed + "\"";
+    }
+
+    static boolean isQuoted(String queryProcessed) {
+        return queryProcessed.startsWith("\"") && queryProcessed.endsWith("\"");
     }
 
 }

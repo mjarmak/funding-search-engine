@@ -16,6 +16,7 @@ import com.jeniustech.funding_search_engine.repository.UserDataRepository;
 import com.jeniustech.funding_search_engine.services.CallService;
 import com.jeniustech.funding_search_engine.services.LogService;
 import com.jeniustech.funding_search_engine.services.ValidatorService;
+import com.jeniustech.funding_search_engine.util.StringUtil;
 import jakarta.validation.constraints.NotNull;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.solr.client.solrj.SolrClient;
@@ -34,6 +35,8 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+
+import static com.jeniustech.funding_search_engine.util.StringUtil.processQuery;
 
 @Service
 @Slf4j
@@ -112,7 +115,7 @@ public class CallSolrClientService implements ISolrClientService<CallDTO> {
             var maxScore = response.getResults().getMaxScore();
             float minScoreNew = maxScore / 2;
             if (minScoreNew > MIN_SCORE && response.getResults().getNumFound() > 1000 && !query.isBlank() && !isTrialUser) {
-                log.info("Max score too high, retrying with min score: {}", minScoreNew);
+                log.debug("Max score too high, retrying with min score: {}", minScoreNew);
                 response = search(query, pageNumber, pageSize, statusFilters, minScoreNew);
             }
 
@@ -151,9 +154,9 @@ public class CallSolrClientService implements ISolrClientService<CallDTO> {
                 CommonParams.ROWS, String.valueOf(pageSize)
         );
         if (!query.isBlank()) {
-            solrQuery.setQuery(query);
-            // set def type to dismax
-            solrQuery.set("defType", "dismax");
+            solrQuery.setQuery(processQuery(query));
+            String operationType = StringUtil.isQuoted(query) ? "AND" : "OR";
+            solrQuery.set("q.op", operationType);
             solrQuery.addFilterQuery("{!frange l=" + minScore + "}query($q)");
         } else {
             solrQuery.setQuery("*:*");

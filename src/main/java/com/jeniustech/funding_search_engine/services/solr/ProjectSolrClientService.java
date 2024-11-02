@@ -15,6 +15,7 @@ import com.jeniustech.funding_search_engine.repository.UserDataRepository;
 import com.jeniustech.funding_search_engine.services.LogService;
 import com.jeniustech.funding_search_engine.services.ProjectService;
 import com.jeniustech.funding_search_engine.services.ValidatorService;
+import com.jeniustech.funding_search_engine.util.StringUtil;
 import jakarta.validation.constraints.NotNull;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.solr.client.solrj.SolrClient;
@@ -33,6 +34,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
+
+import static com.jeniustech.funding_search_engine.util.StringUtil.processQuery;
 
 @Service
 @Slf4j
@@ -74,10 +77,14 @@ public class ProjectSolrClientService implements ISolrClientService<ProjectDTO> 
     public SearchDTO<ProjectDTO> simpleSearch(String query, int pageNumber, int pageSize) throws SearchException {
         try {
             final SolrQuery solrQuery = new SolrQuery(
-                    CommonParams.Q, query,
                     CommonParams.START, String.valueOf(pageNumber * pageSize),
                     CommonParams.ROWS, String.valueOf(pageSize)
             );
+
+            solrQuery.setQuery(processQuery(query));
+            String operationType = StringUtil.isQuoted(query) ? "AND" : "OR";
+            solrQuery.set("q.op", operationType);
+
             solrQuery.addField("*");
             solrQuery.addField("score");
             solrQuery.setSort("score", SolrQuery.ORDER.desc);
@@ -118,12 +125,12 @@ public class ProjectSolrClientService implements ISolrClientService<ProjectDTO> 
         try {
             QueryResponse response = search(query, pageNumber, pageSize, statusFilters, programFilters, MIN_SCORE);
 
-//            var maxScore = response.getResults().getMaxScore();
-//            float minScoreNew = maxScore / 2;
-//            if (minScoreNew > MIN_SCORE && response.getResults().getNumFound() > 1000 && !query.isBlank() && !isTrialUser) {
-//                log.info("Max score too high, retrying with min score: {}", minScoreNew);
-//                response = search(query, pageNumber, pageSize, statusFilters, programFilters, minScoreNew);
-//            }
+            var maxScore = response.getResults().getMaxScore();
+            float minScoreNew = maxScore / 2;
+            if (minScoreNew > MIN_SCORE && response.getResults().getNumFound() > 1000 && !query.isBlank() && !isTrialUser) {
+                log.debug("Max score too high, retrying with min score: {}", minScoreNew);
+                response = search(query, pageNumber, pageSize, statusFilters, programFilters, minScoreNew);
+            }
 
             List<ProjectDTO> results = SolrMapper.mapToProject(response.getResults());
             List<Long> ids = results.stream().map(ProjectDTO::getId).toList();
@@ -157,10 +164,14 @@ public class ProjectSolrClientService implements ISolrClientService<ProjectDTO> 
 
     private QueryResponse search(String query, int pageNumber, int pageSize, List<StatusFilterEnum> statusFilters, List<FrameworkProgramEnum> programFilters, float minScore) throws SolrServerException, IOException {
         final SolrQuery solrQuery = new SolrQuery(
-                CommonParams.Q, query,
                 CommonParams.START, String.valueOf(pageNumber * pageSize),
                 CommonParams.ROWS, String.valueOf(pageSize)
         );
+
+        solrQuery.setQuery(processQuery(query));
+        String operationType = StringUtil.isQuoted(query) ? "AND" : "OR";
+        solrQuery.set("q.op", operationType);
+
         solrQuery.addField("*");
         solrQuery.addField("score");
         solrQuery.setSort("score", SolrQuery.ORDER.desc);

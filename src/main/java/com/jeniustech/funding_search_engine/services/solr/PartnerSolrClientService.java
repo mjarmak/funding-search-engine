@@ -15,6 +15,7 @@ import com.jeniustech.funding_search_engine.repository.UserDataRepository;
 import com.jeniustech.funding_search_engine.services.LogService;
 import com.jeniustech.funding_search_engine.services.PartnerService;
 import com.jeniustech.funding_search_engine.services.ValidatorService;
+import com.jeniustech.funding_search_engine.util.StringUtil;
 import org.apache.solr.client.solrj.SolrClient;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.impl.Http2SolrClient;
@@ -28,6 +29,8 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
+
+import static com.jeniustech.funding_search_engine.util.StringUtil.processQuery;
 
 @Service
 public class PartnerSolrClientService implements ISolrClientService<PartnerDTO> {
@@ -72,23 +75,20 @@ public class PartnerSolrClientService implements ISolrClientService<PartnerDTO> 
             throw new SubscriptionPlanException("Trial users cannot search for partners");
         }
 
-//        if (userData.getMainActiveSubscription().isTrial()) {
-//            pageNumber = 0;
-//            pageSize = 5;
-//        }
-
         logService.addLog(userData, LogTypeEnum.SEARCH_PARTNER, query);
         try {
             final SolrQuery solrQuery = new SolrQuery(
-                    CommonParams.Q, query,
                     CommonParams.START, String.valueOf(pageNumber * pageSize),
                     CommonParams.ROWS, String.valueOf(pageSize)
             );
+
+            solrQuery.setQuery(processQuery(query));
+            String operationType = StringUtil.isQuoted(query) ? "AND" : "OR";
+            solrQuery.set("q.op", operationType);
+
             solrQuery.addField("*");
             solrQuery.addField("score");
             solrQuery.setSort("score", SolrQuery.ORDER.desc);
-            // set def type to dismax
-            solrQuery.set("defType", "dismax");
             solrQuery.addFilterQuery("{!frange l=1}query($q)");
 
             if (!entityTypeFilters.isEmpty() && entityTypeFilters.size() < 5) {

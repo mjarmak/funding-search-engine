@@ -13,6 +13,115 @@ import static org.junit.jupiter.api.Assertions.*;
 public class StringUtilTest {
 
     @Test
+    void removeQuotes_nullInput() {
+        assertEquals("", StringUtil.removeQuotes(null));
+    }
+
+    @Test
+    void removeQuotes_noQuotes() {
+        assertEquals("test query", StringUtil.removeQuotes("test query"));
+    }
+
+    @Test
+    void removeQuotes_withQuotes() {
+        assertEquals("test query", StringUtil.removeQuotes("\"test query\""));
+    }
+
+    @Test
+    void removeQuotes_multipleQuotes() {
+        assertEquals("test query", StringUtil.removeQuotes("\"test\" query\""));
+    }
+
+    @Test
+    void removeQuotes_multipleQuotes_2() {
+        assertEquals("\"test\" query\" test", StringUtil.removeQuotes("\"test\" query\" test"));
+    }
+
+    @Test
+    void removeQuotes_onlyQuotes() {
+        assertEquals("", StringUtil.removeQuotes("\"\""));
+    }
+    @Test
+    void processQuery_nullInput() {
+        assertEquals("", StringUtil.processQuery(null));
+    }
+
+    @Test
+    void processQuery_emptyString() {
+        assertEquals("", StringUtil.processQuery(""));
+    }
+
+    @Test
+    void processQuery_noQuotesNoComma() {
+        assertEquals("test query", StringUtil.processQuery("test query"));
+    }
+
+    @Test
+    void processQuery_noQuotesWithComma() {
+        assertEquals("test query", StringUtil.processQuery("test,query"));
+    }
+
+    @Test
+    void processQuery_withQuotesNoComma() {
+        assertEquals("test query", StringUtil.processQuery("\"test query\""));
+    }
+
+    @Test
+    void processQuery_withQuotesWithComma() {
+        assertEquals("test query", StringUtil.processQuery("\"test,query\""));
+    }
+
+    @Test
+    void processQuery_multipleCommas() {
+        assertEquals("test query example", StringUtil.processQuery("test,query,example"));
+    }
+
+    @Test
+    void processQuery_multipleCommasWithQuotes() {
+        assertEquals("test query example", StringUtil.processQuery("\"test,query,example\""));
+    }
+
+    @Test
+    void isQuotedTwice_nullInput() {
+        assertFalse(StringUtil.isQuotedTwice(null));
+    }
+
+    @Test
+    void isQuotedTwice_emptyString() {
+        assertFalse(StringUtil.isQuotedTwice(""));
+    }
+
+    @Test
+    void isQuotedTwice_lessThanFourCharacters() {
+        assertFalse(StringUtil.isQuotedTwice("abc"));
+    }
+
+    @Test
+    void isQuotedTwice_notQuoted() {
+        assertFalse(StringUtil.isQuotedTwice("test query"));
+    }
+
+    @Test
+    void isQuotedTwice_singleQuotes() {
+        assertFalse(StringUtil.isQuotedTwice("\"test query\""));
+    }
+
+    @Test
+    void isQuotedTwice_doubleQuotes() {
+        assertTrue(StringUtil.isQuotedTwice("\"\"test query\"\""));
+    }
+
+    @Test
+    void isQuotedTwice_doubleQuotes_2() {
+        assertTrue(StringUtil.isQuotedTwice("\"\"\"\""));
+    }
+
+    @Test
+    void isQuotedTwice_mismatchedQuotes() {
+        assertFalse(StringUtil.isQuotedTwice("\"\"test query\""));
+    }
+
+    @Test
     void toUTC() {
         assertEquals("2014-08-28T17:00:00", DateMapper.toUTC("2014-08-28T19:00:00.000+0200"));
         assertEquals("2014-08-28T18:00:00", DateMapper.toUTC("2014-08-28T19:00:00.000+0100"));
