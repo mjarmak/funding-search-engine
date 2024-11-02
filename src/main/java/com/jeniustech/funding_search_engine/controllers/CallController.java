@@ -45,7 +45,7 @@ public class CallController implements IDataController<CallDTO> {
 
     @GetMapping("/search")
     public ResponseEntity<SearchDTO<CallDTO>> search(
-            @RequestParam @Size(min = 2, max = 255) String query,
+            @RequestParam @Size(max = 255) String query,
             @RequestParam(required = true, defaultValue = "0") int pageNumber,
             @RequestParam(required = true, defaultValue = "20") int pageSize,
             @RequestParam(required = false, name = "status", defaultValue = "UPCOMING,OPEN,CLOSED"

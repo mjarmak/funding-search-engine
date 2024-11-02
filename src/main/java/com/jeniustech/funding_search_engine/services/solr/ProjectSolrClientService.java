@@ -16,8 +16,10 @@ import com.jeniustech.funding_search_engine.services.LogService;
 import com.jeniustech.funding_search_engine.services.ProjectService;
 import com.jeniustech.funding_search_engine.services.ValidatorService;
 import jakarta.validation.constraints.NotNull;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.solr.client.solrj.SolrClient;
 import org.apache.solr.client.solrj.SolrQuery;
+import org.apache.solr.client.solrj.SolrServerException;
 import org.apache.solr.client.solrj.impl.Http2SolrClient;
 import org.apache.solr.client.solrj.response.QueryResponse;
 import org.apache.solr.client.solrj.response.UpdateResponse;
@@ -26,14 +28,17 @@ import org.apache.solr.common.params.CommonParams;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 @Service
+@Slf4j
 public class ProjectSolrClientService implements ISolrClientService<ProjectDTO> {
 
+    public static final int MIN_SCORE = 1;
     SolrClient solrClient;
     private final UserDataRepository userDataRepository;
     private final LogService logService;
@@ -103,45 +108,23 @@ public class ProjectSolrClientService implements ISolrClientService<ProjectDTO> 
 
         ValidatorService.validateUserSearch(userData);
 
-        if (userData.getMainActiveSubscription().isTrial()) {
+        boolean isTrialUser = userData.getMainActiveSubscription().isTrial();
+        if (isTrialUser) {
             pageNumber = 0;
             pageSize = 5;
         }
 
         logService.addLog(userData, LogTypeEnum.SEARCH_PROJECT, query);
         try {
-            final SolrQuery solrQuery = new SolrQuery(
-                    CommonParams.Q, query,
-                    CommonParams.START, String.valueOf(pageNumber * pageSize),
-                    CommonParams.ROWS, String.valueOf(pageSize)
-            );
-            solrQuery.addField("*");
-            solrQuery.addField("score");
-            solrQuery.setSort("score", SolrQuery.ORDER.desc);
-            // set def type to dismax
-            solrQuery.set("defType", "dismax");
-            solrQuery.addFilterQuery("{!frange l=1}query($q)");
+            QueryResponse response = search(query, pageNumber, pageSize, statusFilters, programFilters, MIN_SCORE);
 
-            if (!statusFilters.isEmpty() && statusFilters.size() < 3) {
-                List<String> filters = new ArrayList<>();
-                for (StatusFilterEnum statusFilter : statusFilters) {
-                    switch (statusFilter) {
-                        case UPCOMING -> filters.add("(start_date:[NOW TO *])");
-                        case OPEN ->
-                                filters.add("(start_date:[* TO NOW] AND end_date:[NOW TO *])");
-                        case CLOSED ->
-                                filters.add("(end_date:[* TO NOW])");
-                    }
-                }
-                // join with 'OR'
-                solrQuery.addFilterQuery(String.join(" OR ", filters));
-            }
+//            var maxScore = response.getResults().getMaxScore();
+//            float minScoreNew = maxScore / 2;
+//            if (minScoreNew > MIN_SCORE && response.getResults().getNumFound() > 1000 && !query.isBlank() && !isTrialUser) {
+//                log.info("Max score too high, retrying with min score: {}", minScoreNew);
+//                response = search(query, pageNumber, pageSize, statusFilters, programFilters, minScoreNew);
+//            }
 
-            if (!programFilters.isEmpty() && programFilters.size() < 9) {
-                solrQuery.addFilterQuery("framework_program:(" + programFilters.stream().map(FrameworkProgramEnum::getName).collect(Collectors.joining(" ")) + ")");
-            }
-
-            QueryResponse response = this.solrClient.query(solrQuery);
             List<ProjectDTO> results = SolrMapper.mapToProject(response.getResults());
             List<Long> ids = results.stream().map(ProjectDTO::getId).toList();
 
@@ -156,7 +139,7 @@ public class ProjectSolrClientService implements ISolrClientService<ProjectDTO> 
             long technicalTotalResults = response.getResults().getNumFound();
             long totalResults = technicalTotalResults;
 
-            if (userData.getMainActiveSubscription().isTrial()) {
+            if (isTrialUser) {
                 totalResults = Math.min(technicalTotalResults, 5);
             }
 
@@ -170,6 +153,41 @@ public class ProjectSolrClientService implements ISolrClientService<ProjectDTO> 
             e.printStackTrace();
             throw new SearchException("Failed to search", e);
         }
+    }
+
+    private QueryResponse search(String query, int pageNumber, int pageSize, List<StatusFilterEnum> statusFilters, List<FrameworkProgramEnum> programFilters, float minScore) throws SolrServerException, IOException {
+        final SolrQuery solrQuery = new SolrQuery(
+                CommonParams.Q, query,
+                CommonParams.START, String.valueOf(pageNumber * pageSize),
+                CommonParams.ROWS, String.valueOf(pageSize)
+        );
+        solrQuery.addField("*");
+        solrQuery.addField("score");
+        solrQuery.setSort("score", SolrQuery.ORDER.desc);
+        // set def type to dismax
+        solrQuery.set("defType", "dismax");
+        solrQuery.addFilterQuery("{!frange l=" + minScore + "}query($q)");
+
+        if (!statusFilters.isEmpty() && statusFilters.size() < 3) {
+            List<String> filters = new ArrayList<>();
+            for (StatusFilterEnum statusFilter : statusFilters) {
+                switch (statusFilter) {
+                    case UPCOMING -> filters.add("(start_date:[NOW TO *])");
+                    case OPEN ->
+                            filters.add("(start_date:[* TO NOW] AND end_date:[NOW TO *])");
+                    case CLOSED ->
+                            filters.add("(end_date:[* TO NOW])");
+                }
+            }
+            // join with 'OR'
+            solrQuery.addFilterQuery(String.join(" OR ", filters));
+        }
+
+        if (!programFilters.isEmpty() && programFilters.size() < 9) {
+            solrQuery.addFilterQuery("framework_program:(" + programFilters.stream().map(FrameworkProgramEnum::getName).collect(Collectors.joining(" ")) + ")");
+        }
+
+        return this.solrClient.query(solrQuery);
     }
 
 }

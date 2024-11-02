@@ -7,6 +7,7 @@ import com.jeniustech.funding_search_engine.enums.LogTypeEnum;
 import com.jeniustech.funding_search_engine.enums.StatusFilterEnum;
 import com.jeniustech.funding_search_engine.exceptions.DocumentSaveException;
 import com.jeniustech.funding_search_engine.exceptions.SearchException;
+import com.jeniustech.funding_search_engine.exceptions.SubscriptionPlanException;
 import com.jeniustech.funding_search_engine.exceptions.UserNotFoundException;
 import com.jeniustech.funding_search_engine.mappers.DateMapper;
 import com.jeniustech.funding_search_engine.mappers.SolrMapper;
@@ -16,8 +17,10 @@ import com.jeniustech.funding_search_engine.services.CallService;
 import com.jeniustech.funding_search_engine.services.LogService;
 import com.jeniustech.funding_search_engine.services.ValidatorService;
 import jakarta.validation.constraints.NotNull;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.solr.client.solrj.SolrClient;
 import org.apache.solr.client.solrj.SolrQuery;
+import org.apache.solr.client.solrj.SolrServerException;
 import org.apache.solr.client.solrj.impl.Http2SolrClient;
 import org.apache.solr.client.solrj.response.QueryResponse;
 import org.apache.solr.client.solrj.response.UpdateResponse;
@@ -26,14 +29,17 @@ import org.apache.solr.common.params.CommonParams;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 @Service
+@Slf4j
 public class CallSolrClientService implements ISolrClientService<CallDTO> {
 
+    public static final int MIN_SCORE = 1;
     SolrClient solrClient;
     private final UserDataRepository userDataRepository;
     private final LogService logService;
@@ -90,41 +96,26 @@ public class CallSolrClientService implements ISolrClientService<CallDTO> {
 
         ValidatorService.validateUserSearch(userData);
 
-        if (userData.getMainActiveSubscription().isTrial()) {
+        boolean isTrialUser = userData.getMainActiveSubscription().isTrial();
+        if (isTrialUser) {
             pageNumber = 0;
             pageSize = 5;
+            if (query.isBlank()) {
+                throw new SubscriptionPlanException("Trial user can't search without a query");
+            }
         }
 
         logService.addLog(userData, LogTypeEnum.SEARCH_CALL, query);
         try {
-            final SolrQuery solrQuery = new SolrQuery(
-                    CommonParams.Q, query,
-                    CommonParams.START, String.valueOf(pageNumber * pageSize),
-                    CommonParams.ROWS, String.valueOf(pageSize)
-            );
-            solrQuery.addField("*");
-            solrQuery.addField("score");
-            solrQuery.setSort("score", SolrQuery.ORDER.desc);
-            // set def type to dismax
-            solrQuery.set("defType", "dismax");
-            solrQuery.addFilterQuery("{!frange l=1}query($q)");
+            QueryResponse response = search(query, pageNumber, pageSize, statusFilters, MIN_SCORE);
 
-            if (!statusFilters.isEmpty() && statusFilters.size() < 3) {
-                List<String> filters = new ArrayList<>();
-                for (StatusFilterEnum statusFilter : statusFilters) {
-                    switch (statusFilter) {
-                        case UPCOMING -> filters.add("(start_date:[NOW TO *])");
-                        case OPEN ->
-                                filters.add("((start_date:[* TO NOW] AND end_date:[NOW TO *]) OR (start_date:[* TO NOW] AND end_date_2:[NOW TO *]))");
-                        case CLOSED ->
-                                filters.add("((end_date:[* TO NOW] AND -end_date_2:*) OR (end_date:[* TO NOW] AND end_date_2:[* TO NOW]))");
-                    }
-                }
-                // join with 'OR'
-                solrQuery.addFilterQuery(String.join(" OR ", filters));
+            var maxScore = response.getResults().getMaxScore();
+            float minScoreNew = maxScore / 2;
+            if (minScoreNew > MIN_SCORE && response.getResults().getNumFound() > 1000 && !query.isBlank() && !isTrialUser) {
+                log.info("Max score too high, retrying with min score: {}", minScoreNew);
+                response = search(query, pageNumber, pageSize, statusFilters, minScoreNew);
             }
 
-            QueryResponse response = this.solrClient.query(solrQuery);
             List<CallDTO> results = SolrMapper.mapToCall(response.getResults());
             List<Long> ids = results.stream().map(CallDTO::getId).toList();
 
@@ -139,7 +130,7 @@ public class CallSolrClientService implements ISolrClientService<CallDTO> {
             long technicalTotalResults = response.getResults().getNumFound();
             long totalResults = technicalTotalResults;
 
-            if (userData.getMainActiveSubscription().isTrial()) {
+            if (isTrialUser) {
                 totalResults = Math.min(technicalTotalResults, 5);
             }
 
@@ -154,4 +145,38 @@ public class CallSolrClientService implements ISolrClientService<CallDTO> {
         }
     }
 
+    private QueryResponse search(String query, int pageNumber, int pageSize, List<StatusFilterEnum> statusFilters, float minScore) throws SolrServerException, IOException {
+        final SolrQuery solrQuery = new SolrQuery(
+                CommonParams.START, String.valueOf(pageNumber * pageSize),
+                CommonParams.ROWS, String.valueOf(pageSize)
+        );
+        if (!query.isBlank()) {
+            solrQuery.setQuery(query);
+            // set def type to dismax
+            solrQuery.set("defType", "dismax");
+            solrQuery.addFilterQuery("{!frange l=" + minScore + "}query($q)");
+        } else {
+            solrQuery.setQuery("*:*");
+        }
+        solrQuery.addField("*");
+        solrQuery.addField("score");
+        solrQuery.setSort("score", SolrQuery.ORDER.desc);
+
+        if (!statusFilters.isEmpty() && statusFilters.size() < 3) {
+            List<String> filters = new ArrayList<>();
+            for (StatusFilterEnum statusFilter : statusFilters) {
+                switch (statusFilter) {
+                    case UPCOMING -> filters.add("(start_date:[NOW TO *])");
+                    case OPEN ->
+                            filters.add("((start_date:[* TO NOW] AND end_date:[NOW TO *]) OR (start_date:[* TO NOW] AND end_date_2:[NOW TO *]))");
+                    case CLOSED ->
+                            filters.add("((end_date:[* TO NOW] AND -end_date_2:*) OR (end_date:[* TO NOW] AND end_date_2:[* TO NOW]))");
+                }
+            }
+            // join with 'OR'
+            solrQuery.addFilterQuery(String.join(" OR ", filters));
+        }
+
+        return this.solrClient.query(solrQuery);
+    }
 }

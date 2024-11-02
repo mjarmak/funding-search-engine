@@ -72,10 +72,10 @@ public class PartnerSolrClientService implements ISolrClientService<PartnerDTO> 
             throw new SubscriptionPlanException("Trial users cannot search for partners");
         }
 
-        if (userData.getMainActiveSubscription().isTrial()) {
-            pageNumber = 0;
-            pageSize = 5;
-        }
+//        if (userData.getMainActiveSubscription().isTrial()) {
+//            pageNumber = 0;
+//            pageSize = 5;
+//        }
 
         logService.addLog(userData, LogTypeEnum.SEARCH_PARTNER, query);
         try {

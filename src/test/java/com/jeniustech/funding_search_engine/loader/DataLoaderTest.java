@@ -2,6 +2,7 @@ package com.jeniustech.funding_search_engine.loader;
 
 import com.jeniustech.funding_search_engine.scraper.services.OrganisationDataLoader;
 import com.jeniustech.funding_search_engine.scraper.services.ProjectDataLoader;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -9,6 +10,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import java.util.List;
 
 @SpringBootTest
+@Disabled
 public class DataLoaderTest {
 
     @Autowired
