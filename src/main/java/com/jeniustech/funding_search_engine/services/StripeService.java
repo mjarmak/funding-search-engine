@@ -39,17 +39,19 @@ public class StripeService {
     private final String endpointSecret;
     private final UserDataRepository userDataRepository;
     private final SubscriptionRepository subscriptionRepository;
+    private final EmailService emailService;
 
     public StripeService(
             @Value("${stripe.api.key}") String apiKey,
             @Value("${stripe.webhook.secret}") String endpointSecret,
             UserDataRepository userDataRepository,
-            SubscriptionRepository subscriptionRepository
-    ) {
+            SubscriptionRepository subscriptionRepository,
+            EmailService emailService) {
         Stripe.apiKey = apiKey;
         this.endpointSecret = endpointSecret;
         this.userDataRepository = userDataRepository;
         this.subscriptionRepository = subscriptionRepository;
+        this.emailService = emailService;
     }
 
     @Transactional
@@ -149,6 +151,7 @@ public class StripeService {
                 subscription.setNextType(null);
                 subscription.setTrialEndDate(null);
                 subscriptionRepository.save(subscription);
+                emailService.sendNewSubscriptionEmail(subscription);
             }
             case  "customer.subscription.resumed" -> {
                 Subscription stripeSubscription = (Subscription) stripeObject;
@@ -162,13 +165,15 @@ public class StripeService {
             }
             case "customer.subscription.deleted", "customer.subscription.paused" -> {
                 Subscription stripeSubscription = (Subscription) stripeObject;
-                Optional<UserSubscription> subscription = subscriptionRepository.findByStripeId(stripeSubscription.getId());
-                if (subscription.isEmpty()) {
+                Optional<UserSubscription> subscriptionOptional = subscriptionRepository.findByStripeId(stripeSubscription.getId());
+                if (subscriptionOptional.isEmpty()) {
                     log.warn("Subscription not found: " + stripeSubscription.getId());
                     return;
                 }
-                subscription.get().setStatus(SubscriptionStatusEnum.INACTIVE);
-                subscriptionRepository.save(subscription.get());
+                final UserSubscription subscription = subscriptionOptional.get();
+                subscription.setStatus(SubscriptionStatusEnum.INACTIVE);
+                subscriptionRepository.save(subscription);
+                emailService.sendStopSubscriptionEmail(subscription);
             }
             default -> log.warn("Unhandled event type: " + event.getType());
         }
