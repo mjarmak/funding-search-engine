@@ -142,22 +142,21 @@ public interface StringUtil {
         }
         boolean exactMatch = isQuotedTwice(query);
         String queryProcessed = removeQuotes(query);
-        queryProcessed = queryProcessed.replace(",", " ");
-        queryProcessed = queryProcessed.replace(":", "");
+        queryProcessed = removeSpecialCharacters(queryProcessed);
         if (exactMatch) {
             queryProcessed = surroundWithQuotes(queryProcessed);
         }
         return queryProcessed;
-//        if (!isQuoted(query)) {
-//            return query;
-//        }
-//        String queryProcessed = query;
-//        if (query.contains(",")) {
-//            queryProcessed = query.replace(",", " AND ");
-//            queryProcessed = queryProcessed.replace("AND AND", "AND");
-////            queryProcessed = surroundWithQuotes(queryProcessed);
-//        }
-//        return queryProcessed;
+    }
+
+    static String removeSpecialCharacters(String queryProcessed) {
+        if (queryProcessed == null) {
+            return null;
+        }
+        queryProcessed = queryProcessed.replaceAll("[^a-zA-Z0-9\\-_\\s]", " ");
+        // remove double spaces
+        queryProcessed = queryProcessed.replaceAll("\\s+", " ");
+        return queryProcessed.trim();
     }
 
     static boolean isQuotedTwice(String query) {

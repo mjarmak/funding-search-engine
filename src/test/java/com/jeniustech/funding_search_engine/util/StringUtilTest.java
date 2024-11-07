@@ -13,6 +13,39 @@ import static org.junit.jupiter.api.Assertions.*;
 public class StringUtilTest {
 
     @Test
+    void removeSpecialCharacters_nullInput() {
+        assertNull(StringUtil.removeSpecialCharacters(null));
+    }
+
+    @Test
+    void removeSpecialCharacters_emptyString() {
+        assertEquals("", StringUtil.removeSpecialCharacters(""));
+        assertEquals("", StringUtil.removeSpecialCharacters(" "));
+    }
+
+    @Test
+    void removeSpecialCharacters_noSpecialCharacters() {
+        assertEquals("test query", StringUtil.removeSpecialCharacters("test query"));
+    }
+
+    @Test
+    void removeSpecialCharacters_withSpecialCharacters() {
+        assertEquals("test query", StringUtil.removeSpecialCharacters("test@# query!$"));
+        assertEquals("HORIZON-CL5-2024-D4-02-05", StringUtil.removeSpecialCharacters("HORIZON-CL5-2024-D4-02-05"));
+        assertEquals("HORIZON_CL5_2024_D4_02_05", StringUtil.removeSpecialCharacters("HORIZON_CL5_2024_D4_02_05"));
+    }
+
+    @Test
+    void removeSpecialCharacters_onlySpecialCharacters() {
+        assertEquals("", StringUtil.removeSpecialCharacters("@#$%^&*()"));
+    }
+
+    @Test
+    void removeSpecialCharacters_mixedCharacters() {
+        assertEquals("test query 123", StringUtil.removeSpecialCharacters("test@# query!$ 123"));
+    }
+
+    @Test
     void removeQuotes_nullInput() {
         assertEquals("", StringUtil.removeQuotes(null));
     }

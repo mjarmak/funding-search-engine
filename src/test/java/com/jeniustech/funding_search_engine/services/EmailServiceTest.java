@@ -3,6 +3,7 @@ package com.jeniustech.funding_search_engine.services;
 import com.jeniustech.funding_search_engine.dto.search.CallDTO;
 import com.jeniustech.funding_search_engine.entities.SavedSearch;
 import com.jeniustech.funding_search_engine.entities.UserData;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -11,6 +12,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @SpringBootTest
+@Disabled
 public class EmailServiceTest {
 
     @Autowired

@@ -112,12 +112,12 @@ public class CallSolrClientService implements ISolrClientService<CallDTO> {
         try {
             QueryResponse response = search(query, pageNumber, pageSize, statusFilters, MIN_SCORE);
 
-            var maxScore = response.getResults().getMaxScore();
-            float minScoreNew = maxScore / 2;
-            if (minScoreNew > MIN_SCORE && response.getResults().getNumFound() > 1000 && !query.isBlank() && !isTrialUser) {
-                log.debug("Max score too high, retrying with min score: {}", minScoreNew);
-                response = search(query, pageNumber, pageSize, statusFilters, minScoreNew);
-            }
+//            var maxScore = response.getResults().getMaxScore();
+//            float minScoreNew = maxScore / 2;
+//            if (minScoreNew > MIN_SCORE && response.getResults().getNumFound() > 1000 && !query.isBlank() && !isTrialUser) {
+//                log.debug("Max score too high, retrying with min score: {}", minScoreNew);
+//                response = search(query, pageNumber, pageSize, statusFilters, minScoreNew);
+//            }
 
             List<CallDTO> results = SolrMapper.mapToCall(response.getResults());
             List<Long> ids = results.stream().map(CallDTO::getId).toList();
@@ -148,7 +148,7 @@ public class CallSolrClientService implements ISolrClientService<CallDTO> {
         }
     }
 
-    private QueryResponse search(String query, int pageNumber, int pageSize, List<StatusFilterEnum> statusFilters, float minScore) throws SolrServerException, IOException {
+    QueryResponse search(String query, int pageNumber, int pageSize, List<StatusFilterEnum> statusFilters, float minScore) throws SolrServerException, IOException {
         final SolrQuery solrQuery = new SolrQuery(
                 CommonParams.START, String.valueOf(pageNumber * pageSize),
                 CommonParams.ROWS, String.valueOf(pageSize)
@@ -156,7 +156,9 @@ public class CallSolrClientService implements ISolrClientService<CallDTO> {
         if (!query.isBlank()) {
             solrQuery.setQuery(processQuery(query));
             String operationType = StringUtil.isQuoted(query) ? "AND" : "OR";
+            solrQuery.set("defType", "dismax");
             solrQuery.set("q.op", operationType);
+            solrQuery.set("qf", "identifier^2 title^2 long_text");
             solrQuery.addFilterQuery("{!frange l=" + minScore + "}query($q)");
         } else {
             solrQuery.setQuery("*:*");
