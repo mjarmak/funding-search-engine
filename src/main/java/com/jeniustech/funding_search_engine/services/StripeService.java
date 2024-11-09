@@ -145,9 +145,12 @@ public class StripeService {
                 subscription.setStatus(SubscriptionStatusEnum.ACTIVE);
                 subscription.setCheckoutSessionId(null);
                 subscription.setStripeId(session.getSubscription());
-                subscription.setEndDateFromNow(subscription.getType().getPeriod());
-                subscription.setType(subscription.getNextType());
-                subscription.setEndDateFromNow(subscription.getNextType().getPeriod());
+                if (subscription.getNextType() != null) {
+                    subscription.setEndDateFromNow(subscription.getNextType().getPeriod());
+                    subscription.setType(subscription.getNextType());
+                } else {
+                    subscription.setEndDateFromNow(subscription.getType().getPeriod());
+                }
                 subscription.setNextType(null);
                 subscription.setTrialEndDate(null);
                 subscriptionRepository.save(subscription);
