@@ -1,8 +1,8 @@
 ### Run in order:
 ```
-docker build -t funding-search-engine:0.1.63 .
-docker tag funding-search-engine:0.1.63 jeniustech/funding-search-engine:0.1.63
-docker push jeniustech/funding-search-engine:0.1.63
+docker build -t funding-search-engine:0.1.65 .
+docker tag funding-search-engine:0.1.64 jeniustech/funding-search-engine:0.1.65
+docker push jeniustech/funding-search-engine:0.1.65
 
 ```
 
@@ -43,7 +43,7 @@ docker compose -f docker-compose-funding-search-engine.yml up -d
 sudo apt install certbot python3-certbot-nginx -y
 ```
 ```
-sudo certbot certonly --nginx -d www.innovilyse.com
+sudo certbot certonly --nginx -d www.innovilyse.com innovilyse.com
 sudo certbot certonly --nginx -d auth.innovilyse.com
 sudo certbot certonly --nginx -d app.innovilyse.com
 sudo certbot certonly --nginx -d api.innovilyse.com
@@ -115,4 +115,10 @@ order by date desc
 ````
 
 ## Back up db
-tar -czvf db_main_backup.tar.gz db_main
+````
+tar -czvf db_main_backup_09_11_24.tar.gz db_main
+````
+
+## Reputation
+https://talosintelligence.com/reputation_center/lookup?search=innovilyse.com
+https://www.virustotal.com/gui/url/cb95be5b678ddb2065f407e6a160241f27e6e63cc09cfa577cd2ba1359201c3e?nocache=1
