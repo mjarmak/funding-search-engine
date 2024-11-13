@@ -1,6 +1,6 @@
 To run stripe locally, open cmd in the stripe.exe directory and run the following command:
 ```
-stripe login
+./stripe login
 ./stripe listen --forward-to localhost:8080/api/v1/webhook
 ```
 

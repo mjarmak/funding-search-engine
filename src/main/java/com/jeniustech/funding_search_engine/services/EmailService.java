@@ -1,16 +1,20 @@
 package com.jeniustech.funding_search_engine.services;
 
 import com.jeniustech.funding_search_engine.dto.search.CallDTO;
+import com.jeniustech.funding_search_engine.entities.Payment;
 import com.jeniustech.funding_search_engine.entities.SavedSearch;
 import com.jeniustech.funding_search_engine.entities.UserData;
 import com.jeniustech.funding_search_engine.entities.UserSubscription;
 import com.jeniustech.funding_search_engine.enums.UrlTypeEnum;
 import com.jeniustech.funding_search_engine.exceptions.EmailServiceException;
+import com.jeniustech.funding_search_engine.exceptions.InvoiceException;
 import com.jeniustech.funding_search_engine.exceptions.ScraperException;
 import com.jeniustech.funding_search_engine.mappers.DateMapper;
+import jakarta.activation.DataSource;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.InternetAddress;
 import jakarta.mail.internet.MimeMessage;
+import jakarta.mail.util.ByteArrayDataSource;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -19,7 +23,10 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.math.BigDecimal;
 import java.util.List;
 
 @Slf4j
@@ -37,7 +44,9 @@ public class EmailService {
 
     private final JavaMailSender mailSender;
 
-    private void sendEmail(String to, String subject, String body) {
+    private final InvoiceService invoiceService;
+
+    private void sendEmail(String to, String subject, String body, String fileName, ByteArrayInputStream pdf) {
         MimeMessage message = mailSender.createMimeMessage();
         MimeMessageHelper helper;
         try {
@@ -47,10 +56,19 @@ public class EmailService {
             helper.setTo(to);
             helper.setSubject(subject);
             helper.setText(body, true);
+            if (fileName != null && pdf != null) {
+                DataSource source = new ByteArrayDataSource(pdf, "application/pdf");
+                helper.addAttachment(fileName, source);
+            }
             mailSender.send(message);
         } catch (MailSendException | MessagingException | UnsupportedEncodingException e) {
             throw new ScraperException(e.getMessage());
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
+    }
+    private void sendEmail(String to, String subject, String body) {
+        sendEmail(to, subject, body, null, null);
     }
 
     public void sendNewSubscriptionEmail(UserSubscription subscription) {
@@ -210,5 +228,69 @@ public class EmailService {
         builder.append("</body></html>");
 
         return builder.toString();
+    }
+
+    public void sendInvoice(String email, Payment savedPayment) {
+        try {
+
+            ByteArrayInputStream invoicePdf = invoiceService.generatePdf(savedPayment);
+
+            String fileName = "invoice";
+
+            sendEmail(email,
+                    "INNOVILYSE Invoice - " + savedPayment.getCreatedAtDisplayDate(),
+                    getInvoiceEmailBody(savedPayment),
+                    fileName + ".pdf",
+                    invoicePdf);
+        } catch (EmailServiceException e) {
+            log.error("Error sending email: " + e.getMessage());
+        } catch (InvoiceException e) {
+            log.error("Error generating invoice: " + e.getMessage());
+        }
+    }
+
+    private String getInvoiceEmailBody(Payment payment) throws EmailServiceException {
+        try {
+            String createdAt = payment.getCreatedAtDisplay();
+            if (createdAt == null) {
+                createdAt = "N/A";
+            }
+
+            UserData user = payment.getUserData();
+            String userNames;
+            if (user == null) {
+                userNames = "User";
+            } else {
+                userNames = (user.getFirstName() + " " + user.getLastName()).trim();
+            }
+            String currency = payment.getCurrencyDisplay();
+
+            BigDecimal amount = payment.getAmount();
+            if (amount == null) {
+                amount = BigDecimal.ZERO;
+            }
+
+            StringBuilder builder = new StringBuilder();
+            builder.append("<!DOCTYPE html><html>");
+            builder.append("<head><style>table {width: 100%; border: 1px solid lightgrey; padding: 4px; border-radius: 8px; border-collapse: collapse;} ");
+            builder.append("th, td {border: 1px solid lightgrey; padding: 4px; text-align: left;}</style></head>");
+            builder.append("<body>");
+            builder.append("<h1 style=\"text-align:center;background-color:" + PRIMARY_COLOR + ";color:white;padding: 8px;\">");
+            builder.append("<a href=\"").append(uiUrl).append("\" style=\"color:white;text-decoration:none;\">INNOVILYSE Invoice").append("</a>");
+            builder.append("</h1>");
+
+            builder.append("<p>Dear ").append(userNames).append(",</p>");
+
+            builder.append("<p>Your payment of <b>").append(amount).append(" ")
+                    .append(currency)
+                    .append("</b> has been received at <b>").append(createdAt).append(" (UTC)</b>.</p>");
+            builder.append("<p>Please find your <b>invoice</b> is attached to this email.</p>");
+
+
+            builder.append("</body></html>");
+            return builder.toString();
+        } catch (Exception e) {
+            throw new EmailServiceException(e.getMessage());
+        }
     }
 }

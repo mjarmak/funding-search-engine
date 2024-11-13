@@ -36,7 +36,7 @@ public class Address {
             addressString += city + ", ";
         }
         if (country != null) {
-            addressString += country.getName();
+            addressString += country.getDisplayName();
         }
         return addressString;
     }

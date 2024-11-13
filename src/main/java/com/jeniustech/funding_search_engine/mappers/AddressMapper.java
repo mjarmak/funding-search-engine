@@ -7,7 +7,7 @@ import com.jeniustech.funding_search_engine.entities.LocationCoordinates;
 
 public interface AddressMapper {
 
-    static AddressDTO mapToDTO(Address address) {
+    static AddressDTO map(Address address) {
         if (address == null) {
             return null;
         }
@@ -16,11 +16,11 @@ public interface AddressMapper {
                 .city(address.getCity())
                 .postCode(address.getPostCode())
                 .country(address.getCountry())
-                .countryName(address.getCountry() == null ? null : address.getCountry().getName())
+                .countryName(address.getCountry() == null ? null : address.getCountry().getDisplayName())
                 .build();
     }
 
-    static LocationCoordinatesDTO mapToDTO(LocationCoordinates locationCoordinates) {
+    static LocationCoordinatesDTO map(LocationCoordinates locationCoordinates) {
         if (locationCoordinates == null) {
             return null;
         }

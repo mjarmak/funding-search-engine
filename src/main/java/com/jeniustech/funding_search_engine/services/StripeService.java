@@ -2,6 +2,7 @@ package com.jeniustech.funding_search_engine.services;
 
 import com.google.gson.JsonSyntaxException;
 import com.jeniustech.funding_search_engine.dto.PaymentSessionDTO;
+import com.jeniustech.funding_search_engine.entities.Payment;
 import com.jeniustech.funding_search_engine.entities.UserData;
 import com.jeniustech.funding_search_engine.entities.UserSubscription;
 import com.jeniustech.funding_search_engine.enums.SubscriptionStatusEnum;
@@ -11,15 +12,15 @@ import com.jeniustech.funding_search_engine.exceptions.StripeRequestException;
 import com.jeniustech.funding_search_engine.exceptions.StripeWebhookException;
 import com.jeniustech.funding_search_engine.exceptions.UserNotFoundException;
 import com.jeniustech.funding_search_engine.models.JwtModel;
+import com.jeniustech.funding_search_engine.repository.PaymentRepository;
 import com.jeniustech.funding_search_engine.repository.SubscriptionRepository;
 import com.jeniustech.funding_search_engine.repository.UserDataRepository;
+import com.jeniustech.funding_search_engine.util.InvoiceUtil;
+import com.jeniustech.funding_search_engine.util.StringUtil;
 import com.stripe.Stripe;
 import com.stripe.exception.SignatureVerificationException;
 import com.stripe.exception.StripeException;
-import com.stripe.model.Event;
-import com.stripe.model.EventDataObjectDeserializer;
-import com.stripe.model.StripeObject;
-import com.stripe.model.Subscription;
+import com.stripe.model.*;
 import com.stripe.model.checkout.Session;
 import com.stripe.net.ApiResource;
 import com.stripe.net.Webhook;
@@ -30,6 +31,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.Optional;
 
 @Slf4j
@@ -40,13 +43,15 @@ public class StripeService {
     private final UserDataRepository userDataRepository;
     private final SubscriptionRepository subscriptionRepository;
     private final EmailService emailService;
+    private final PaymentRepository paymentRepository;
 
     public StripeService(
             @Value("${stripe.api.key}") String apiKey,
             @Value("${stripe.webhook.secret}") String endpointSecret,
             UserDataRepository userDataRepository,
             SubscriptionRepository subscriptionRepository,
-            EmailService emailService) {
+            EmailService emailService, PaymentRepository paymentRepository) {
+        this.paymentRepository = paymentRepository;
         Stripe.apiKey = apiKey;
         this.endpointSecret = endpointSecret;
         this.userDataRepository = userDataRepository;
@@ -154,6 +159,13 @@ public class StripeService {
                 subscription.setNextType(null);
                 subscription.setTrialEndDate(null);
                 subscriptionRepository.save(subscription);
+
+                if (StringUtil.isNotEmpty(session.getCustomer())) {
+                    UserData userData = subscription.getAdminUser();
+                    userData.setStripeId(session.getCustomer());
+                    userDataRepository.save(userData);
+                }
+
                 emailService.sendNewSubscriptionEmail(subscription);
             }
             case  "customer.subscription.resumed" -> {
@@ -173,13 +185,61 @@ public class StripeService {
                     log.warn("Subscription not found: " + stripeSubscription.getId());
                     return;
                 }
+                if (subscriptionOptional.get().getType().equals(SubscriptionTypeEnum.TRIAL)) {
+                    log.info("No action required for trial subscription: " + stripeSubscription.getId());
+                    return;
+                }
                 final UserSubscription subscription = subscriptionOptional.get();
                 subscription.setStatus(SubscriptionStatusEnum.INACTIVE);
                 subscriptionRepository.save(subscription);
                 emailService.sendStopSubscriptionEmail(subscription);
             }
+            case "payment_intent.succeeded" -> {
+                PaymentIntent paymentIntent = (PaymentIntent) stripeObject;
+                BigDecimal amount = BigDecimal.valueOf(paymentIntent.getAmountReceived()).divide(BigDecimal.valueOf(100), 2, RoundingMode.HALF_UP).stripTrailingZeros();
+                String currency = paymentIntent.getCurrency();
+                Payment payment = Payment.builder()
+                        .stripePaymentId(paymentIntent.getId())
+                        .amount(amount)
+                        .currency(currency)
+                        .build();
+
+                String email = paymentIntent.getReceiptEmail();
+                String stripeId = paymentIntent.getCustomer();
+                Optional<UserData> userDataOptional = getUserByStripeIdOrEmail(email, stripeId);
+
+                if (userDataOptional.isPresent()) {
+                    UserData userData = userDataOptional.get();
+                    payment.setUserData(userData);
+                    if (userData.getBusinessInformation() != null) {
+                        payment.setBusinessInformation(userData.getBusinessInformation());
+                    }
+                    if (StringUtil.isNotEmpty(paymentIntent.getCustomer())) {
+                        userData.setStripeId(paymentIntent.getCustomer());
+                        userDataRepository.save(userData);
+                    }
+                }
+
+                payment.setInvoiceId(InvoiceUtil.generateInvoiceId());
+
+                Payment savedPayment = paymentRepository.save(payment);
+                if (StringUtil.isNotEmpty(email)) {
+                    emailService.sendInvoice(email, savedPayment);
+                }
+            }
             default -> log.warn("Unhandled event type: " + event.getType());
         }
+    }
+
+    private Optional<UserData> getUserByStripeIdOrEmail(String email, String customerId) {
+        Optional<UserData> userDataOptional = Optional.empty();
+        if (StringUtil.isNotEmpty(customerId)) {
+            userDataOptional = userDataRepository.findByStripeId(customerId);
+        }
+        if (userDataOptional.isEmpty()) {
+            userDataOptional = userDataRepository.findByEmail(email);
+        }
+        return userDataOptional;
     }
 
 

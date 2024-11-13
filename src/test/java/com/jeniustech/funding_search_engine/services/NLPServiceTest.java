@@ -17,7 +17,7 @@ public class NLPServiceTest {
     private NLPService nlpService;
 
     @Test
-    public void testGetKeywords() throws IOException {
+    void testGetKeywords() throws IOException {
         String text = "TOURINN-01-2020 Innovation uptake and digitalisation in the tourism sector Through this call for applicants, " +
                 "the CulTourData project will support tourism SMEs by guiding them to make a better use of data, using creative " +
                 "customer-engaging approaches and new technologies. To this end, the CulTourData call will offer grants aiming " +
