@@ -9,4 +9,7 @@ public interface UserDataRepository extends JpaRepository<UserData, Long> {
     Optional<UserData> findBySubjectId(String subjectId);
 
     Optional<UserData> findByUserName(String userName);
+
+    Optional<UserData> findByEmail(String email);
+    Optional<UserData> findByStripeId(String stripeId);
 }

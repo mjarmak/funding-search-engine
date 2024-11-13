@@ -239,7 +239,7 @@ public class CallSolrClientServiceTest {
             "Deploying The Network Of National Coordination Centres With Member States",
             "Data space for smart communities (deployment)",
             "Hop on Facility",
-            "ERC PROOF OF CONCEPT GRANT",
+            "ERC PROOF OF CONCEPT GRANTS",
             "European Network of AI Excellence Centres: Expanding the European AI lighthouse (RIA)",
             "European Partnership Water Security for the Planet (Water4All)",
             "SNS Large Scale Trials and Pilots (LST&Ps) with Verticals",

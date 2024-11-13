@@ -1,5 +1,5 @@
 # ------------------------------------------
-# landing page
+# Landing page
 # ------------------------------------------
 server {
     listen 80;
@@ -13,8 +13,8 @@ server {
     listen 443 ssl;
     server_name innovilyse.com www.innovilyse.com;
 
-    ssl_certificate /etc/letsencrypt/live/www.innovilyse.com/fullchain.pem;
-    ssl_certificate_key /etc/letsencrypt/live/www.innovilyse.com/privkey.pem;
+    ssl_certificate /etc/letsencrypt/live/innovilyse.com/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/innovilyse.com/privkey.pem;
 
     location / {
         root /var/www/innovilyse.com;

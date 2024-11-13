@@ -1,8 +1,5 @@
 package com.jeniustech.funding_search_engine.services;
 
-import com.itextpdf.io.image.ImageDataFactory;
-import com.itextpdf.kernel.colors.ColorConstants;
-import com.itextpdf.kernel.colors.DeviceRgb;
 import com.itextpdf.kernel.events.Event;
 import com.itextpdf.kernel.events.IEventHandler;
 import com.itextpdf.kernel.events.PdfDocumentEvent;
@@ -13,11 +10,12 @@ import com.itextpdf.kernel.pdf.PdfPage;
 import com.itextpdf.kernel.pdf.PdfWriter;
 import com.itextpdf.kernel.pdf.action.PdfAction;
 import com.itextpdf.kernel.pdf.annot.PdfLinkAnnotation;
-import com.itextpdf.kernel.pdf.canvas.draw.SolidLine;
 import com.itextpdf.layout.Canvas;
 import com.itextpdf.layout.Document;
 import com.itextpdf.layout.borders.SolidBorder;
-import com.itextpdf.layout.element.*;
+import com.itextpdf.layout.element.Link;
+import com.itextpdf.layout.element.Paragraph;
+import com.itextpdf.layout.element.Text;
 import com.itextpdf.layout.property.TextAlignment;
 import com.jeniustech.funding_search_engine.entities.Call;
 import com.jeniustech.funding_search_engine.entities.LongText;
@@ -29,30 +27,22 @@ import com.jeniustech.funding_search_engine.mappers.CallMapper;
 import com.jeniustech.funding_search_engine.repository.CallRepository;
 import com.jeniustech.funding_search_engine.repository.UserDataRepository;
 import com.jeniustech.funding_search_engine.util.DetailFormatter;
-import com.jeniustech.funding_search_engine.util.StringUtil;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.util.List;
 
 import static com.jeniustech.funding_search_engine.enums.LogTypeEnum.EXPORT_PDF;
 
 @Service
 @RequiredArgsConstructor
-public class ReportService {
+public class ReportService extends PDFWriter {
 
-    public static final DeviceRgb PRIMARY_COLOR = new DeviceRgb(78, 85, 243);
     private final CallRepository callRepository;
     private final UserDataRepository userDataRepository;
     private final LogService logService;
-    static final int paddingSmall = 10;
-
-    @Value("${ui.url}")
-    private String uiUrl;
 
     public ByteArrayInputStream generatePdf(List<Long> callIds, String subjectId, String path, String timezone) throws ReportException {
         UserData userData = userDataRepository.findBySubjectId(subjectId).orElseThrow(() -> new UserNotFoundException("User not found"));
@@ -108,10 +98,6 @@ public class ReportService {
         } catch (Exception e) {
             throw new ReportException("Error generating PDF");
         }
-    }
-
-    private void newPage(Document document) {
-        document.add(new AreaBreak());
     }
 
     private void writeCall(Document document, Call call, String timezone) {
@@ -180,70 +166,12 @@ public class ReportService {
         document.add(row);
     }
 
-    private static void addVerticalSpace(Document document) {
-        document.add(new Paragraph().setHeight(paddingSmall));
-    }
-
-    private static void addDivider(Document document) {
-        addDivider(document, 1);
-    }
-
-    private static void addDivider(Document document, int width) {
-        document.add(new LineSeparator(new SolidLine(width)));
-    }
-
-    private void addHeader(Document document, String path) throws IOException {
-        String largeText = "INNOVILYSE";
-        Rectangle rect = new Rectangle(0, 0, 523, 10);
-        Link link = new Link(largeText, (new PdfLinkAnnotation(rect)
-                .setAction(PdfAction.createURI(uiUrl))
-        ));
-        Paragraph paragraph = new Paragraph()
-                .setFontSize(50)
-                .setBold()
-                .setTextAlignment(TextAlignment.LEFT)
-                .add(link);
-
-        // Load image from resources
-        Image img = new Image(ImageDataFactory.create(path))
-                .setWidth(50)
-                .setHeight(50);
-
-        Paragraph imageParagraph = new Paragraph()
-                .add(img)
-                .setMarginRight(10);
-
-        // Create a paragraph to hold both text and image
-        Paragraph row = new Paragraph()
-                .add(imageParagraph)
-                .add(paragraph)
-                .setTextAlignment(TextAlignment.CENTER);
-
-        document.add(row);
-        addDivider(document, 5);
-        addVerticalSpace(document); // Vertical space of 20 points
-    }
-
-    private static void addInfoField(Document document, Number value, String sectionTitle) {
+    private void addInfoField(Document document, Number value, String sectionTitle) {
         if (value != null) {
             addInfoField(document, value.toString(), sectionTitle);
         }
     }
 
-    private static void addInfoField(Document document, String value, String sectionTitle) {
-        if (StringUtil.isNotEmpty(value)) {
-            document.add(getTitle(sectionTitle));
-            document.add(new Paragraph(value));
-        }
-    }
-
-    private static Paragraph getTitle(String sectionTitle) {
-        return new Paragraph(sectionTitle)
-                .setBold()
-                .setMarginBottom(0)
-                .setFontColor(ColorConstants.GRAY)
-                .setTextAlignment(TextAlignment.LEFT);
-    }
 }
 
 class PageNumberHandler implements IEventHandler {

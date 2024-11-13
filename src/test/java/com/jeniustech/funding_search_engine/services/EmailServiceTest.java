@@ -1,20 +1,21 @@
 package com.jeniustech.funding_search_engine.services;
 
 import com.jeniustech.funding_search_engine.dto.search.CallDTO;
-import com.jeniustech.funding_search_engine.entities.SavedSearch;
-import com.jeniustech.funding_search_engine.entities.UserData;
-import com.jeniustech.funding_search_engine.entities.UserSubscription;
+import com.jeniustech.funding_search_engine.entities.*;
+import com.jeniustech.funding_search_engine.enums.CountryEnum;
 import com.jeniustech.funding_search_engine.enums.SubscriptionTypeEnum;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.List;
 
 @SpringBootTest
-//@Disabled
+@Disabled
 public class EmailServiceTest {
 
     public static final String EMAIL = "mohamadjarmak@gmail.com";
@@ -22,7 +23,7 @@ public class EmailServiceTest {
     private EmailService emailService;
 
     @Test
-    public void testSendNewSubscriptionEmail() {
+    void testSendNewSubscriptionEmail() {
         UserSubscription subscription = UserSubscription.builder()
                 .adminUser(UserData.builder()
                         .email(EMAIL)
@@ -37,7 +38,7 @@ public class EmailServiceTest {
     }
 
     @Test
-    public void testStopSubscriptionEmail() {
+    void testStopSubscriptionEmail() {
         UserSubscription subscription = UserSubscription.builder()
                 .adminUser(UserData.builder()
                         .email(EMAIL)
@@ -52,7 +53,7 @@ public class EmailServiceTest {
     }
 
     @Test
-    public void testSendNewCallsNotification() {
+    void testSendNewCallsNotification() {
         List<CallDTO> callDTOS = List.of(
                 CallDTO.builder()
                         .id(1L)
@@ -107,6 +108,93 @@ public class EmailServiceTest {
                         .build())
                 .build();
         emailService.sendNewCallsNotification(savedSearch, callDTOS);
+    }
+
+    @Test
+    void sendInvoice_null() {
+        Payment payment = Payment.builder().build();
+        emailService.sendInvoice(EMAIL, payment);
+    }
+
+    @Test
+    void sendInvoice_nullUser() {
+        Payment payment = Payment.builder()
+                .userData(null)
+                .amount(BigDecimal.valueOf(50))
+                .currency("EUR")
+                .createdAt(Timestamp.valueOf(LocalDateTime.now()))
+                .build();
+
+        emailService.sendInvoice(EMAIL, payment);
+    }
+
+    @Test
+    void sendInvoice_nullBusiness() {
+        Payment payment = Payment.builder()
+                .userData(UserData.builder()
+                        .email(EMAIL)
+                        .firstName("Mohamad")
+                        .lastName("Jarmak")
+                        .build())
+                .amount(BigDecimal.valueOf(50))
+                .currency("EUR")
+                .createdAt(Timestamp.valueOf(LocalDateTime.now()))
+                .invoiceId("314.2024.11111")
+                .build();
+
+        emailService.sendInvoice(EMAIL, payment);
+    }
+
+    @Test
+    void sendInvoice_minimumInput() {
+        Payment payment = Payment.builder()
+                .userData(UserData.builder()
+                        .email(EMAIL)
+                        .firstName("Mohamad")
+                        .lastName("Jarmak")
+                        .businessInformation(
+                                BusinessInformation.builder()
+                                        .name("Afinit")
+                                        .vatNumber("BE0789424602")
+                                        .build())
+                        .build())
+                .amount(BigDecimal.valueOf(301.29))
+                .currency("EUR")
+                .createdAt(Timestamp.valueOf(LocalDateTime.now()))
+                .invoiceId("314.2024.11111")
+                .build();
+
+        emailService.sendInvoice(EMAIL, payment);
+    }
+
+    @Test
+    void sendInvoice() {
+        Payment payment = Payment.builder()
+                .userData(UserData.builder()
+                        .email(EMAIL)
+                        .firstName("Mohamad")
+                        .lastName("Jarmak")
+                        .businessInformation(
+                                BusinessInformation.builder()
+                                        .name("Afinit")
+                                        .vatNumber("BE0789424602")
+                                        .email("test@gmail.com")
+                                        .phoneNumber("+123456789")
+                                        .address(Address.builder()
+                                                .street("Avenue des Volontaires 38")
+                                                .postCode("1040")
+                                                .city("Brussels")
+                                                .country(CountryEnum.BE)
+                                                .build())
+                                        .build())
+                        .build())
+                .amount(BigDecimal.valueOf(301.29))
+                .currency("EUR")
+                .createdAt(Timestamp.valueOf(LocalDateTime.now()))
+                .invoiceId("314.2024.11111")
+                .build();
+
+        emailService.sendInvoice(EMAIL, payment);
     }
 
 }

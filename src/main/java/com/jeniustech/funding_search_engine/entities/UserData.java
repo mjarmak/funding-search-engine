@@ -3,7 +3,10 @@ package com.jeniustech.funding_search_engine.entities;
 import com.jeniustech.funding_search_engine.enums.SubscriptionTypeEnum;
 import com.jeniustech.funding_search_engine.exceptions.NoSubscriptionException;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -25,6 +28,7 @@ public class UserData {
     private Long id;
 
     private String subjectId;
+    private String stripeId;
 
     private String email;
 
@@ -35,8 +39,12 @@ public class UserData {
     private String userName;
 
     @Builder.Default
-    @OneToMany(mappedBy = "userData")
+    @OneToMany(mappedBy = "userData", fetch = FetchType.LAZY)
     private List<UserSubscriptionJoin> userSubscriptionJoins = new ArrayList<>();
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "business_id")
+    private BusinessInformation businessInformation;
 
     @CreationTimestamp
     @Column(updatable = false)

@@ -250,20 +250,28 @@ public enum CountryEnum {
     YU(246, "Yugoslavia", null, null);
 
 
-    private final Integer hierarchy;
-    private final String name;
+    private final int hierarchy;
+    private final String displayName;
     private final String phoneCode;
     private final String emoji;
 
-    CountryEnum(final Integer hierarchy, String name, String phoneCode, String emoji) {
+    CountryEnum(final Integer hierarchy, String displayName, String phoneCode, String emoji) {
         this.hierarchy = hierarchy;
-        this.name = name;
+        this.displayName = displayName;
         this.phoneCode = phoneCode;
         this.emoji = emoji;
     }
 
+    public Integer getHierarchy() {
+        return hierarchy;
+    }
+
     public String getName() {
-        return name;
+        return this.name();
+    }
+
+    public String getDisplayName() {
+        return displayName;
     }
 
 }

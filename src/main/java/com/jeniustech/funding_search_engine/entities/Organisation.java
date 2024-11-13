@@ -50,6 +50,7 @@ public class Organisation {
     @Enumerated(EnumType.ORDINAL)
     private BooleanEnum sme;
 
+    @Enumerated(EnumType.ORDINAL)
     private OrganisationTypeEnum type;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "organisation", fetch = FetchType.LAZY)
