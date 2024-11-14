@@ -3,7 +3,10 @@ package com.jeniustech.funding_search_engine.entities;
 import com.jeniustech.funding_search_engine.enums.*;
 import com.jeniustech.funding_search_engine.mappers.DateMapper;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -57,13 +60,15 @@ public class UserSubscription {
     private Timestamp updatedAt;
 
     public boolean isActive() {
-            if (trialEndDate != null && trialEndDate.after(new Timestamp(System.currentTimeMillis()))) {
-                return true;
-            } else if (status == null) {
-                return false;
-            } else {
-                return status.equals(SubscriptionStatusEnum.ACTIVE);
-            }
+        if (type.equals(SubscriptionTypeEnum.TRIAL) && (trialEndDate == null || trialEndDate.before(new Timestamp(System.currentTimeMillis())))) {
+            return false;
+        } else if (trialEndDate != null && trialEndDate.after(new Timestamp(System.currentTimeMillis()))) {
+            return true;
+        } else if (status == null) {
+            return false;
+        } else {
+            return status.equals(SubscriptionStatusEnum.ACTIVE);
+        }
     }
 
     public boolean isTrial() {
