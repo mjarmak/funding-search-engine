@@ -50,6 +50,9 @@ public class ProjectDataLoader {
 
     public static final int BATCH_SIZE = 1000;
     private int total = 0;
+    private int problems = 0;
+    private String[] headers;
+    private List<String[]> problemRows = new ArrayList<>();
 
     int ID_INDEX = -1;
     int ACRONYM_INDEX = -1;
@@ -70,6 +73,11 @@ public class ProjectDataLoader {
     int RCN_INDEX = -1;
 
     public void splitFileAndLoadData(String fileName, boolean oldFormat, boolean skipUpdate, int rowsPerFile, boolean onlyValidate) {
+        total = 0;
+        problems = 0;
+        problemRows.clear();
+        resetIndexes();
+
         fileName = csvService.preprocessCSV(fileName, oldFormat);
 
         List<String> splitFileNames = CSVSplitter.splitCSVFile(fileName, rowsPerFile);
@@ -77,6 +85,10 @@ public class ProjectDataLoader {
         for (String splitFileName : splitFileNames) {
             log.info("Loading data from " + splitFileName);
             loadData(splitFileName, oldFormat, skipUpdate, onlyValidate);
+        }
+        if (onlyValidate && problems > 0) {
+            log.error("Writing problems to file");
+            csvService.writeCSV(headers, problemRows, fileName.replace(".csv", "_invalid_fields.csv"));
         }
     }
 
@@ -98,11 +110,7 @@ public class ProjectDataLoader {
         }
     }
 
-    public void loadData(String fileName, boolean oldFormat, boolean skipUpdate, boolean onlyValidate) {
-        total = 0;
-
-        resetIndexes();
-
+    private void loadData(String fileName, boolean oldFormat, boolean skipUpdate, boolean onlyValidate) {
         try (CSVReader reader = new CSVReaderBuilder(new FileReader(fileName))
                 .withCSVParser(new CSVParserBuilder()
                         .withSeparator(CSVService.DELIMITER_DEFAULT)
@@ -111,7 +119,7 @@ public class ProjectDataLoader {
                         .build()
                 ).build()
         ) {
-            var headers = reader.readNext();
+            headers = reader.readNext();
             int index = 0;
             for (String cell : headers) {
                 switch (cell) {
@@ -171,19 +179,40 @@ public class ProjectDataLoader {
             while ((row = reader.readNext()) != null) {
                 Project project = getProject(row, skipUpdate, onlyValidate);
                 if (!onlyValidate) {
-                    processSave(projects, project, fileName);
+                    if (!Project.isFieldsValid(project)) {
+                        total++;
+                        problems++;
+                        log.error("Invalid fields for project: " + project.getReferenceId() + " " + project.getTitle());
+                    } else {
+                        processSave(projects, project, fileName);
+                    }
                 } else {
+                    validateFields(project, row);
                     total++;
                     if (total % 1000 == 0) {
                         log.info("Validated " + total + " items");
                     }
                 }
             }
-            log.info("Saving last batch of " + projects.size() + " items");
-            save(projects, fileName);
+            if (!onlyValidate) {
+                log.info("Saving last batch of " + projects.size() + " items");
+                save(projects, fileName);
+            }
+            log.info("Total: " + total + ", problems: " + problems);
         } catch (IOException | DataIntegrityViolationException | CsvValidationException e) {
             log.error(e.getMessage());
             throw new ScraperException(e.getMessage());
+        }
+    }
+
+    private void validateFields(Project project, String[] row) {
+        if (project == null) {
+            return;
+        }
+        if (!project.isFieldsValid()) {
+            problems++;
+            log.error("Invalid fields for project: " + project.getReferenceId() + " " + project.getTitle());
+            problemRows.add(row);
         }
     }
 

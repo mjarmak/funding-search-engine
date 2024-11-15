@@ -1,7 +1,7 @@
 ### Run in order:
 ```
 docker build -t funding-search-engine:0.1.65 .
-docker tag funding-search-engine:0.1.64 jeniustech/funding-search-engine:0.1.65
+docker tag funding-search-engine:0.1.65 jeniustech/funding-search-engine:0.1.65
 docker push jeniustech/funding-search-engine:0.1.65
 
 ```
@@ -10,6 +10,9 @@ docker push jeniustech/funding-search-engine:0.1.65
 docker pull jeniustech/funding-search-engine:0.0.6
 ```
 
+## Projects update
+https://cordis.europa.eu/data/cordis-h2020projects-csv.zip
+https://cordis.europa.eu/data/cordis-HORIZONprojects-csv.zip
 ```
 sudo adduser --system --group --no-create-home solr
 sudo chown -R solr:solr /var/data/data_solr

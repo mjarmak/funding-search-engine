@@ -167,4 +167,18 @@ public class CSVService {
             throw new RuntimeException("Failed to write to csv", e);
         }
     }
+
+    public void writeCSV(String[] headers, List<String[]> row, String fileName) {
+        log.info("Writing field validation failed rows to csv");
+        StringBuilder csv = new StringBuilder(String.join(";", headers));
+        for (String[] r : row) {
+            csv.append("\n")
+                    .append(String.join(";", r));
+        }
+        try (FileWriter fileWriter = new FileWriter(fileName)) {
+            fileWriter.write(csv.toString());
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to write to csv", e);
+        }
+    }
 }

@@ -12,6 +12,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -20,6 +21,7 @@ import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.util.List;
 
+@Slf4j
 @Data
 @Builder
 @Entity
@@ -152,4 +154,45 @@ public class Project {
     public String getFundingSchemeName() {
         return fundingScheme != null ? fundingScheme.getName() : null;
     }
+
+    public static boolean isFieldsValid(Project project) {
+        if (project == null) {
+            return true;
+        }
+        return project.isFieldsValid();
+    }
+
+    public boolean isFieldsValid() {
+        boolean iValid = true;
+        if (this.getReferenceId() != null && this.getReferenceId().length() > 63) {
+            log.warn("Reference ID is too long: " + this.getReferenceId());
+            iValid = false;
+        }
+        if (this.getRcn() != null && this.getRcn().length() > 63) {
+            log.warn("RCN is too long: " + this.getRcn());
+            iValid = false;
+        }
+        if (this.getAcronym() != null && this.getAcronym().length() > 127) {
+            log.warn("Acronym is too long: " + this.getAcronym());
+            iValid = false;
+        }
+        if (this.getTitle() != null && this.getTitle().length() > 511) {
+            log.warn("Title is too long: " + this.getTitle());
+            iValid = false;
+        }
+        if (this.getLegalBasis() != null && this.getLegalBasis().length() > 100) {
+            log.warn("Legal Basis is too long: " + this.getLegalBasis());
+            iValid = false;
+        }
+        if (this.getMasterCallIdentifier() != null && this.getMasterCallIdentifier().length() > 63) {
+            log.warn("Master Call Identifier is too long: " + this.getMasterCallIdentifier());
+            iValid = false;
+        }
+        if (this.getCallIdentifier() != null && this.getCallIdentifier().length() > 127) {
+            log.warn("Call Identifier is too long: " + this.getCallIdentifier());
+            iValid = false;
+        }
+        return iValid; // All validations passed
+    }
+
 }

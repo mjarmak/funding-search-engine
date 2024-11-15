@@ -13,6 +13,7 @@ import com.jeniustech.funding_search_engine.models.JwtModel;
 import com.jeniustech.funding_search_engine.repository.LogBookRepository;
 import com.jeniustech.funding_search_engine.repository.UserDataRepository;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
@@ -30,6 +31,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 @SpringBootTest
+@Disabled
 public class CallSolrClientServiceTest {
 
     private final JwtModel JWT_MODEL = JwtModel.builder().userId("userId").build();

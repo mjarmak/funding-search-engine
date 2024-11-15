@@ -52,6 +52,9 @@ public class OrganisationDataLoader {
     public static final int BATCH_SIZE = 1000;
     private int duplicates = 0;
     private int total = 0;
+    private int problems = 0;
+    private String[] headers;
+    private List<String[]> problemRows = new ArrayList<>();
 
     int PROJECT_ID_INDEX = -1;
     int PROJECT_RCN_INDEX = -1;
@@ -76,6 +79,12 @@ public class OrganisationDataLoader {
     int TOTAL_COST_INDEX = -1;
 
     public void splitFileAndLoadData(String fileName, boolean oldFormat, boolean skipUpdate, int rowsPerFile, boolean onlyValidate) {
+        duplicates = 0;
+        total = 0;
+        problems = 0;
+        problemRows.clear();
+        resetIndexes();
+
         fileName = csvService.preprocessCSV(fileName, oldFormat);
 
         List<String> splitFileNames = CSVSplitter.splitCSVFile(fileName, rowsPerFile);
@@ -83,6 +92,10 @@ public class OrganisationDataLoader {
         for (String splitFileName : splitFileNames) {
             log.info("Loading data from " + splitFileName);
             loadData(splitFileName, oldFormat, skipUpdate, onlyValidate);
+        }
+        if (onlyValidate && problems > 0) {
+            log.error("Writing problems to file");
+            csvService.writeCSV(headers, problemRows, fileName.replace(".csv", "_invalid_fields.csv"));
         }
     }
 
@@ -103,10 +116,6 @@ public class OrganisationDataLoader {
     }
 
     private void loadData(String fileName, boolean oldFormat, boolean skipUpdate, boolean onlyValidate) {
-        duplicates = 0;
-        total = 0;
-
-        resetIndexes();
 
         try (CSVReader reader = new CSVReaderBuilder(new FileReader(fileName))
                 .withCSVParser(new CSVParserBuilder()
@@ -116,7 +125,7 @@ public class OrganisationDataLoader {
                         .build()
                 ).build()
         ) {
-            var headers = reader.readNext();
+            headers = reader.readNext();
             int index = 0;
             for (String cell : headers) {
                 switch (cell) {
@@ -184,18 +193,31 @@ public class OrganisationDataLoader {
                 if (!onlyValidate) {
                     processSave(organisations, organisation, fileName);
                 } else {
+                    validateFields(organisation);
                     total++;
                     if (total % 1000 == 0) {
                         log.info("Validated " + total + " items");
                     }
                 }
             }
-            log.info("Saving last batch of " + organisations.size() + " items");
-            save(organisations, fileName);
+            if (!onlyValidate) {
+                log.info("Saving last batch of " + organisations.size() + " items");
+                save(organisations, fileName);
+            }
+            log.info("Total: " + total + ", problems: " + problems);
         } catch (IOException | DataIntegrityViolationException | CsvValidationException e) {
             log.error(e.getMessage());
-//            e.printStackTrace();
             throw new ScraperException(e.getMessage());
+        }
+    }
+
+    private void validateFields(Organisation organisation) {
+        if (organisation == null) {
+            return;
+        }
+        if (!organisation.isFieldsValid()) {
+            problems++;
+            log.error("Invalid fields for project: " + organisation.getReferenceId() + " " + organisation.getName());
         }
     }
 

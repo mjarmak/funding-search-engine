@@ -12,6 +12,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -19,6 +20,7 @@ import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.List;
 
+@Slf4j
 @Data
 @Builder
 @Entity
@@ -177,4 +179,60 @@ public class Organisation {
         }
         return fundingEU.stripTrailingZeros().toPlainString();
     }
+
+    public boolean isFieldsValid() {
+        boolean iValid = true;
+        if (this.getReferenceId() != null && this.getReferenceId().length() > 63) {
+            log.warn("Reference ID is too long: " + this.getReferenceId());
+            iValid = false;
+        }
+        if (this.getRcn() != null && this.getRcn().length() > 63) {
+            log.warn("RCN is too long: " + this.getRcn());
+            iValid = false;
+        }
+        if (this.getName() != null && this.getName().length() > 255) {
+            log.warn("Name is too long: " + this.getName());
+            iValid = false;
+        }
+        if (this.getShortName() != null && this.getShortName().length() > 255) {
+            log.warn("Short name is too long: " + this.getShortName());
+            iValid = false;
+        }
+        if (this.getVatNumber() != null && this.getVatNumber().length() > 63) {
+            log.warn("VAT number is too long: " + this.getVatNumber());
+            iValid = false;
+        }
+        if (this.getNutsCode() != null && this.getNutsCode().length() > 15) {
+            log.warn("NUTS code is too long: " + this.getNutsCode());
+            iValid = false;
+        }
+        if (this.getContactInfos() != null) {
+            for (OrganisationContactInfo contactInfo : this.getContactInfos()) {
+                if (contactInfo.getValue() != null && contactInfo.getValue().length() > 255) {
+                    log.warn("Contact info value is too long: " + contactInfo.getValue());
+                    iValid = false;
+                }
+                if (contactInfo.getName() != null && contactInfo.getName().length() > 127) {
+                    log.warn("Contact info name is too long: " + contactInfo.getName());
+                    iValid = false;
+                }
+            }
+        }
+        if (this.getAddress() != null) {
+            if (address.getStreet() != null && address.getStreet().length() > 255) {
+                log.warn("Address street is too long: " + address.getStreet());
+                iValid = false;
+            }
+            if (address.getCity() != null && address.getCity().length() > 255) {
+                log.warn("Address city is too long: " + address.getCity());
+                iValid = false;
+            }
+            if (address.getPostCode() != null && address.getPostCode().length() > 31) {
+                log.warn("Address postal code is too long: " + address.getPostCode());
+                iValid = false;
+            }
+        }
+        return iValid; // All validations passed
+    }
+
 }
