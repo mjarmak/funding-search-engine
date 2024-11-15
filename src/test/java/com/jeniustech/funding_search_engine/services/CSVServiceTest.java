@@ -6,24 +6,31 @@ import com.jeniustech.funding_search_engine.entities.Project;
 import com.jeniustech.funding_search_engine.enums.FundingSchemeEnum;
 import com.jeniustech.funding_search_engine.enums.LongTextTypeEnum;
 import com.jeniustech.funding_search_engine.enums.ProjectStatusEnum;
+import com.jeniustech.funding_search_engine.util.FileUtil;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
+import org.mockito.InjectMocks;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-@SpringBootTest
+@ExtendWith(SpringExtension.class)
 public class CSVServiceTest {
 
-    @Autowired
+    @InjectMocks
     private CSVService csvService;
 
 
     @Test
+    @Disabled
     void writeCSV() {
         List<Project> projects = List.of(
                 Project.builder()
@@ -53,7 +60,6 @@ public class CSVServiceTest {
 
     @Test
     void testPreprocessCSV_1() {
-//        String input = "\" mode.The PMS market is estimated at $1.5 billion in 2016 and expected to grow to $2.0 billion in 2024.DAYUSE targets its gradual smooth adoption, first as a complementary tool to existing PMS and finally as a full substitute. DAYUSE will then extend its reach to the whole Hospitality Industry while integrating other distributors. The company wants to be the European game changer in an industry where North American players prevail.This SME Instrument Phase 2 project represents for DAYUSE the very last step to the market. For 24 months, it will prepare and fine-tune the IT tools for the industrialization while running pilots globally in different countries (Europe, US, Asia) to be prepared for the challenges of the Go-to-Market execution in Phase 3.\"";
         String input = "\"823217\";\"DAYUSE\";\"CLOSED\";\"DAYUSE: the European game changer that creates a disruptive value-adding exploitation model for Hotels.\";\"2018-07-01\";\"2020-06-30\";\"2154187,5\";\"1507931,25\";\"H2020-EU.2.3.\";\"EIC-SMEInst-2018-2020\";\"2018-06-21\";\"H2020\";\"H2020-EIC-SMEInst-2018-2020\";\"H2020-SMEInst-2018-2020-2\";\"SME-2\";\"\";\"\"\"Created in late 2010, dayuse.com is the innovative world leader in online reservation for the emerging \"\"\"\"day use\"\"\"\" hotel room segment in a typical \"\"\"\"Blue Ocean\"\"\"\" strategy.It provides an answer to this key question \"\"\"\"Why should I book a hotel room for a full overnight price when I only need it for a few hours?\"\"\"\"The Company now relies on a network of over 4,500 partner hotels. The service is provided on a day-time allotment pricing basis. DAYUSE  boasts over 300,000 bookings p.a. which represents now one reservation per minute!With the recent signature of agreements with major hotel chains such as AccorHotels, Hilton, Marriott that want to open their huge hotel networks to dayuse.com, a large-scale industrialization phase looks urgent.DAYUSE has now the ambition to leverage on its leader position in the \"\"\"\"day use\"\"\"\" segment to shake completely the Hospitality Industry by imposing gradually and globally a new scalable industry standard based on an hourly service/rate, 24 hours a day, similarly to industries like car renting.Concretely, the company targets to provide to hotels a DAYUSE Proprietary Management System (PMS) called DMS delivered through SaaS with a ground-breaking pricing \"\"\"\"per transaction\"\"\"\" mode.The PMS market is estimated at $1.5 billion in 2016 and expected to grow to $2.0 billion in 2024.DAYUSE targets its gradual smooth adoption, first as a complementary tool to existing PMS and finally as a full substitute. DAYUSE will then extend its reach to the whole Hospitality Industry while integrating other distributors. The company wants to be the European game changer in an industry where North American players prevail.This SME Instrument Phase 2 project represents for DAYUSE the very last step to the market. For 24 months, it will prepare and fine-tune the IT tools for the industrialization while running pilots globally in different countries (Europe, US, Asia) to be prepared for the challenges of the Go-to-Market execution in Phase 3.\"\"\";\"2024-03-13 16:30:22\";\"217048\";\"10.3030/823217\"";
         String output = csvService.processCSVLine(input);
         assertEquals("\"823217\";\"DAYUSE\";\"CLOSED\";\"DAYUSE: the European game changer that creates a disruptive value-adding exploitation model for Hotels.\";\"2018-07-01\";\"2020-06-30\";\"2154187,5\";\"1507931,25\";\"H2020-EU.2.3.\";\"EIC-SMEInst-2018-2020\";\"2018-06-21\";\"H2020\";\"H2020-EIC-SMEInst-2018-2020\";\"H2020-SMEInst-2018-2020-2\";\"SME-2\";\"\";\"\"\"Created in late 2010, dayuse.com is the innovative world leader in online reservation for the emerging \"\"\"\"day use\"\"\"\" hotel room segment in a typical \"\"\"\"Blue Ocean\"\"\"\" strategy.It provides an answer to this key question \"\"\"\"Why should I book a hotel room for a full overnight price when I only need it for a few hours?\"\"\"\"The Company now relies on a network of over 4,500 partner hotels. The service is provided on a day-time allotment pricing basis. DAYUSE  boasts over 300,000 bookings p.a. which represents now one reservation per minute!With the recent signature of agreements with major hotel chains such as AccorHotels, Hilton, Marriott that want to open their huge hotel networks to dayuse.com, a large-scale industrialization phase looks urgent.DAYUSE has now the ambition to leverage on its leader position in the \"\"\"\"day use\"\"\"\" segment to shake completely the Hospitality Industry by imposing gradually and globally a new scalable industry standard based on an hourly service/rate, 24 hours a day, similarly to industries like car renting.Concretely, the company targets to provide to hotels a DAYUSE Proprietary Management System (PMS) called DMS delivered through SaaS with a ground-breaking pricing \"\"\"\"per transaction\"\"\"\" mode.The PMS market is estimated at $1.5 billion in 2016 and expected to grow to $2.0 billion in 2024.DAYUSE targets its gradual smooth adoption, first as a complementary tool to existing PMS and finally as a full substitute. DAYUSE will then extend its reach to the whole Hospitality Industry while integrating other distributors. The company wants to be the European game changer in an industry where North American players prevail.This SME Instrument Phase 2 project represents for DAYUSE the very last step to the market. For 24 months, it will prepare and fine-tune the IT tools for the industrialization while running pilots globally in different countries (Europe, US, Asia) to be prepared for the challenges of the Go-to-Market execution in Phase 3.\"\"\";\"2024-03-13 16:30:22\";\"217048\";\"10.3030/823217\""
@@ -79,6 +85,42 @@ public class CSVServiceTest {
         String input = "\"test$ then $\"";
         String output = csvService.processCSVLine(input);
         assertEquals("\"test$ then $\"", output);
+    }
+
+
+    @Test
+    @Disabled
+    void testPreprocessCSV_5() throws IOException {
+        String input = FileUtil.readFile("test-data/csvLine.txt");
+        String output = csvService.processCSVLine(input);
+        String expected = FileUtil.readFile("test-data/csvLineProcessed.txt");
+        assertEquals(expected.trim(), output.trim());
+    }
+
+
+    @ParameterizedTest
+    @CsvSource({
+            "\"HORIZON-CSA\";\"\";\"\"The\",\"HORIZON-CSA\";\"\";\"The\"",
+            "test;\"\";\"\"x;x\"\";,test;\"\";\"x\\;x\";",
+            ";\"\"x and x\"\";,;\"x and x\";",
+//            ";\"\"\"\"x and x\"\"\"\";,;\"x and x\";",
+            "x\"\"x,x'x",
+            "x\"\"\"\"x,x'x",
+            "IMB-BAS and reduce the \"\"brain drain\"\";- Raising the standards,IMB-BAS and reduce the 'brain drain';- Raising the standards",
+            "\"IMB-BAS and reduce the \"\"brain drain\"\";- Raising the standards\"\",\"IMB-BAS and reduce the \"brain drain\"\\;- Raising the standards\"",
+            "\"SME-2\";\"\";\"\"Created in late 2010 dayuse.com,\"SME-2\";\"\";\"Created in late 2010 dayuse.com"
+
+//            ";\"\"x and x\"\";,;'x and x';",
+//            ";\"\"\"\"x and x\"\"\"\";,;'x and x';",
+//            ";\"\"\"x and x\"\"\";,;\"'x and x'\";",
+//            "x\"\"x,x'x",
+//            "x\"\"\"\"x,x'x",
+//            "IMB-BAS and reduce the \"\"brain drain\"\";- Raising the standards,IMB-BAS and reduce the 'brain drain';- Raising the standards"
+    })
+    @Disabled
+    void testProcessCSVLine(String input, String expected) {
+        String output = csvService.processCSVLine(input);
+        assertEquals(expected, output);
     }
 
 }

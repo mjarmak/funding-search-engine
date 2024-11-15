@@ -320,6 +320,8 @@ public class OrganisationDataLoader {
 
             if (skipUpdate) {
                 return existingOrganisation;
+            } else {
+                existingOrganisation.setUpdatedAt(DateMapper.map(LocalDateTime.now()));
             }
 
             if (!oldFormat) {

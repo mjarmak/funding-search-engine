@@ -81,7 +81,7 @@ public class CSVService {
     public void writeProjectsCSV(List<Project> projects, String fileName) {
         log.info("Writing failed project rows to csv");
         // write to csv
-        String header = "id;acronym;status;title;startDate;endDate;totalCost;ecMaxContribution;legalBasis;topics;ecSignatureDate;masterCall;fundingScheme;objective;rcn";
+        String header = "id;acronym;status;title;startDate;endDate;totalCost;ecMaxContribution;legalBasis;topics;ecSignatureDate;masterCall;fundingScheme;objective;rcn;frameworkProgramme";
         StringBuilder csv = new StringBuilder(header);
         for (Project project : projects) {
             String description = project.getLongTexts().stream()
@@ -96,15 +96,16 @@ public class CSVService {
                     .append(QUOTE).append(valueOrDefault(project.getTitle(), "")).append(QUOTE).append(DELIMITER_DEFAULT)
                     .append(QUOTE).append(project.getStartDate() == null ? "" : project.getStartDate()).append(QUOTE).append(DELIMITER_DEFAULT)
                     .append(QUOTE).append(project.getEndDate() == null ? "" : project.getEndDate()).append(QUOTE).append(DELIMITER_DEFAULT)
-                    .append(QUOTE).append(project.getFundingEU() != null ? project.getFundingEU().add(project.getFundingOrganisation()).toPlainString() : project.getFundingOrganisation()).append(QUOTE).append(DELIMITER_DEFAULT)
-                    .append(QUOTE).append(project.getFundingEU().toPlainString()).append(QUOTE).append(DELIMITER_DEFAULT)
+                    .append(QUOTE).append(QUOTE).append(DELIMITER_DEFAULT)
+                    .append(QUOTE).append(QUOTE).append(DELIMITER_DEFAULT)
                     .append(QUOTE).append(valueOrDefault(project.getLegalBasis(), "")).append(QUOTE).append(DELIMITER_DEFAULT)
                     .append(QUOTE).append(project.getCall() == null ? "" : project.getCall().getIdentifier()).append(QUOTE).append(DELIMITER_DEFAULT)
                     .append(QUOTE).append(project.getSignDate() == null ? "" : project.getSignDate()).append(QUOTE).append(DELIMITER_DEFAULT)
                     .append(QUOTE).append(valueOrDefault(project.getMasterCallIdentifier(), "")).append(QUOTE).append(DELIMITER_DEFAULT)
                     .append(QUOTE).append(project.getFundingScheme() == null ? "" : project.getFundingScheme().getName()).append(QUOTE).append(DELIMITER_DEFAULT)
                     .append(QUOTE).append(description).append(QUOTE).append(DELIMITER_DEFAULT)
-                    .append(QUOTE).append(valueOrDefault(project.getRcn(), "")).append(QUOTE);
+                    .append(QUOTE).append(valueOrDefault(project.getRcn(), "")).append(QUOTE).append(DELIMITER_DEFAULT)
+                    .append(QUOTE).append(valueOrDefault(project.getFrameworkProgramName(), "")).append(QUOTE);
         }
         try (FileWriter fileWriter = new FileWriter(fileName.replace(".csv", "_" + System.currentTimeMillis() + "_failed.csv"))) {
             fileWriter.write(csv.toString());

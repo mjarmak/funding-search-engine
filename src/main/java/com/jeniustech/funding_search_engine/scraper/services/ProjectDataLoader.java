@@ -52,7 +52,7 @@ public class ProjectDataLoader {
     private int total = 0;
     private int problems = 0;
     private String[] headers;
-    private List<String[]> problemRows = new ArrayList<>();
+    private final List<String[]> problemRows = new ArrayList<>();
 
     int ID_INDEX = -1;
     int ACRONYM_INDEX = -1;
@@ -178,20 +178,22 @@ public class ProjectDataLoader {
             String[] row;
             while ((row = reader.readNext()) != null) {
                 Project project = getProject(row, skipUpdate, onlyValidate);
+                if (project == null) {
+                    continue;
+                }
+                total++;
                 if (!onlyValidate) {
-                    if (!Project.isFieldsValid(project)) {
-                        total++;
+                    if (!project.isFieldsValid()) {
                         problems++;
                         log.error("Invalid fields for project: " + project.getReferenceId() + " " + project.getTitle());
                         if (forceSaveProblems) {
                             problemRows.add(row);
                         }
-                    } else {
+                    } else if (!(skipUpdate && project.getId() != null)) {
                         processSave(projects, project, fileName);
                     }
                 } else {
                     validateFields(project, row);
-                    total++;
                     if (total % 1000 == 0) {
                         log.info("Validated " + total + " items");
                     }
@@ -241,7 +243,6 @@ public class ProjectDataLoader {
 
 
     private void processSave(List<Project> items, Project item, String fileName) {
-        total++;
         if (item != null) {
             items.add(item);
             if (items.size() == BATCH_SIZE) {
@@ -299,29 +300,33 @@ public class ProjectDataLoader {
 
             if (skipUpdate) {
                 return existingProject;
+            } else {
+                existingProject.setUpdatedAt(DateMapper.map(LocalDateTime.now()));
             }
 
-            for (LongText longText : project.getLongTexts()) {
-                if (existingProject.getLongTexts().stream().noneMatch(lt -> lt.getType().equals(longText.getType()))) {
-                    longText.setProject(existingProject);
-                    existingProject.getLongTexts().add(longText);
-                } else {
-                    LongText longTextToSave = existingProject.getLongTexts().stream()
-                            .filter(lt -> lt.getType().equals(longText.getType()))
-                            .findFirst()
-                            .orElseThrow();
-                    if (
-                            isNotEmpty(longTextToSave.getText())) {
-                        longTextToSave.setText(longText.getText());
-                    }
-                }
-            }
+            // remove because never updated and sometimes invalid
+//            for (LongText longText : project.getLongTexts()) {
+//                if (existingProject.getLongTexts().stream().noneMatch(lt -> lt.getType().equals(longText.getType()))) {
+//                    longText.setProject(existingProject);
+//                    existingProject.getLongTexts().add(longText);
+//                } else {
+//                    LongText longTextToSave = existingProject.getLongTexts().stream()
+//                            .filter(lt -> lt.getType().equals(longText.getType()))
+//                            .findFirst()
+//                            .orElseThrow();
+//                    if (
+//                            isNotEmpty(longTextToSave.getText())) {
+//                        longTextToSave.setText(longText.getText());
+//                    }
+//                }
+//            }
             if (isNotEmpty(project.getReferenceId())) {
                 existingProject.setReferenceId(project.getReferenceId());
             }
-            if (isNotEmpty(project.getRcn())) {
-                existingProject.setRcn(project.getRcn());
-            }
+            // remove because never updated and sometimes invalid
+//            if (isNotEmpty(project.getRcn())) {
+//                existingProject.setRcn(project.getRcn());
+//            }
             if (isNotEmpty(project.getAcronym())) {
                 existingProject.setAcronym(project.getAcronym());
             }

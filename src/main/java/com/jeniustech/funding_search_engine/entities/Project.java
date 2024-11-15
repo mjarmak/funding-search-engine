@@ -155,13 +155,6 @@ public class Project {
         return fundingScheme != null ? fundingScheme.getName() : null;
     }
 
-    public static boolean isFieldsValid(Project project) {
-        if (project == null) {
-            return true;
-        }
-        return project.isFieldsValid();
-    }
-
     public boolean isFieldsValid() {
         boolean iValid = true;
         if (this.getReferenceId() != null && this.getReferenceId().length() > 63) {

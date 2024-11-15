@@ -282,6 +282,8 @@ public class CallDataLoader {
 
                 if (skipUpdate) {
                     return existingCall;
+                } else {
+                    existingCall.setUpdatedAt(DateMapper.map(LocalDateTime.now()));
                 }
 
                 log.debug("Updating call: " + call.getIdentifier());
