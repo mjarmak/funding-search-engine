@@ -102,6 +102,7 @@ public class ScrapeController {
             @RequestParam(value = "oldFormat", required = false, defaultValue = "false") boolean oldFormat,
             @RequestParam(value = "skipUpdate", required = false, defaultValue = "false") boolean skipUpdate,
             @RequestParam(required = false, defaultValue = "false") boolean onlyValidate,
+            @RequestParam(required = false, defaultValue = "false") boolean forceSaveProblems,
             @RequestParam(required = false, defaultValue = "10000") int rowsPerFile
             ) {
         log.info("Scraping projects");
@@ -109,7 +110,7 @@ public class ScrapeController {
         log.info("Old format: {}", oldFormat);
         log.info("Only validate: {}", onlyValidate);
         for (String file : files) {
-            projectDataLoader.splitFileAndLoadData(file, oldFormat, skipUpdate, rowsPerFile, onlyValidate);
+            projectDataLoader.splitFileAndLoadData(file, oldFormat, skipUpdate, rowsPerFile, onlyValidate, forceSaveProblems);
             adminLogService.addLog(AdminLogType.SCRAPE_SUCCESS, file);
         }
     }

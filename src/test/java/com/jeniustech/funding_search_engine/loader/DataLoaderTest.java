@@ -2,7 +2,6 @@ package com.jeniustech.funding_search_engine.loader;
 
 import com.jeniustech.funding_search_engine.scraper.services.OrganisationDataLoader;
 import com.jeniustech.funding_search_engine.scraper.services.ProjectDataLoader;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -10,7 +9,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import java.util.List;
 
 @SpringBootTest
-@Disabled
 public class DataLoaderTest {
 
     @Autowired
@@ -36,14 +34,13 @@ public class DataLoaderTest {
     @Test
     void validateProjectData() {
         List<String> files = List.of(
-                "C:/Projects/funding-search-engine/src/test/resources/data/projects/project_2021-2.csv",
-                "C:/Projects/funding-search-engine/src/test/resources/data/projects/project_2014-2.csv",
-                "C:/Projects/funding-search-engine/src/test/resources/data/projects/projects-fp7-2007-2013.csv",
-                "C:/Projects/funding-search-engine/src/test/resources/data/projects/projects-fp7-2007-2013-2.csv"
+                "C:/Projects/funding-search-engine/src/test/resources/data/projects/project_2021.csv",
+                "C:/Projects/funding-search-engine/src/test/resources/data/projects/project_2014.csv",
+                "C:/Projects/funding-search-engine/src/test/resources/data/projects/projects-fp7-2007-2013.csv"
         );
 
         for (String file : files) {
-            projectDataLoader.splitFileAndLoadData(file, false, true, 1_000_000, true);
+            projectDataLoader.splitFileAndLoadData(file, false, true, 1_000_000, true, false);
         }
     }
 
@@ -75,7 +72,7 @@ public class DataLoaderTest {
         );
 
         for (String file : files) {
-            projectDataLoader.splitFileAndLoadData(file, true, true, 1_000_000, true);
+            projectDataLoader.splitFileAndLoadData(file, true, true, 1_000_000, true, false);
         }
     }
 
