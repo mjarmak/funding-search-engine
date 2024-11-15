@@ -72,7 +72,7 @@ public class ProjectDataLoader {
     int OBJECTIVE_INDEX = -1;
     int RCN_INDEX = -1;
 
-    public void splitFileAndLoadData(String fileName, boolean oldFormat, boolean skipUpdate, int rowsPerFile, boolean onlyValidate) {
+    public void splitFileAndLoadData(String fileName, boolean oldFormat, boolean skipUpdate, int rowsPerFile, boolean onlyValidate, boolean forceSaveProblems) {
         total = 0;
         problems = 0;
         problemRows.clear();
@@ -84,9 +84,9 @@ public class ProjectDataLoader {
 
         for (String splitFileName : splitFileNames) {
             log.info("Loading data from " + splitFileName);
-            loadData(splitFileName, oldFormat, skipUpdate, onlyValidate);
+            loadData(splitFileName, oldFormat, skipUpdate, onlyValidate, forceSaveProblems);
         }
-        if (onlyValidate && problems > 0) {
+        if ((forceSaveProblems || onlyValidate) && problems > 0) {
             log.error("Writing problems to file");
             csvService.writeCSV(headers, problemRows, fileName.replace(".csv", "_invalid_fields.csv"));
         }
@@ -110,7 +110,7 @@ public class ProjectDataLoader {
         }
     }
 
-    private void loadData(String fileName, boolean oldFormat, boolean skipUpdate, boolean onlyValidate) {
+    private void loadData(String fileName, boolean oldFormat, boolean skipUpdate, boolean onlyValidate, boolean forceSaveProblems) {
         try (CSVReader reader = new CSVReaderBuilder(new FileReader(fileName))
                 .withCSVParser(new CSVParserBuilder()
                         .withSeparator(CSVService.DELIMITER_DEFAULT)
@@ -183,6 +183,9 @@ public class ProjectDataLoader {
                         total++;
                         problems++;
                         log.error("Invalid fields for project: " + project.getReferenceId() + " " + project.getTitle());
+                        if (forceSaveProblems) {
+                            problemRows.add(row);
+                        }
                     } else {
                         processSave(projects, project, fileName);
                     }
