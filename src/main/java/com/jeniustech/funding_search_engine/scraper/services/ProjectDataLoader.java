@@ -300,8 +300,6 @@ public class ProjectDataLoader {
 
             if (skipUpdate) {
                 return existingProject;
-            } else {
-                existingProject.setUpdatedAt(DateMapper.map(LocalDateTime.now()));
             }
 
             // remove because never updated and sometimes invalid
