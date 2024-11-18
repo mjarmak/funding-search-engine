@@ -7,7 +7,7 @@ public enum OrganisationProjectJoinTypeEnum {
     COORDINATOR("coordinator", 2),
     THIRD_PARTY("thirdParty", 4),
     ASSOCIATED_PARTNER("associatedPartner", 1),
-    UNKNOWN("", 99);
+    UNKNOWN("", -1);
 
     private final String csvName;
     private final int hierarchy;
