@@ -85,7 +85,7 @@ public class CallSolrClientService implements ISolrClientService<CallDTO> {
             solrQuery.addField("*");
             solrQuery.setSort("score", SolrQuery.ORDER.desc);
             solrQuery.addFilterQuery("{!frange l=2}query($q)");
-            solrQuery.set("secret", "false");
+            solrQuery.addFilterQuery("secret:false");
 
             QueryResponse response = this.solrClient.query(solrQuery);
             return SolrMapper.mapToCall(response.getResults());

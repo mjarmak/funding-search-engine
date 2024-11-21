@@ -44,7 +44,7 @@ public class ReportService extends PDFWriter {
     private final UserDataRepository userDataRepository;
     private final LogService logService;
 
-    public ByteArrayInputStream generatePdf(List<Long> callIds, String subjectId, String path, String timezone) throws ReportException {
+    public ByteArrayInputStream generatePdf(List<Long> callIds, String subjectId, String path, String timezone, boolean hasSecretAccess) throws ReportException {
         UserData userData = userDataRepository.findBySubjectId(subjectId).orElseThrow(() -> new UserNotFoundException("User not found"));
         ValidatorService.validateUserPDFExport(userData, logService.getCountByUserIdAndType(userData.getId(), EXPORT_PDF));
 
@@ -64,7 +64,7 @@ public class ReportService extends PDFWriter {
             document.setFontSize(10);
             addHeader(document, path);
 
-            List<Call> calls = callRepository.findAllById(callIds);
+            List<Call> calls = callRepository.findAllById(callIds, hasSecretAccess);
             CallMapper.sortByEndDate(calls);
 
             if (calls.isEmpty()) {

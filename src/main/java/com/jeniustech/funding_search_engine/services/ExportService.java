@@ -42,11 +42,11 @@ public class ExportService {
     private final UserDataRepository userDataRepository;
     private final LogService logService;
 
-    public ByteArrayInputStream generateCallExcel(List<Long> callIds, String subjectId, String timezone) throws IOException {
+    public ByteArrayInputStream generateCallExcel(List<Long> callIds, String subjectId, String timezone, boolean hasSecretAccess) throws IOException {
         UserData userData = userDataRepository.findBySubjectId(subjectId).orElseThrow(() -> new UserNotFoundException("User not found"));
         ValidatorService.validateUserExcelExport(userData, logService.getCountByUserIdAndType(userData.getId(), EXPORT_EXCEL));
 
-        List<Call> calls = callRepository.findAllById(callIds);
+        List<Call> calls = callRepository.findAllById(callIds, hasSecretAccess);
         CallMapper.sortByEndDate(calls);
 
         try (Workbook workbook = new XSSFWorkbook(); ByteArrayOutputStream out = new ByteArrayOutputStream()) {

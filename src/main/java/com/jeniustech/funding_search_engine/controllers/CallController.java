@@ -66,7 +66,7 @@ public class CallController implements IDataController<CallDTO> {
     public ResponseEntity<CallDTO> getById(@PathVariable Long id,
                                            @AuthenticationPrincipal Jwt jwt) {
         JwtModel jwtModel = UserDataMapper.map(jwt);
-        return ResponseEntity.ok(callService.getDTOById(id, jwtModel.getUserId()));
+        return ResponseEntity.ok(callService.getDTOById(id, jwtModel.getUserId(), jwtModel.hasSecretAccess()));
     }
 
     @GetMapping("/{id}/favorite")
@@ -74,7 +74,7 @@ public class CallController implements IDataController<CallDTO> {
                                          @AuthenticationPrincipal Jwt jwt
                              ) {
         JwtModel jwtModel = UserDataMapper.map(jwt);
-        callService.favorite(id, jwtModel.getUserId());
+        callService.favorite(id, jwtModel.getUserId(), jwtModel.hasSecretAccess());
         return ResponseEntity.noContent().build();
     }
 
@@ -83,7 +83,7 @@ public class CallController implements IDataController<CallDTO> {
                                            @AuthenticationPrincipal Jwt jwt
                                ) {
         JwtModel jwtModel = UserDataMapper.map(jwt);
-        callService.unFavorite(id, jwtModel.getUserId());
+        callService.unFavorite(id, jwtModel.getUserId(), jwtModel.hasSecretAccess());
         return ResponseEntity.noContent().build();
     }
 
@@ -129,7 +129,7 @@ public class CallController implements IDataController<CallDTO> {
     ) throws IOException {
         JwtModel jwtModel = UserDataMapper.map(jwt);
 
-        ByteArrayInputStream in = exportService.generateCallExcel(ids, jwtModel.getUserId(), timezone);
+        ByteArrayInputStream in = exportService.generateCallExcel(ids, jwtModel.getUserId(), timezone, jwtModel.hasSecretAccess());
 
         HttpHeaders headers = new HttpHeaders();
         headers.add("Content-Disposition", "attachment; filename=data.xlsx");
@@ -149,7 +149,7 @@ public class CallController implements IDataController<CallDTO> {
     ) throws ReportException {
         JwtModel jwtModel = UserDataMapper.map(jwt);
 
-        ByteArrayInputStream bis = reportService.generatePdf(callIds, jwtModel.getUserId(), imageUrl, timezone);
+        ByteArrayInputStream bis = reportService.generatePdf(callIds, jwtModel.getUserId(), imageUrl, timezone, jwtModel.hasSecretAccess());
 
         HttpHeaders headers = new HttpHeaders();
         headers.add("Content-Disposition", "inline; filename=data.pdf");
@@ -170,7 +170,7 @@ public class CallController implements IDataController<CallDTO> {
     ) throws ReportException {
         JwtModel jwtModel = UserDataMapper.map(jwt);
 
-        ByteArrayInputStream bis = reportService.generatePdf(List.of(callId), jwtModel.getUserId(), imageUrl, timezone);
+        ByteArrayInputStream bis = reportService.generatePdf(List.of(callId), jwtModel.getUserId(), imageUrl, timezone, jwtModel.hasSecretAccess());
 
         HttpHeaders headers = new HttpHeaders();
         headers.add("Content-Disposition", "inline; filename=data.pdf");

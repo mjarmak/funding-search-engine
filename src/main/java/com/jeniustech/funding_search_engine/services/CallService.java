@@ -32,12 +32,15 @@ public class CallService extends IDataService<CallDTO> {
     }
 
     public CallDTO getDTOById(Long id, String subjectId) {
+        return getDTOById(id, subjectId, false);
+    }
+    public CallDTO getDTOById(Long id, String subjectId, boolean hasSecretAccess) {
         UserData userData = getUserOrNotFound(subjectId);
-        return CallMapper.map(getById(id), false, isFavorite(id, userData.getId()), true);
+        return CallMapper.map(getById(id, hasSecretAccess), false, isFavorite(id, userData.getId()), true);
     }
 
-    private Call getById(Long callId) {
-        return callRepository.findById(callId).orElseThrow(() -> new CallNotFoundException("Call not found"));
+    private Call getById(Long callId, boolean hasSecretAccess) {
+        return callRepository.findById(callId, hasSecretAccess).orElseThrow(() -> new CallNotFoundException("Call not found"));
     }
 
     public boolean isFavorite(Long callId, Long userId) {
@@ -45,11 +48,14 @@ public class CallService extends IDataService<CallDTO> {
     }
 
     public void favorite(Long id, String subjectId) {
+        favorite(id, subjectId, false);
+    }
+    public void favorite(Long id, String subjectId, boolean hasSecretAccess) {
         UserData userData = getUserOrNotFound(subjectId);
 
         ValidatorService.validateUserFavorite(userData.getMainActiveSubscription(), userCallJoinRepository.countByUserIdAndType(userData.getId(), UserJoinTypeEnum.FAVORITE));
 
-        Call call = getById(id);
+        Call call = getById(id, hasSecretAccess);
         if (isFavorite(call.getId(), userData.getId())) {
             return;
         }
@@ -62,8 +68,11 @@ public class CallService extends IDataService<CallDTO> {
     }
 
     public void unFavorite(Long callId, String subjectId) {
+        unFavorite(callId, subjectId, false);
+    }
+    public void unFavorite(Long callId, String subjectId, boolean hasSecretAccess) {
         UserData userData = getUserOrNotFound(subjectId);
-        Call call = getById(callId);
+        Call call = getById(callId, hasSecretAccess);
         Optional<UserCallJoin> userCallJoin = userCallJoinRepository.findByReferenceIdAndUserIdAndType(call.getId(), userData.getId(), UserJoinTypeEnum.FAVORITE);
         if (userCallJoin.isEmpty()) {
             return;
@@ -90,6 +99,6 @@ public class CallService extends IDataService<CallDTO> {
     }
 
     public CallDTO getGraphMesh(Long id) {
-        return CallMapper.mapToGraphMesh(getById(id));
+        return CallMapper.mapToGraphMesh(getById(id, false));
     }
 }
