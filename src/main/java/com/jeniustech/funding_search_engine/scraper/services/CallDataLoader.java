@@ -68,18 +68,31 @@ public class CallDataLoader {
     int furtherInformationIndex = 0;
 
     public void loadSolrData() {
+        loadSolrData(null);
+    }
+    public void loadSolrData(LocalDateTime after) {
         log.info("Loading calls to solr");
         // do in batch of 1000
         int pageNumber = 0;
         int pageSize = 1000;
         Sort sort = Sort.sort(Project.class).by(Project::getId).descending();
         Pageable pageable = PageRequest.of(pageNumber, pageSize, sort);
-        List<Call> calls = callRepository.findAll(pageable).getContent();
+
+        List<Call> calls;
+        if (after != null) {
+            calls = callRepository.findAllAfter(pageable, DateMapper.map(after)).getContent();
+        } else {
+            calls = callRepository.findAll(pageable).getContent();
+        }
         while (!calls.isEmpty()) {
             log.info("Saving batch of " + calls.size() + " items");
             callSolrClientService.add(SolrMapper.mapCallsToSolrDocument(calls), 100_000);
             pageNumber++;
-            calls = callRepository.findAll(PageRequest.of(pageNumber, pageSize, sort)).getContent();
+            if (after != null) {
+                calls = callRepository.findAllAfter(PageRequest.of(pageNumber, pageSize, sort), DateMapper.map(after)).getContent();
+            } else {
+                calls = callRepository.findAll(PageRequest.of(pageNumber, pageSize, sort)).getContent();
+            }
         }
     }
 
@@ -103,7 +116,7 @@ public class CallDataLoader {
         }
     }
 
-    public void loadData(String fileName, boolean skipUpdate) {
+    public void loadData(String fileName, boolean skipUpdate, boolean secret) {
         total = 0;
 
         resetIndexes();
@@ -169,7 +182,7 @@ public class CallDataLoader {
             List<Call> calls = new ArrayList<>();
             String[] row;
             while ((row = reader.readNext()) != null) {
-                Call call = getCall(row, skipUpdate);
+                Call call = getCall(row, skipUpdate, secret);
                 processSave(calls, call, fileName);
             }
             log.info("Saving last batch of " + calls.size() + " items");
@@ -229,7 +242,7 @@ public class CallDataLoader {
         }
     }
 
-    private Call getCall(String[] row, boolean skipUpdate) throws IOException {
+    private Call getCall(String[] row, boolean skipUpdate, boolean secret) throws IOException {
         if (row[identifierIndex] == null || row[identifierIndex].isEmpty()) {
             return null;
         }
@@ -243,11 +256,13 @@ public class CallDataLoader {
                 .endDate(DateMapper.mapToTimestamp(row[submissionDLIndex]))
                 .endDate2(DateMapper.mapToTimestamp(row[submissionDL2Index]))
                 .startDate(DateMapper.mapToTimestamp(row[openDateIndex]))
-                .budgetMin(new BigDecimal(row[budgetMinIndex]).stripTrailingZeros())
-                .budgetMax(new BigDecimal(row[budgetMaxIndex]).stripTrailingZeros())
+                .budgetMin(getBudgetFromString(row, budgetMinIndex))
+                .budgetMax(getBudgetFromString(row, budgetMaxIndex))
                 .projectNumber(getProjectNumber(row[numberOfProjectsIndex]))
                 .typeOfMGADescription(valueOrDefault(row[typeOfMGADescriptionIndex], null))
                 .build();
+
+        call.setSecret(secret);
 
         String reference = row[referenceIndex];
         String pathId = row[pathIdIndex];
@@ -341,6 +356,7 @@ public class CallDataLoader {
                 if (isEmpty(existingCall.getKeywords())) {
                     setKeywords(existingCall);
                 }
+                existingCall.setSecret(secret);
                 existingCall.setUpdatedAt(DateMapper.map(LocalDateTime.now()));
                 return existingCall;
             } else {
@@ -352,6 +368,13 @@ public class CallDataLoader {
             e.printStackTrace();
             throw new ScraperException("Data integrity violation");
         }
+    }
+
+    private BigDecimal getBudgetFromString(String[] row, int index) {
+        if (index == -1 || isEmpty(row[index])) {
+            return null;
+        }
+        return new BigDecimal(row[index]).stripTrailingZeros();
     }
 
     private void setKeywords(Call call) throws IOException {
@@ -367,7 +390,7 @@ public class CallDataLoader {
     }
 
     private static Short getProjectNumber(String row) {
-        if (!isNotEmpty(row)) {
+        if (isEmpty(row)) {
             return null;
         }
         return Short.parseShort(row);

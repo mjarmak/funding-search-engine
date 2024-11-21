@@ -15,5 +15,6 @@ public interface CallColumns {
     String PROJECT_NUMBER = "project_number";
     String CREATED_AT = "created_date";
     String SCORE = "score";
+    String SECRET = "secret";
 
 }

@@ -1,5 +1,6 @@
 package com.jeniustech.funding_search_engine.entities;
 
+import com.jeniustech.funding_search_engine.enums.BooleanEnum;
 import com.jeniustech.funding_search_engine.enums.LongTextTypeEnum;
 import com.jeniustech.funding_search_engine.enums.SubmissionProcedureEnum;
 import com.jeniustech.funding_search_engine.enums.UrlTypeEnum;
@@ -69,6 +70,10 @@ public class Call {
 
     @Column(name = "type_of_mga_description")
     private String typeOfMGADescription;
+
+    @Enumerated(EnumType.ORDINAL)
+    @Column(name = "secret")
+    private BooleanEnum secret;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "call")
     private List<Project> projects;
@@ -190,5 +195,16 @@ public class Call {
             return longText.getText();
         }
         return null;
+    }
+
+    public void setSecret(Boolean secret) {
+        this.secret = BooleanEnum.fromBoolean(secret);
+    }
+
+    public boolean isSecret() {
+        if (secret == null) {
+            return false;
+        }
+        return secret.toBoolean();
     }
 }

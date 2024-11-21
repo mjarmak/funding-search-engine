@@ -21,6 +21,10 @@ public class JwtModel {
         return userRoles != null && (userRoles.contains("admin") || userRoles.contains("ADMIN"));
     }
 
+    public boolean hasSecretAccess() {
+        return userRoles != null && (userRoles.contains("secret_access") || userRoles.contains("SECRET_ACCESS"));
+    }
+
     public boolean isReadOnlyAdmin() {
         return userRoles != null && (userRoles.contains("admin-readonly") || userRoles.contains("ADMIN-READONLY"));
     }

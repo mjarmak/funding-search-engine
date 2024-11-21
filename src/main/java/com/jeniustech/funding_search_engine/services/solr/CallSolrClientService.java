@@ -85,6 +85,7 @@ public class CallSolrClientService implements ISolrClientService<CallDTO> {
             solrQuery.addField("*");
             solrQuery.setSort("score", SolrQuery.ORDER.desc);
             solrQuery.addFilterQuery("{!frange l=2}query($q)");
+            solrQuery.set("secret", "false");
 
             QueryResponse response = this.solrClient.query(solrQuery);
             return SolrMapper.mapToCall(response.getResults());
@@ -110,7 +111,7 @@ public class CallSolrClientService implements ISolrClientService<CallDTO> {
 
         logService.addLog(userData, LogTypeEnum.SEARCH_CALL, query);
         try {
-            QueryResponse response = search(query, pageNumber, pageSize, statusFilters, MIN_SCORE);
+            QueryResponse response = search(query, pageNumber, pageSize, statusFilters, MIN_SCORE, jwtModel.hasSecretAccess());
 
 //            var maxScore = response.getResults().getMaxScore();
 //            float minScoreNew = maxScore / 2;
@@ -148,7 +149,7 @@ public class CallSolrClientService implements ISolrClientService<CallDTO> {
         }
     }
 
-    QueryResponse search(String query, int pageNumber, int pageSize, List<StatusFilterEnum> statusFilters, float minScore) throws SolrServerException, IOException {
+    QueryResponse search(String query, int pageNumber, int pageSize, List<StatusFilterEnum> statusFilters, float minScore, boolean hasSecretAccess) throws SolrServerException, IOException {
         final SolrQuery solrQuery = new SolrQuery(
                 CommonParams.START, String.valueOf(pageNumber * pageSize),
                 CommonParams.ROWS, String.valueOf(pageSize)
@@ -180,6 +181,10 @@ public class CallSolrClientService implements ISolrClientService<CallDTO> {
             }
             // join with 'OR'
             solrQuery.addFilterQuery(String.join(" OR ", filters));
+        }
+
+        if (!hasSecretAccess) {
+            solrQuery.addFilterQuery("secret:false");
         }
 
         return this.solrClient.query(solrQuery);

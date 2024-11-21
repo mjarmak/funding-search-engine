@@ -68,6 +68,7 @@ public interface SolrMapper {
         } else {
             document.addField(CallColumns.CREATED_AT, DateMapper.mapToSolrString(LocalDateTime.now()));
         }
+        document.addField(CallColumns.SECRET, call.isSecret());
         return document;
     }
 

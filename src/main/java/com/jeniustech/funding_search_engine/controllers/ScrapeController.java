@@ -2,6 +2,7 @@ package com.jeniustech.funding_search_engine.controllers;
 
 import com.jeniustech.funding_search_engine.enums.AdminLogType;
 import com.jeniustech.funding_search_engine.enums.FrameworkProgramEnum;
+import com.jeniustech.funding_search_engine.exceptions.ScraperException;
 import com.jeniustech.funding_search_engine.scraper.services.*;
 import com.jeniustech.funding_search_engine.services.AdminLogService;
 import com.jeniustech.funding_search_engine.services.NotificationService;
@@ -12,6 +13,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,9 +39,10 @@ public class ScrapeController {
             @RequestParam(value = "query", required = false) List<String> queries,
             @RequestParam(value = "files", required = false) List<String> files,
             @RequestParam(required = false, defaultValue = "false") boolean skipUpdate,
-            @RequestParam(value = "destination") String destination
+            @RequestParam(required = false, defaultValue = "false") boolean secret,
+            @RequestParam(required = false) String destination
     ) {
-        scrapeAndNotify(queries, files, destination, skipUpdate);
+        scrapeAndNotify(queries, files, destination, skipUpdate, secret);
     }
 
     @PreAuthorize("hasRole('admin-server')")
@@ -126,11 +130,19 @@ public class ScrapeController {
         projectDataLoader.loadSolrData(frameworkPrograms);
     }
 
-    public void scrapeAndNotify(List<String> queries, List<String> files, String destination, boolean skipUpdate) {
+    public void scrapeAndNotify(
+            List<String> queries,
+            List<String> files,
+            String destination,
+            boolean skipUpdate,
+            boolean secret) {
         if (files == null) {
             files = new ArrayList<>();
         }
         if (files.isEmpty()) {
+            if (destination == null) {
+                throw new ScraperException("Destination is required");
+            }
             for (String query : queries) {
                 log.info("Scraping query: {}", query);
                 final String file = scrapeService.scrapeCalls(query, destination);
@@ -139,11 +151,14 @@ public class ScrapeController {
         }
         for (String file : files) {
             log.info("Loading file: {}", file);
-            callDataLoader.loadData(file, skipUpdate);
+            callDataLoader.loadData(file, skipUpdate, secret);
         }
-        callDataLoader.loadSolrData();
+        LocalDateTime startOfDay = LocalDateTime.now().with(LocalTime.MIN);
+        callDataLoader.loadSolrData(startOfDay);
         notificationService.sendAllNotifications();
-        adminLogService.addLog(AdminLogType.SCRAPE_SUCCESS, String.join(",", queries));
+        if (queries != null && !queries.isEmpty()) {
+            adminLogService.addLog(AdminLogType.SCRAPE_SUCCESS, String.join(",", queries));
+        }
     }
 
 }

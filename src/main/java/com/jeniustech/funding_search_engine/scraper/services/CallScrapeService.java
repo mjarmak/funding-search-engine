@@ -44,7 +44,7 @@ public class CallScrapeService {
         this.restTemplateDetails = new RestTemplate();
     }
 
-    public String scrapeCalls(String query, String dest) {
+    public String scrapeCalls(String query, String destination) {
 
         FileSystemResource queryFile;
         try {
@@ -76,7 +76,7 @@ public class CallScrapeService {
         log.info("Total pages: {}", totalPages);
 
 
-        String file = dest + "/output_" + query + "_" + System.currentTimeMillis() + ".csv";
+        String file = destination + "/output_" + query + "_" + System.currentTimeMillis() + ".csv";
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
 
             writer.write(String.join(",", CallCSVDetails.getCSVHeaders()));
