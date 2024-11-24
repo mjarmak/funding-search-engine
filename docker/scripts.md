@@ -1,8 +1,8 @@
 ### Run in order:
 ```
-docker build -t funding-search-engine:0.1.71 .
-docker tag funding-search-engine:0.1.71 jeniustech/funding-search-engine:0.1.71
-docker push jeniustech/funding-search-engine:0.1.71
+docker build -t funding-search-engine:0.1.72 .
+docker tag funding-search-engine:0.1.72 jeniustech/funding-search-engine:0.1.72
+docker push jeniustech/funding-search-engine:0.1.72
 
 ```
 
@@ -125,3 +125,11 @@ tar -czvf db_main_backup_09_11_24.tar.gz db_main
 ## Reputation
 https://talosintelligence.com/reputation_center/lookup?search=innovilyse.com
 https://www.virustotal.com/gui/url/cb95be5b678ddb2065f407e6a160241f27e6e63cc09cfa577cd2ba1359201c3e?nocache=1
+
+## generate solr password
+Copy the generate_password.sh to the server
+````
+sudo chmod -R 755 ./generate_password.sh
+./generate_password.sh 35ef052632ad85a16de7761587dd2ea2
+./generate_password.sh nv7902BNTGYdsaTgb9372qt40q23
+````

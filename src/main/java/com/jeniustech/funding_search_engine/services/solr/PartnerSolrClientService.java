@@ -47,7 +47,9 @@ public class PartnerSolrClientService implements ISolrClientService<PartnerDTO> 
             @Value("${spring.data.solr.core.partners}") String core,
             UserDataRepository userDataRepository,
             LogService logService,
-            PartnerService partnerService
+            PartnerService partnerService,
+            @Value("${spring.data.solr.username}") String username,
+            @Value("${spring.data.solr.password}") String password
     ) {
         this.userDataRepository = userDataRepository;
         this.logService = logService;
@@ -55,6 +57,7 @@ public class PartnerSolrClientService implements ISolrClientService<PartnerDTO> 
         this.solrClient = new Http2SolrClient
                 .Builder(url + "/" + core)
                 .withConnectionTimeout(10, TimeUnit.SECONDS)
+                .withBasicAuthCredentials(username, password)
                 .build();
     }
 

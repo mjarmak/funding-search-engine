@@ -3,7 +3,8 @@
     "blockUnknown":true,
     "class":"solr.BasicAuthPlugin",
     "credentials":{
-      "admin_user":"35ef052632ad85a16de7761587dd2ea2"
+      "admin_user":"uetEYw+g3iOtgP4t81ZPBAyfE6rspGXRSJPy3R5JDMc= ZWVyOWplaW5pOEVpZ2hlZW5nOGVlamFoNUVleTV1ZmllMkNob0JlZWM2ZWl0aG9s",
+      "user": "MHNa3Zo/l8P0VGct858vH9dCcvEgkCMdhuA5oGMp7JE= YWdlZVBoN29QaDhlb21ldGhvaFhvbmc4Y3U2WWk1ZWloMlB1b0hpZTVhZXNoNmhh"
     },
     "realm":"master",
     "forwardCredentials":false
@@ -12,12 +13,17 @@
     "class":"solr.RuleBasedAuthorizationPlugin",
     "permissions":[
       {
-        "role":"admin",
-        "name":"security-edit"
+        "name":"security-edit",
+        "role":"admin"
+      },
+      {
+        "name": "read",
+        "role": "user"
       }
     ],
     "user-role":{
-      "admin_user":"admin"
+      "admin_user":["admin", "user"],
+      "user": ["user"]
     }
   }
 }
