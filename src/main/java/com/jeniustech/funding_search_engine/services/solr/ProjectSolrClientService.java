@@ -16,7 +16,7 @@ import com.jeniustech.funding_search_engine.services.LogService;
 import com.jeniustech.funding_search_engine.services.ProjectService;
 import com.jeniustech.funding_search_engine.services.ValidatorService;
 import com.jeniustech.funding_search_engine.util.StringUtil;
-import jakarta.validation.constraints.NotNull;
+import jakarta.annotation.Nullable;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.solr.client.solrj.SolrClient;
 import org.apache.solr.client.solrj.SolrQuery;
@@ -35,13 +35,13 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
+import static com.jeniustech.funding_search_engine.util.QueryUtil.getMinScore;
 import static com.jeniustech.funding_search_engine.util.StringUtil.processQuery;
 
 @Service
 @Slf4j
 public class ProjectSolrClientService implements ISolrClientService<ProjectDTO> {
 
-    public static final int MIN_SCORE = 1;
     SolrClient solrClient;
     private final UserDataRepository userDataRepository;
     private final LogService logService;
@@ -88,7 +88,8 @@ public class ProjectSolrClientService implements ISolrClientService<ProjectDTO> 
             solrQuery.addField("*");
             solrQuery.addField("score");
             solrQuery.setSort("score", SolrQuery.ORDER.desc);
-            solrQuery.addFilterQuery("{!frange l=2}query($q)");
+            Float minScore = getMinScore(query);
+            solrQuery.addFilterQuery("{!frange l=" + minScore + "}query($q)");
 
             QueryResponse response = this.solrClient.query(solrQuery);
             List<ProjectDTO> results = SolrMapper.mapToProject(response.getResults());
@@ -107,8 +108,8 @@ public class ProjectSolrClientService implements ISolrClientService<ProjectDTO> 
             String query,
             int pageNumber,
             int pageSize,
-            @NotNull List<StatusFilterEnum> statusFilters,
-            @NotNull List<FrameworkProgramEnum> programFilters,
+            @Nullable List<StatusFilterEnum> statusFilters,
+            @Nullable List<FrameworkProgramEnum> programFilters,
             JwtModel jwtModel
     ) throws SearchException {
         UserData userData = this.userDataRepository.findBySubjectId(jwtModel.getUserId()).orElseThrow(() -> new UserNotFoundException("User not found"));
@@ -123,14 +124,14 @@ public class ProjectSolrClientService implements ISolrClientService<ProjectDTO> 
 
         logService.addLog(userData, LogTypeEnum.SEARCH_PROJECT, query);
         try {
-            QueryResponse response = search(query, pageNumber, pageSize, statusFilters, programFilters, MIN_SCORE);
+            QueryResponse response = search(query, pageNumber, pageSize, statusFilters, programFilters, getMinScore(query));
 
-            var maxScore = response.getResults().getMaxScore();
-            float minScoreNew = maxScore / 2;
-            if (minScoreNew > MIN_SCORE && response.getResults().getNumFound() > 1000 && !query.isBlank() && !isTrialUser) {
-                log.debug("Max score too high, retrying with min score: {}", minScoreNew);
-                response = search(query, pageNumber, pageSize, statusFilters, programFilters, minScoreNew);
-            }
+//            var maxScore = response.getResults().getMaxScore();
+//            float minScoreNew = maxScore / 2;
+//            if (minScoreNew > MIN_SCORE && response.getResults().getNumFound() > 1000 && !query.isBlank() && !isTrialUser) {
+//                log.debug("Max score too high, retrying with min score: {}", minScoreNew);
+//                response = search(query, pageNumber, pageSize, statusFilters, programFilters, minScoreNew);
+//            }
 
             List<ProjectDTO> results = SolrMapper.mapToProject(response.getResults());
             List<Long> ids = results.stream().map(ProjectDTO::getId).toList();
@@ -162,7 +163,7 @@ public class ProjectSolrClientService implements ISolrClientService<ProjectDTO> 
         }
     }
 
-    private QueryResponse search(String query, int pageNumber, int pageSize, List<StatusFilterEnum> statusFilters, List<FrameworkProgramEnum> programFilters, float minScore) throws SolrServerException, IOException {
+    private QueryResponse search(String query, int pageNumber, int pageSize, @Nullable List<StatusFilterEnum> statusFilters, @Nullable List<FrameworkProgramEnum> programFilters, @Nullable Float minScore) throws SolrServerException, IOException {
         final SolrQuery solrQuery = new SolrQuery(
                 CommonParams.START, String.valueOf(pageNumber * pageSize),
                 CommonParams.ROWS, String.valueOf(pageSize)
@@ -177,9 +178,12 @@ public class ProjectSolrClientService implements ISolrClientService<ProjectDTO> 
         solrQuery.setSort("score", SolrQuery.ORDER.desc);
         // set def type to dismax
         solrQuery.set("defType", "dismax");
-        solrQuery.addFilterQuery("{!frange l=" + minScore + "}query($q)");
 
-        if (!statusFilters.isEmpty() && statusFilters.size() < 3) {
+        if (minScore != null) {
+            solrQuery.addFilterQuery("{!frange l=" + minScore + "}query($q)");
+        }
+
+        if (statusFilters != null && !statusFilters.isEmpty() && statusFilters.size() < 3) {
             List<String> filters = new ArrayList<>();
             for (StatusFilterEnum statusFilter : statusFilters) {
                 switch (statusFilter) {
@@ -194,7 +198,7 @@ public class ProjectSolrClientService implements ISolrClientService<ProjectDTO> 
             solrQuery.addFilterQuery(String.join(" OR ", filters));
         }
 
-        if (!programFilters.isEmpty() && programFilters.size() < 9) {
+        if (programFilters != null && !programFilters.isEmpty() && programFilters.size() < 9) {
             solrQuery.addFilterQuery("framework_program:(" + programFilters.stream().map(FrameworkProgramEnum::getName).collect(Collectors.joining(" ")) + ")");
         }
 

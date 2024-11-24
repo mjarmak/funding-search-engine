@@ -16,6 +16,7 @@ import com.jeniustech.funding_search_engine.services.LogService;
 import com.jeniustech.funding_search_engine.services.PartnerService;
 import com.jeniustech.funding_search_engine.services.ValidatorService;
 import com.jeniustech.funding_search_engine.util.StringUtil;
+import jakarta.annotation.Nullable;
 import org.apache.solr.client.solrj.SolrClient;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.impl.Http2SolrClient;
@@ -30,6 +31,7 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
+import static com.jeniustech.funding_search_engine.util.QueryUtil.getMinScore;
 import static com.jeniustech.funding_search_engine.util.StringUtil.processQuery;
 
 @Service
@@ -67,7 +69,7 @@ public class PartnerSolrClientService implements ISolrClientService<PartnerDTO> 
         }
     }
 
-    public SearchDTO<PartnerDTO> search(String query, int pageNumber, int pageSize, JwtModel jwtModel, List<OrganisationTypeEnum> entityTypeFilters) throws SearchException {
+    public SearchDTO<PartnerDTO> search(String query, int pageNumber, int pageSize, JwtModel jwtModel, @Nullable List<OrganisationTypeEnum> entityTypeFilters) throws SearchException {
         UserData userData = this.userDataRepository.findBySubjectId(jwtModel.getUserId()).orElseThrow(() -> new UserNotFoundException("User not found"));
 
         ValidatorService.validateUserSearch(userData);
@@ -89,9 +91,11 @@ public class PartnerSolrClientService implements ISolrClientService<PartnerDTO> 
             solrQuery.addField("*");
             solrQuery.addField("score");
             solrQuery.setSort("score", SolrQuery.ORDER.desc);
-            solrQuery.addFilterQuery("{!frange l=1}query($q)");
 
-            if (!entityTypeFilters.isEmpty() && entityTypeFilters.size() < 5) {
+            float minScore = getMinScore(query);
+            solrQuery.addFilterQuery("{!frange l=" + minScore + "}query($q)");
+
+            if (entityTypeFilters != null && !entityTypeFilters.isEmpty() && entityTypeFilters.size() < 5) {
                 solrQuery.addFilterQuery("type:(" + entityTypeFilters.stream().map(OrganisationTypeEnum::getName).collect(Collectors.joining(" ")) + ")");
             }
 

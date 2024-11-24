@@ -2,72 +2,29 @@ package com.jeniustech.funding_search_engine.services.solr;
 
 import com.jeniustech.funding_search_engine.dto.search.CallDTO;
 import com.jeniustech.funding_search_engine.dto.search.SearchDTO;
-import com.jeniustech.funding_search_engine.entities.UserData;
-import com.jeniustech.funding_search_engine.entities.UserSubscription;
-import com.jeniustech.funding_search_engine.entities.UserSubscriptionJoin;
-import com.jeniustech.funding_search_engine.enums.SubscriptionJoinType;
-import com.jeniustech.funding_search_engine.enums.SubscriptionStatusEnum;
-import com.jeniustech.funding_search_engine.enums.SubscriptionTypeEnum;
-import com.jeniustech.funding_search_engine.mappers.DateMapper;
-import com.jeniustech.funding_search_engine.models.JwtModel;
-import com.jeniustech.funding_search_engine.repository.LogBookRepository;
-import com.jeniustech.funding_search_engine.repository.UserDataRepository;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 
-import java.util.List;
-import java.util.Optional;
-
-import static com.jeniustech.funding_search_engine.enums.StatusFilterEnum.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
 
 @SpringBootTest
 @Disabled
-public class CallSolrClientServiceTest {
+public class CallSolrClientServiceTest extends SolrClientTest {
 
-    private final JwtModel JWT_MODEL = JwtModel.builder().userId("userId").build();
 
     @Autowired
     private CallSolrClientService service;
 
-    @MockBean
-    private UserDataRepository userDataRepository;
-
-    @MockBean
-    private LogBookRepository logBookRepository;
-
-    @BeforeEach
-    public void setUp() {
-        UserData userData = UserData.builder()
-                .subjectId("userId")
-                .userSubscriptionJoins(List.of(
-                        UserSubscriptionJoin.builder().
-                                type(SubscriptionJoinType.ADMIN)
-                                .subscription(
-                                        UserSubscription.builder()
-                                                .status(SubscriptionStatusEnum.ACTIVE)
-                                                .type(SubscriptionTypeEnum.ENTERPRISE)
-                                                .endDate(DateMapper.mapToTimestamp("9999-01-01T01:01:01"))
-                                                .build()
-                                ).build()))
-                .build();
-        when(userDataRepository.findBySubjectId(JWT_MODEL.getUserId())).thenReturn(Optional.of(userData));
-        when(logBookRepository.save(any())).thenReturn(null);
-    }
-
     @Test
     public void testSearch_1() {
         SearchDTO<CallDTO> results = service.search("Digital solutions to foster participative design, planning and management of buildings, neighbourhoods and urban districts",
-                0, 5, List.of(UPCOMING,OPEN,CLOSED), JWT_MODEL);
+                0, 5, null, JWT_MODEL);
 
         assertEquals("HORIZON-CL5-2024-D4-02-05", results.getResults().get(0).getIdentifier());
         assertEquals("Digital solutions to foster participative design, planning and management of buildings, neighbourhoods and urban districts (Built4People Partnership)", results.getResults().get(0).getTitle());
@@ -214,7 +171,7 @@ public class CallSolrClientServiceTest {
             "CEF-T-2024-SUSTMOBGEN-MULTHUB-Studies",
     })
     public void testSearch_identifier(String query) {
-        SearchDTO<CallDTO> results = service.search(query, 0, 5, List.of(UPCOMING,OPEN,CLOSED), JWT_MODEL);
+        SearchDTO<CallDTO> results = service.search(query, 0, 5, null, JWT_MODEL);
         assertEquals(query, results.getResults().get(0).getIdentifier());
     }
 
@@ -346,14 +303,19 @@ public class CallSolrClientServiceTest {
             "Mutual learning and support scheme for national and regional innovation programmes"
     })
     void testSearch_title(String query) {
-        SearchDTO<CallDTO> results = service.search(query, 0, 5, List.of(UPCOMING,OPEN,CLOSED), JWT_MODEL);
+        SearchDTO<CallDTO> results = service.search(query, 0, 5, null, JWT_MODEL);
         assertEquals(query.toLowerCase(), results.getResults().get(0).getTitle().toLowerCase());
     }
 
-    @Test
-    public void testSearch_2() {
-        SearchDTO<CallDTO> results = service.search("digital solutions", 0, 5, List.of(UPCOMING,OPEN,CLOSED), JWT_MODEL);
+    @ParameterizedTest
+    @CsvSource({
+            "digital solutions, 1000",
+            "digital, 2000",
+            "building, 2000",
+    })
+    public void testSearch_count(String query, int count) {
+        SearchDTO<CallDTO> results = service.search(query, 0, 5, null, JWT_MODEL);
         System.out.println("count: " + results.getTechnicalTotalResults());
-        assertTrue(results.getTechnicalTotalResults() > 1000);
+        assertTrue(results.getTechnicalTotalResults() > count);
     }
 }

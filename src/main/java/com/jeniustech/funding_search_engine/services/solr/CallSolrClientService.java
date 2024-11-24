@@ -17,7 +17,7 @@ import com.jeniustech.funding_search_engine.services.CallService;
 import com.jeniustech.funding_search_engine.services.LogService;
 import com.jeniustech.funding_search_engine.services.ValidatorService;
 import com.jeniustech.funding_search_engine.util.StringUtil;
-import jakarta.validation.constraints.NotNull;
+import jakarta.annotation.Nullable;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.solr.client.solrj.SolrClient;
 import org.apache.solr.client.solrj.SolrQuery;
@@ -36,13 +36,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+import static com.jeniustech.funding_search_engine.util.QueryUtil.getMinScore;
 import static com.jeniustech.funding_search_engine.util.StringUtil.processQuery;
 
 @Service
 @Slf4j
 public class CallSolrClientService implements ISolrClientService<CallDTO> {
 
-    public static final int MIN_SCORE = 1;
     SolrClient solrClient;
     private final UserDataRepository userDataRepository;
     private final LogService logService;
@@ -95,7 +95,7 @@ public class CallSolrClientService implements ISolrClientService<CallDTO> {
         }
     }
 
-    public SearchDTO<CallDTO> search(String query, int pageNumber, int pageSize, @NotNull List<StatusFilterEnum> statusFilters, JwtModel jwtModel) throws SearchException {
+    public SearchDTO<CallDTO> search(String query, int pageNumber, int pageSize, List<StatusFilterEnum> statusFilters, JwtModel jwtModel) throws SearchException {
         UserData userData = this.userDataRepository.findBySubjectId(jwtModel.getUserId()).orElseThrow(() -> new UserNotFoundException("User not found"));
 
         ValidatorService.validateUserSearch(userData);
@@ -111,7 +111,7 @@ public class CallSolrClientService implements ISolrClientService<CallDTO> {
 
         logService.addLog(userData, LogTypeEnum.SEARCH_CALL, query);
         try {
-            QueryResponse response = search(query, pageNumber, pageSize, statusFilters, MIN_SCORE, jwtModel.hasSecretAccess());
+            QueryResponse response = search(query, pageNumber, pageSize, statusFilters, getMinScore(query), jwtModel.hasSecretAccess());
 
 //            var maxScore = response.getResults().getMaxScore();
 //            float minScoreNew = maxScore / 2;
@@ -149,7 +149,7 @@ public class CallSolrClientService implements ISolrClientService<CallDTO> {
         }
     }
 
-    QueryResponse search(String query, int pageNumber, int pageSize, List<StatusFilterEnum> statusFilters, float minScore, boolean hasSecretAccess) throws SolrServerException, IOException {
+    QueryResponse search(String query, int pageNumber, int pageSize, @Nullable List<StatusFilterEnum> statusFilters, @Nullable Float minScore, boolean hasSecretAccess) throws SolrServerException, IOException {
         final SolrQuery solrQuery = new SolrQuery(
                 CommonParams.START, String.valueOf(pageNumber * pageSize),
                 CommonParams.ROWS, String.valueOf(pageSize)
@@ -160,7 +160,9 @@ public class CallSolrClientService implements ISolrClientService<CallDTO> {
             solrQuery.set("defType", "dismax");
             solrQuery.set("q.op", operationType);
             solrQuery.set("qf", "identifier^2 title^2 long_text");
-            solrQuery.addFilterQuery("{!frange l=" + minScore + "}query($q)");
+            if (minScore != null) {
+                solrQuery.addFilterQuery("{!frange l=" + minScore + "}query($q)");
+            }
         } else {
             solrQuery.setQuery("*:*");
         }
@@ -168,7 +170,7 @@ public class CallSolrClientService implements ISolrClientService<CallDTO> {
         solrQuery.addField("score");
         solrQuery.setSort("score", SolrQuery.ORDER.desc);
 
-        if (!statusFilters.isEmpty() && statusFilters.size() < 3) {
+        if (statusFilters != null && !statusFilters.isEmpty() && statusFilters.size() < 3) {
             List<String> filters = new ArrayList<>();
             for (StatusFilterEnum statusFilter : statusFilters) {
                 switch (statusFilter) {
