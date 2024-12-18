@@ -1,0 +1,126 @@
+{
+  "TopicDetails": {
+    "type": 1,
+    "ccm2Id": 47294886,
+    "identifier": "PPPA-2024-SKILL-FOR-TOURISM",
+    "title": "Upskilling and reskilling the Tourism Ecosystem I Tourism Knowledge hub and Tourism Data Space",
+    "publicationDateLong": 1731970800000,
+    "callIdentifier": "PPPA-2024-TOTOLAB",
+    "callTitle": "Upskilling and reskilling the Tourism Ecosystem - Tourism Knowledge hub and Tourism Data Space",
+    "callccm2Id": 47294927,
+    "allowPartnerSearch": true,
+    "frameworkProgramme": {
+      "id": 43637601,
+      "abbreviation": "PPPA2027",
+      "description": "Pilot Projects and Preparation Actions (PPPA)"
+    },
+    "programmeDivision": [
+      {
+        "id": 45918723,
+        "abbreviation": "PPPA-SMP",
+        "description": "Pilot Projects and Preparatory Actions in the area of the Single Market Programme"
+      }
+    ],
+    "topicMGAs": [
+      {
+        "id": 43632754,
+        "abbreviation": "PPPA",
+        "description": "Pilot Projects and Preparatory Actions"
+      }
+    ],
+    "keywords": [
+
+    ],
+    "sme": false,
+    "actions": [
+      {
+        "status": {
+          "id": 31094502,
+          "abbreviation": "Open",
+          "description": "Open"
+        },
+        "types": [
+          {
+            "typeOfAction": "PPPA Pilot Projects and Preparatory Actions",
+            "typeOfMGA": [
+              {
+                "id": 43632754,
+                "abbreviation": "PPPA",
+                "description": "Pilot Projects and Preparatory Actions"
+              }
+            ]
+          }
+        ],
+        "plannedOpeningDate": "1732748400000",
+        "submissionProcedure": {
+
+        },
+        "deadlineDates": [
+          "1739401200000"
+        ]
+      }
+    ],
+    "latestInfos": [
+      {
+        "approvalDate": "",
+        "lastChangeDate": "2024-11-28T00:01:00.196",
+        "content": "The submission session is now available for: PPPA-2024-SKILL-FOR-TOURISM"
+      }
+    ],
+    "budgetOverviewJSONItem": {
+      "budgetTopicActionMap": {
+        "108137": {
+          "action": "PPPA-2024-SKILL-FOR-TOURISM - PPPA Pilot Projects and Preparatory Actions",
+          "plannedOpeningDate": "1732748400000",
+          "deadlineModel": "single-stage",
+          "deadlineDates": [
+            "1739401200000"
+          ],
+          "budgetYearMap": {
+            "2024": "1000000"
+          },
+          "expectedGrants": 1,
+          "minContribution": 1,
+          "maxContribution": 995000
+        }
+      },
+      "budgetYearsColumns": [
+        "2024"
+      ]
+    },
+    "description": "<span class=\"topicdescriptionkind\">Expected Outcome:</span><p>Supporting upskilling and training for DMOs and SMEs;</p><p>Ensuring synergies with existing measures at EU level</p><span class=\"topicdescriptionkind\">Scope:</span><p>This call for proposal aims at supporting the current policy work on data management and data sharing by developing guidelines on how to participate and use the D3Hub and the future common European tourism data space for destinations and SMEs in the tourism sector.</p>",
+    "conditions": "<div class=\"eui-u-mt-l>\"><h4>Conditions</h4><div><h4> 1. Admissibility Conditions: Proposal page limit and layout</h4><div class=\"eui-u-mt-s\"><p>described in the <u><a href=\"https://ec.europa.eu/info/funding-tenders/opportunities/docs/2021-2027/pppa/wp-call/2024/call-fiche_pppa-2024-skill-for-tourism_en.pdf\" rel=\"noopener noreferrer\" target=\"_blank\">call document</a></u>.</p><p><strong>Proposal page limits and layout:</strong> described in Part B of the <a href=\"https://ec.europa.eu/info/funding-tenders/opportunities/docs/2021-2027/smp/temp-form/af/af_smp-cosme_en.pdf\" rel=\"noopener noreferrer\" target=\"_blank\">Application Form</a>&nbsp;available in the Submission System.</p></div></div><div><h4> 2. Eligible Countries</h4><div class=\"eui-u-mt-s\"><p>described in the <u><a href=\"https://ec.europa.eu/info/funding-tenders/opportunities/docs/2021-2027/pppa/wp-call/2024/call-fiche_pppa-2024-skill-for-tourism_en.pdf\" rel=\"noopener noreferrer\" target=\"_blank\">call document</a></u><a href=\"https://ec.europa.eu/info/funding-tenders/opportunities/docs/2021-2027/pppa/wp-call/2024/call-fiche_pppa-2024-skill-for-tourism_en.pdf\" rel=\"noopener noreferrer\" target=\"_blank\">.</a></p></div></div><div><h4> 3. Other Eligible Conditions</h4><div class=\"eui-u-mt-s\"><p>n/a</p></div></div><div><h4> 4. Financial and operational capacity and exclusion</h4><div class=\"eui-u-mt-s\"><p>n/a</p></div></div><div><h4> 5a. Evaluation and award: Submission and evaluation process</h4><div class=\"eui-u-mt-s\"><p>n/a</p></div></div><div><h4> 5b. Evaluation and award: Award criteria, scoring and thresholds</h4><div class=\"eui-u-mt-s\"><p>Evaluation criteria, scoring, threshold and process are described in the <u><a href=\"https://ec.europa.eu/info/funding-tenders/opportunities/docs/2021-2027/pppa/wp-call/2024/call-fiche_pppa-2024-skill-for-tourism_en.pdf\" rel=\"noopener noreferrer\" target=\"_blank\">call document</a></u>.</p></div></div><div><h4> 5c. Evaluation and award: Indicative timeline for evaluation and grant agreement</h4><div class=\"eui-u-mt-s\"><p>described in the <u><a href=\"https://ec.europa.eu/info/funding-tenders/opportunities/docs/2021-2027/pppa/wp-call/2024/call-fiche_pppa-2024-skill-for-tourism_en.pdf\" rel=\"noopener noreferrer\" target=\"_blank\">call document</a></u>.</p></div></div><div><h4> 6. Legal and financial set-up of the grants</h4><div class=\"eui-u-mt-s\"><p>n/a</p></div></div></div><div class=\"eui-u-mt-l\"><h4> Call document and annexes:</h4> <div class=\"eui-u-mt-s\"><p><u><a href=\"https://ec.europa.eu/info/funding-tenders/opportunities/docs/2021-2027/pppa/wp-call/2024/call-fiche_pppa-2024-skill-for-tourism_en.pdf\" rel=\"noopener noreferrer\" target=\"_blank\">Call document</a></u></p></div><h4> Application form templates</h4> <div class=\"eui-u-mt-s\"><p>Standard proposal template — the application form specific to this call is available in the Submission System</p><p><a href=\"https://ec.europa.eu/info/funding-tenders/opportunities/docs/2021-2027/smp/temp-form/af/detailed-budget-table_smp-cosme_en.xlsm\" rel=\"noopener noreferrer\" target=\"_blank\">Detailed budget template</a></p></div><h4> Model Grant Agreements (MGA) and additional documents</h4> <div class=\"eui-u-mt-s\"><p><a href=\"https://ec.europa.eu/info/funding-tenders/opportunities/docs/2021-2027/common/agr-contr/general-mga_en.pdf\" rel=\"noopener noreferrer\" target=\"_blank\">MGA</a></p><p><a href=\"https://eur-lex.europa.eu/legal-content/EN/TXT/PDF/?uri=OJ:L_202402509\" rel=\"noopener noreferrer\" target=\"_blank\">Regulation 2024/2509</a> </p><p>financing decision on the financing of certain pilot projects relating to 'Horizon Europe' and the 'Single Market Programme’ and on the adoption of the Work Programme for 2024 - Commission Decision C (2024) 1936 final of 27.3.2024</p><p><a href=\"https://eur-lex.europa.eu/legal-content/EN/ALL/?uri=CELEX:32018R1046&qid=1535046024012\" rel=\"noopener noreferrer\" target=\"_blank\">EU Financial Regulation 2018/1046</a></p><p><a href=\"https://ec.europa.eu/info/funding-tenders/opportunities/docs/2021-2027/common/guidance/rules-lev-lear-fca_en.pdf\" rel=\"noopener noreferrer\" target=\"_blank\">Rules for Legal Entity Validation, LEAR Appointment and Financial Capacity Assessment</a></p><p><a href=\"https://ec.europa.eu/info/funding-tenders/opportunities/docs/2021-2027/common/guidance/aga_en.pdf\" rel=\"noopener noreferrer\" target=\"_blank\">EU Grants AGA — Annotated Model Grant Agreement</a></p><p><a href=\"https://webgate.ec.europa.eu/funding-tenders-opportunities/display/OM/Online+Manual\" rel=\"noopener noreferrer\" target=\"_blank\">Funding &amp; Tenders Portal Online Manual</a></p><p><a href=\"https://ec.europa.eu/info/funding-tenders/opportunities/docs/2021-2027/common/ftp/tc_en.pdf\" rel=\"noopener noreferrer\" target=\"_blank\">Funding &amp; Tenders Portal Terms and Conditions</a></p><p><a href=\"https://ec.europa.eu/info/funding-tenders/opportunities/portal/screen/support/legalnotice\" rel=\"noopener noreferrer\" target=\"_blank\">Funding &amp; Tenders Portal Privacy Statement</a></p></div></div>",
+    "supportInfo": "<p>For help related to this call, please contact EISMEA-SMP-COSME-ENQUIRIES@ec.europa.eu</p><p><a href=\"https://ec.europa.eu/info/funding-tenders/opportunities/portal/screen/support/faq?order=DESC&pageNumber=1&amp;pageSize=10&amp;sortBy=publicationDate&amp;isExactMatch=true&amp;type=1&amp;grantCategories=p_submission_eval\" rel=\"noopener noreferrer\" target=\"_blank\">Funding &amp; Tenders Portal FAQ – Submission of proposals</a>.</p><p><a href=\"https://ec.europa.eu/info/funding-tenders/opportunities/portal/screen/support/helpdesks/contact-form\" rel=\"noopener noreferrer\" target=\"_blank\">IT Helpdesk</a> – Contact the IT helpdesk for questions such as forgotten passwords, access rights and roles, technical aspects of submission of proposals, etc.</p><p><a href=\"https://webgate.ec.europa.eu/funding-tenders-opportunities/display/OM/Online+Manual\" rel=\"noopener noreferrer\" target=\"_blank\">Online Manual</a> – Step-by-step online guide through the Portal processes from proposal preparation and evaluation to reporting on your ongoing project. Valid for all 2021-2027 programmes.</p><p><u><a href=\"https://een.ec.europa.eu/\" rel=\"noopener noreferrer\" target=\"_blank\">Enterprise Europe Network</a></u> – Contact your Network national contact for advice to business with special focus on SMEs. The support includes guidance on EU research funding.</p><p><u><a href=\"https://intellectual-property-helpdesk.ec.europa.eu/index_en\" rel=\"noopener noreferrer\" target=\"_blank\">Intellectual Property Helpdesk</a></u> – Contact the IP Helpdesk for advice on the IP elements of your grant agreement.</p>",
+    "sepTemplate": "<p>To access the Electronic Submission Service, please click on the submission-button next to the <strong>type of action</strong> and the <strong>type of model grant agreement</strong> that corresponds to your proposal. You will then be asked to confirm your choice, as it cannot be changed in the submission system. Upon confirmation, you will be linked to the correct entry point.</p><p>To access existing draft proposals for this topic, please login to the Funding & Tenders Portal and select the My Proposals page of the My Area section.</p>",
+    "links": [
+      {
+        "callIdentifier": "PPPA-2024-TOTOLAB",
+        "criterionCode": "PPPA",
+        "criterionDescription": "Pilot Projects and Preparatory Actions",
+        "url": "https://ec.europa.eu/research/participants/submission/manage/screen/submission/create-draft/39401?topic=PPPA-2024-SKILL-FOR-TOURISM",
+        "startDate": "1732748400000",
+        "endDate": "1739401200000",
+        "mgaDescription": "Pilot Projects and Preparatory Actions",
+        "mgaCode": "PPPA"
+      }
+    ],
+    "additionalDossiers": [
+
+    ],
+    "infoPackDossiers": [
+
+    ],
+    "callDetailsJSONItem": {
+      "latestInfos": [
+        {
+          "approvalDate": "",
+          "lastChangeDate": "2024-11-28T00:01:00.196",
+          "content": "The submission session is now available for: PPPA-2024-SKILL-FOR-TOURISM"
+        }
+      ],
+      "hasForthcomingTopics": false,
+      "hasOpenTopics": false,
+      "allClosedTopics": false
+    }
+  }
+}

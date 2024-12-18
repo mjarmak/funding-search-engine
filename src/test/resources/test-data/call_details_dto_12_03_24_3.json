@@ -1,0 +1,130 @@
+{
+  "TopicDetails": {
+    "type": 1,
+    "ccm2Id": 47396260,
+    "identifier": "ERASMUS-EDU-2025-PI-ALL-INNO-EDU-ENTERP",
+    "title": "Alliances for Education and Enterprises",
+    "publicationDateLong": 1732748400000,
+    "callIdentifier": "ERASMUS-EDU-2025-PI-ALL-INNO",
+    "callTitle": "Partnerships for Innovation - Alliances",
+    "callccm2Id": 47396629,
+    "allowPartnerSearch": true,
+    "frameworkProgramme": {
+      "id": 43353764,
+      "abbreviation": "ERASMUS2027",
+      "description": "Erasmus+ (ERASMUS+)"
+    },
+    "programmeDivision": [
+      {
+        "id": 43439960,
+        "abbreviation": "PI-INNO-EDU-ENTERP",
+        "description": "Alliances for Innovation - Alliances for Education and Enterprises"
+      }
+    ],
+    "topicMGAs": [
+      {
+        "id": 43341839,
+        "abbreviation": "ERASMUS-AG-LS",
+        "description": "ERASMUS Lump Sum Grant"
+      }
+    ],
+    "keywords": [
+      "Circular economy",
+      "Climate change",
+      "Curricular education activities with enterprises",
+      "Curriculum design and development",
+      "Demography",
+      "ESCO",
+      "ESG",
+      "Education-enterprises partnerships",
+      "Entrepreneurship",
+      "European  transparency tools for validation ECVET",
+      "Identification of skills needs",
+      "Innovation capacity",
+      "Innovation in learning, teaching and assessment practices supported by digital technologies",
+      "Mobility in Vocational Education & Training (VET)",
+      "Start-ups",
+      "Vocational training",
+      "digital skills",
+      "digitalisation",
+      "emerging professional needs",
+      "green skills",
+      "mobility in HE",
+      "work-based learning"
+    ],
+    "sme": false,
+    "actions": [
+      {
+        "status": {
+          "id": 31094501,
+          "abbreviation": "Forthcoming",
+          "description": "Forthcoming"
+        },
+        "types": [
+          {
+            "typeOfAction": "ERASMUS-LS ERASMUS Lump Sum Grants",
+            "typeOfMGA": [
+              {
+                "id": 43341839,
+                "abbreviation": "ERASMUS-AG-LS",
+                "description": "ERASMUS Lump Sum Grant"
+              }
+            ]
+          }
+        ],
+        "plannedOpeningDate": "1733353200000",
+        "submissionProcedure": {
+
+        },
+        "deadlineDates": [
+          "1741215600000"
+        ]
+      }
+    ],
+    "latestInfos": [
+
+    ],
+    "budgetOverviewJSONItem": {
+      "budgetTopicActionMap": {
+        "108636": {
+          "action": "ERASMUS-EDU-2025-PI-ALL-INNO-BLUEPRINT - ERASMUS-LS ERASMUS Lump Sum Grants",
+          "plannedOpeningDate": "1733353200000",
+          "deadlineModel": "single-stage",
+          "deadlineDates": [
+            "1741215600000"
+          ],
+          "budgetYearMap": {
+            "2025": "62000000"
+          },
+          "expectedGrants": 0,
+          "minContribution": 0,
+          "maxContribution": 0
+        }
+      },
+      "budgetYearsColumns": [
+        "2025"
+      ]
+    },
+    "description": "<span class=\"topicdescriptionkind\">Scope:</span><p><strong>ALLIANCES FOR INNOVATION</strong></p><p><strong>Alliances for Innovation</strong> aim to strengthen Europe’s innovation capacity by boosting innovation through <strong>cooperation and flow of knowledge </strong>among higher education, vocational education and training (both initial and continuous), and the broader socio-economic environment, including research.</p><p>They also aim to boost the provision of new skills and address skills mismatches by designing and creating new curricula <strong>for higher education (HE) and vocational education and training (VET)</strong>, supporting the development of a <strong>sense of initiative</strong> and <strong>entrepreneurial mind-sets </strong>in the EU.</p><p><strong>OBJECTIVES OF THE ACTION</strong></p><p>These partnerships shall implement a coherent and comprehensive set of <strong>sectoral or cross-sectoral</strong> activities, which should be adaptable to future knowledge developments across the EU.</p><p>To boost innovation, the focus will be on <strong>talent and skills</strong> development. Firstly, digital competences have become increasingly important in all job profiles across the entire labour market. Secondly, the transition to a circular and greener economy needs to be underpinned by changes to qualifications and national education and training curricula to meet emerging professional needs for <strong>green skills</strong> and sustainable development. Thirdly, the twin digital and green transition requires an accelerated adoption of new technologies, in particular in the highly innovative deep tech domains, across all sectors of our economy and society.</p><p>The objectives of Alliances for Innovation can be achieved by applying to one or both Lots (If interested in <strong><u>Lot 2: Alliances for Sectoral Cooperation on Skills (implementing the ‘Blueprint’)</u></strong>) please refer to the dedicated Call Web page on the EU Funding and Tenders Portal. An organisation can be involved in several proposals):</p><p><strong><u>Lot 1: Alliances for Education and Enterprises</u></strong></p><p>Alliances for Education and Enterprises are transnational, structured and result-driven projects, in which partners share common goals and work together to foster innovation, new skills, a sense of initiative and entrepreneurial mind-sets.</p><p>They aim to foster innovation in higher education, vocational education and training, enterprises and the broader socio-economic environment. This includes confronting societal and economic challenges such as climate change, changing demographics, digitisation, the emergence of new, disruptive (deep tech) technologies such as artificial intelligence and rapid employment changes through social innovation and community resilience as well as labour market innovation.</p><p>Alliances for Education and Enterprises bring together enterprises and both higher education and vocational training providers to work together in partnership. Operating within one economic sector or several different economic sectors, they create reliable and sustainable relations and demonstrate their innovative and transnational character in all aspects. While each partnership must include at least one VET and one higher education organisation, they can address either both or one of these educational fields. The cooperation between VET and higher education organisations should be relevant and should benefit both sectors.</p>",
+    "conditions": "<div class=\"eui-u-mt-l>\"><h4>Conditions</h4><div><h4>1. Admissibility Conditions: Proposal page limit and layout</h4><div class=\"eui-u-mt-s\"><p>described in the <u><a href=\"https://erasmus-plus.ec.europa.eu/erasmus-programme-guide\" rel=\"noopener noreferrer\" target=\"_blank\">ERASMUS+ Programme Guide 2025</a></u>.</p><p><strong>Proposal page limits and layout:</strong> Page limit for the Part B Technical Description of the Application Form is 120 pages for both Lots/Topics Education_Enterprise and Blueprint. Within this 120 pages limit, the list of relevant previous projects is included.</p><p>Layout as described in the Important Notice of the Part B Technical Description of the Application Form</p></div></div><div><h4>2. Eligible Countries</h4><div class=\"eui-u-mt-s\"><p>described in the  <u><a href=\"https://erasmus-plus.ec.europa.eu/erasmus-programme-guide\" rel=\"noopener noreferrer\" target=\"_blank\">ERASMUS+ Programme Guide 2025</a></u>.</p></div></div><div><h4>3. Other Eligible Conditions</h4><div class=\"eui-u-mt-s\"><p>described in the <u><a href=\"https://erasmus-plus.ec.europa.eu/erasmus-programme-guide\" rel=\"noopener noreferrer\" target=\"_blank\">ERASMUS+ Programme Guide 2025</a></u>.</p></div></div><div><h4>4. Financial and operational capacity and exclusion</h4><div class=\"eui-u-mt-s\"><p>described in the <u><a href=\"https://erasmus-plus.ec.europa.eu/erasmus-programme-guide\" rel=\"noopener noreferrer\" target=\"_blank\">ERASMUS+ Programme Guide 2025</a></u>.</p></div></div><div><h4>5a. Evaluation and award: Submission and evaluation processes</h4><div class=\"eui-u-mt-s\"><p>described in the <u><a href=\"https://erasmus-plus.ec.europa.eu/erasmus-programme-guide\" rel=\"noopener noreferrer\" target=\"_blank\">ERASMUS+ Programme Guide 2025</a></u>.</p></div></div><div><h4>5b. Evaluation and award: Award criteria, scoring and thresholds</h4><div class=\"eui-u-mt-s\"><p>Evaluation criteria, scoring, threshold and process are described in the <u><a href=\"https://erasmus-plus.ec.europa.eu/erasmus-programme-guide\" rel=\"noopener noreferrer\" target=\"_blank\">ERASMUS+ Programme Guide 2025</a></u>.</p></div></div><div><h4>5c. Evaluation and award: Indicative timeline for evaluation and grant agreement</h4><div class=\"eui-u-mt-s\"><p>described in the <u><a href=\"https://erasmus-plus.ec.europa.eu/erasmus-programme-guide\" rel=\"noopener noreferrer\" target=\"_blank\">ERASMUS+ Programme Guide 2025</a></u>.</p><p><br></p><p>Publication of the call: 28/11/2024.</p><p>Deadline for submitting applications: 6 March 2025 17:00 (Brussels time).</p><p>Evaluation period: March-July 2025.</p><p>Information to applicants:&nbsp;July 2025.</p><p>Signature of grant agreement:&nbsp;September-December 2025.</p></div></div><div><h4>6. Legal and financial set-up of the grants</h4><div class=\"eui-u-mt-s\"><p>n/a</p></div></div></div><div class=\"eui-u-mt-l\"><div class=\"eui-u-mt-s\">\n</div><h4>Call document and annexes:</h4> <div class=\"eui-u-mt-s\"><p><strong>Application form templates</strong></p><p><a href=\"https://ec.europa.eu/info/funding-tenders/opportunities/docs/2021-2027/erasmus/temp-form/af/af_erasmus-bb-lsii_en.pdf\" rel=\"noopener noreferrer\" target=\"_blank\">Standard application form (ERASMUS BB and LSII)</a></p><p><a href=\"https://ec.europa.eu/info/funding-tenders/opportunities/docs/2021-2027/erasmus/temp-form/af/detailed-budget-table_erasmus-lsii_en.xlsm\" rel=\"noopener noreferrer\" target=\"_blank\">Detailed budget table (ERASMUS LSII)</a></p><p><strong>Guidance</strong></p><p><a href=\"https://erasmus-plus.ec.europa.eu/erasmus-programme-guide\" rel=\"noopener noreferrer\" target=\"_blank\">ERASMUS Programme Guide</a></p><p><strong>Model Grant Agreements (MGA)</strong></p><p><a href=\"https://ec.europa.eu/info/funding-tenders/opportunities/docs/2021-2027/common/agr-contr/ls-mga_en.pdf\" rel=\"noopener noreferrer\" target=\"_blank\">Lump Sum MGA</a> </p></div><h4>Additional documents:</h4> <div class=\"eui-u-mt-s\"><p><a href=\"https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=OJ:C_202406983\" rel=\"noopener noreferrer\" target=\"_blank\">Call document</a></p><p><a href=\"https://erasmus-plus.ec.europa.eu/document/2025-annual-work-programme-for-the-implementation-of-erasmus-the-union-programme-for-education-training-youth-and-sport\" rel=\"noopener noreferrer\" target=\"_blank\">ERASMUS+ Work Programme</a></p><p><a href=\"https://eur-lex.europa.eu/legal-content/EN/ALL/?uri=CELEX:32021R0817\" rel=\"noopener noreferrer\" target=\"_blank\">ERASMUS Regulation 2021/817</a></p><p><a href=\"https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX:32024R2509#:~:text=Regulation%20%28EU%2c%20Euratom%29%202024/2509%20of%20the\" rel=\"noopener noreferrer\" target=\"_blank\">EU Financial Regulation 2024/2509</a></p><p><a href=\"https://ec.europa.eu/info/funding-tenders/opportunities/docs/2021-2027/common/guidance/rules-lev-lear-fca_en.pdf\" rel=\"noopener noreferrer\" target=\"_blank\">Rules for Legal Entity Validation, LEAR Appointment and Financial Capacity Assessment</a></p><p><a href=\"https://ec.europa.eu/info/funding-tenders/opportunities/docs/2021-2027/common/guidance/aga_en.pdf\" rel=\"noopener noreferrer\" target=\"_blank\">EU Grants AGA — Annotated Model Grant Agreement</a> </p><p><a href=\"https://webgate.ec.europa.eu/funding-tenders-opportunities/display/OM/Online+Manual\" rel=\"noopener noreferrer\" target=\"_blank\">Funding & Tenders Portal Online Manual</a>&nbsp;</p><p><a href=\"https://ec.europa.eu/info/funding-tenders/opportunities/docs/2021-2027/common/ftp/tc_en.pdf\" rel=\"noopener noreferrer\" target=\"_blank\">Funding &amp; Tenders Portal Terms and Conditions</a>&nbsp;</p><p><a href=\"https://ec.europa.eu/info/funding-tenders/opportunities/portal/screen/support/legalnotice\" rel=\"noopener noreferrer\" target=\"_blank\">Funding &amp; Tenders Portal Privacy Statement</a></p><p><a href=\"https://ec.europa.eu/info/funding-tenders/opportunities/docs/2021-2027/common/guidance/how-to-manage-your-lump-sum-grants_en.pdf\" rel=\"noopener noreferrer\" target=\"_blank\">How to manage your lump sum grants</a></p></div></div>",
+    "supportInfo": "<p>For help related to this call, please contact EACEA-EPLUS-ALLIANCES@ec.europa.eu</p><p><a href=\"https://ec.europa.eu/info/funding-tenders/opportunities/portal/screen/support/faq?order=DESC&pageNumber=1&amp;pageSize=10&amp;sortBy=publicationDate&amp;isExactMatch=true&amp;type=1&amp;grantCategories=p_submission_eval\" rel=\"noopener noreferrer\" target=\"_blank\">Funding &amp; Tenders Portal FAQ – Submission of proposals</a>.</p><p><a href=\"https://ec.europa.eu/info/funding-tenders/opportunities/portal/screen/support/helpdesks/contact-form\" rel=\"noopener noreferrer\" target=\"_blank\">IT Helpdesk</a> – Contact the IT helpdesk for questions such as forgotten passwords, access rights and roles, technical aspects of submission of proposals, etc.</p><p><a href=\"https://webgate.ec.europa.eu/funding-tenders-opportunities/display/OM/Online+Manual\" rel=\"noopener noreferrer\" target=\"_blank\">Online Manual</a> – Step-by-step online guide through the Portal processes from proposal preparation and evaluation to reporting on your ongoing project. Valid for all 2021-2027 programmes.</p>",
+    "sepTemplate": "<p>The submission system is planned to be opened on the date stated on the topic header.</p>",
+    "links": [
+
+    ],
+    "additionalDossiers": [
+
+    ],
+    "infoPackDossiers": [
+
+    ],
+    "callDetailsJSONItem": {
+      "latestInfos": [
+
+      ],
+      "hasForthcomingTopics": false,
+      "hasOpenTopics": false,
+      "allClosedTopics": false
+    }
+  }
+}

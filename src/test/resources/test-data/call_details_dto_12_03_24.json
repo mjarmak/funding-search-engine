@@ -1,0 +1,126 @@
+{
+  "TopicDetails": {
+    "type": 1,
+    "ccm2Id": 47308608,
+    "identifier": "CEF-T-2024-SAFEMOBGEN-EXTBORDER-WORKS",
+    "title": "Adapting the transport infrastructure for Union external border checks purposes – studies, works or mixed",
+    "publicationDateLong": 1727128800000,
+    "callIdentifier": "CEF-T-2024-SAFEMOBGEN",
+    "callTitle": "CEF 2 Transport - Actions related to safe and secure mobility - General envelope",
+    "callccm2Id": 47308699,
+    "allowPartnerSearch": true,
+    "frameworkProgramme": {
+      "id": 43251567,
+      "abbreviation": "CEF2027",
+      "description": "Connecting Europe Facility (CEF)"
+    },
+    "programmeDivision": [
+      {
+        "id": 43251575,
+        "abbreviation": "CEF-2.1.1",
+        "description": "General"
+      }
+    ],
+    "topicMGAs": [
+      {
+        "id": 43249539,
+        "abbreviation": "CEF-AG",
+        "description": "CEF Action Grant Budget-Based"
+      }
+    ],
+    "keywords": [
+
+    ],
+    "sme": false,
+    "actions": [
+      {
+        "status": {
+          "id": 31094502,
+          "abbreviation": "Open",
+          "description": "Open"
+        },
+        "types": [
+          {
+            "typeOfAction": "CEF-INFRA CEF Infrastructure Projects",
+            "typeOfMGA": [
+              {
+                "id": 43249539,
+                "abbreviation": "CEF-AG",
+                "description": "CEF Action Grant Budget-Based"
+              }
+            ]
+          }
+        ],
+        "plannedOpeningDate": "1727128800000",
+        "submissionProcedure": {
+
+        },
+        "deadlineDates": [
+          "1737414000000"
+        ]
+      }
+    ],
+    "latestInfos": [
+      {
+        "approvalDate": "",
+        "lastChangeDate": "2024-09-24T00:01:00.215",
+        "content": "The submission session is now available for: CEF-T-2024-SAFEMOBGEN-PARKINGS-WORKS, CEF-T-2024-SAFEMOBGEN-EXTBORDER-WORKS, CEF-T-2024-SAFEMOBGEN-RESILIENCE-WORKS"
+      }
+    ],
+    "budgetOverviewJSONItem": {
+      "budgetTopicActionMap": {
+        "106086": {
+          "action": "CEF-T-2024-SAFEMOBGEN-PARKINGS-WORKS - CEF-INFRA CEF Infrastructure Projects",
+          "plannedOpeningDate": "1727128800000",
+          "deadlineModel": "single-stage",
+          "deadlineDates": [
+            "1737414000000"
+          ],
+          "budgetYearMap": {
+            "2024": "160000000"
+          },
+          "expectedGrants": 0,
+          "minContribution": 0,
+          "maxContribution": 0
+        }
+      },
+      "budgetYearsColumns": [
+        "2024"
+      ]
+    },
+    "description": "<span class=\"topicdescriptionkind\">Objective:</span><p>The objective is to modernise transport infrastructure on the TEN-T network with the purpose of accelerating external border checks.</p><span class=\"topicdescriptionkind\">Scope:</span><p>Studies and / or works related to:</p><p>• projects aiming to facilitate traffic flows for land and waterborne transport modes at border control areas at the Union external border of the TEN-T network. The projects, targeting only the transport infrastructure, will inter alia improve the connections to the border crossing points, and parking lines and spaces related to the border controls.</p><p>The upgrade of parking spaces for trucks, of safe and secure waiting areas, of road lane capacity from the parking spaces to the border control points and between them can be supported. Projects may also concern the enhancement of an existing terminal if the applicants demonstrate that the project would facilitate traffic flows at the EU external border control area.</p><p>Border check equipment and facilities cannot be supported, in principle, as a stand-alone project. However, certain border check equipment, such as smart IT solutions which facilitate and/or accelerate border checks and alleviate congestion at border crossing points, or fixed devices integrated into the transport infrastructure, may be supported in case it forms part of a wider project concerning the adaptation of transport infrastructure.</p><p>Buildings, storage and warehouse facilities, phytosanitary stations and parking facilities for border officers cannot be supported.</p><p>Where relevant, coordination with relevant Interreg IPA-CBC (Instrument for Pre-accession Assistance - Cross Border Cooperation) programmes should be ensured by the applicants.</p>",
+    "conditions": "<div class=\"eui-u-mt-l>\"><h4>Conditions</h4><div><h4>1. Admissibility Conditions: Proposal page limit and layout</h4><div class=\"eui-u-mt-s\"><p>described in section 5 of the <u><a href=\"https://ec.europa.eu/info/funding-tenders/opportunities/docs/2021-2027/cef/wp-call/2024/call-fiche_cef-t-2024-safemobgen_en.pdf\" rel=\"noopener noreferrer\" target=\"_blank\">call document</a></u>.</p></div></div><div><h4>2. Eligible Countries</h4><div class=\"eui-u-mt-s\"><p>described in section 6 of the <u><a href=\"https://ec.europa.eu/info/funding-tenders/opportunities/docs/2021-2027/cef/wp-call/2024/call-fiche_cef-t-2024-safemobgen_en.pdf\" rel=\"noopener noreferrer\" target=\"_blank\">call document</a></u>.</p></div></div><div><h4>3. Other Eligible Conditions</h4><div class=\"eui-u-mt-s\"><p>described in section 6 of the <u><a href=\"https://ec.europa.eu/info/funding-tenders/opportunities/docs/2021-2027/cef/wp-call/2024/call-fiche_cef-t-2024-safemobgen_en.pdf\" rel=\"noopener noreferrer\" target=\"_blank\">call document</a></u>.</p></div></div><div><h4>4. Financial and operational capacity and exclusion</h4><div class=\"eui-u-mt-s\"><p>described in section 7 of the <u><a href=\"https://ec.europa.eu/info/funding-tenders/opportunities/docs/2021-2027/cef/wp-call/2024/call-fiche_cef-t-2024-safemobgen_en.pdf\" rel=\"noopener noreferrer\" target=\"_blank\">call document</a></u>.</p></div></div><div><h4>5a. Evaluation and award: Submission and evaluation processes</h4><div class=\"eui-u-mt-s\"><p>described section 8 of the <u><a href=\"https://ec.europa.eu/info/funding-tenders/opportunities/docs/2021-2027/cef/wp-call/2024/call-fiche_cef-t-2024-safemobgen_en.pdf\" rel=\"noopener noreferrer\" target=\"_blank\">call document</a></u> and the <a href=\"https://ec.europa.eu/info/funding-tenders/opportunities/docs/2021-2027/common/guidance/om_en.pdf\" rel=\"noopener noreferrer\" target=\"_blank\">Online Manual</a>.</p></div></div><div><h4>5b. Evaluation and award: Award criteria, scoring and thresholds</h4><div class=\"eui-u-mt-s\"><p>described in section 9 of the <u><a href=\"https://ec.europa.eu/info/funding-tenders/opportunities/docs/2021-2027/cef/wp-call/2024/call-fiche_cef-t-2024-safemobgen_en.pdf\" rel=\"noopener noreferrer\" target=\"_blank\">call document</a></u>.</p></div></div><div><h4>5c. Evaluation and award: Indicative timeline for evaluation and grant agreement</h4><div class=\"eui-u-mt-s\"><p>described in section 4 of the <u><a href=\"https://ec.europa.eu/info/funding-tenders/opportunities/docs/2021-2027/cef/wp-call/2024/call-fiche_cef-t-2024-safemobgen_en.pdf\" rel=\"noopener noreferrer\" target=\"_blank\">call document</a></u>.</p></div></div><div><h4>6. Legal and financial set-up of the grants</h4><div class=\"eui-u-mt-s\"><p>described in section 10 of the <u><a href=\"https://ec.europa.eu/info/funding-tenders/opportunities/docs/2021-2027/cef/wp-call/2024/call-fiche_cef-t-2024-safemobgen_en.pdf\" rel=\"noopener noreferrer\" target=\"_blank\">call document</a></u>.</p></div></div></div><div class=\"eui-u-mt-l\"><div class=\"eui-u-mt-s\"><p><u><a href=\"https://ec.europa.eu/info/funding-tenders/opportunities/docs/2021-2027/cef/wp-call/2024/call-fiche_cef-t-2024-safemobgen_en.pdf\" rel=\"noopener noreferrer\" target=\"_blank\">CEF-T-2024-SAFEMOBGEN</a></u></p></div><h4>Call document and annexes:</h4> <div class=\"eui-u-mt-s\"><p><u><a href=\"https://ec.europa.eu/info/funding-tenders/opportunities/docs/2021-2027/cef/wp-call/2024/call-fiche_cef-t-2024-safemobgen_en.pdf\" rel=\"noopener noreferrer\" target=\"_blank\">CEF-T-2024-SAFEMOBGEN</a></u></p><p><br></p><p><strong>Application form and annexes:</strong></p><p><em>Proposals (including annexes and supporting documents) must be submitted using the forms provided inside the Submission System (NOT the documents available on the Topic page - these are only for information).</em></p><p><em><a href=\"https://ec.europa.eu/info/funding-tenders/opportunities/docs/2021-2027/cef/temp-form/af/af_cef-t_en.pdf\" rel=\"noopener noreferrer\" target=\"_blank\">Application form (Part A and B)</a></em></p><p><em><a href=\"https://ec.europa.eu/info/funding-tenders/opportunities/docs/2021-2027/cef/temp-form/af/detailed-budget-table-per-wp_cef_en.xlsx\" rel=\"noopener noreferrer\" target=\"_blank\">Detailed budget table per WP</a></em></p><p><em><a href=\"https://ec.europa.eu/info/funding-tenders/opportunities/docs/2021-2027/cef/temp-form/af/timetable-gantt-chart_cef_en.docx\" rel=\"noopener noreferrer\" target=\"_blank\">Timetable (Gantt Chart)</a></em></p><p><em><a href=\"https://ec.europa.eu/info/funding-tenders/opportunities/docs/2021-2027/cef/temp-form/af/letter-of-support-ms-agreement_cef_en.docx\" rel=\"noopener noreferrer\" target=\"_blank\">Letter of support (MS agreement)</a></em></p><p><em><a href=\"https://ec.europa.eu/info/funding-tenders/opportunities/docs/2021-2027/cef/temp-form/af/environmental-compliance-file_cef-t-cef-e_en.docx\" rel=\"noopener noreferrer\" target=\"_blank\">Environmental compliance file</a></em></p><p><em><a href=\"https://ec.europa.eu/info/funding-tenders/opportunities/docs/2021-2027/cef/temp-form/af/full-cba-cash-flow-template_cef-t_en.xlsx\" rel=\"noopener noreferrer\" target=\"_blank\">Full CBA cash flow template</a></em></p><p><em><a href=\"https://ec.europa.eu/info/funding-tenders/opportunities/docs/2021-2027/cef/temp-form/af/simplified-cba-calculator_cef-t_en.xlsm\" rel=\"noopener noreferrer\" target=\"_blank\">Simplified CBA calculator</a></em></p></div><h4>Additional documents:</h4> <div class=\"eui-u-mt-s\"><p><em><a href=\"https://eur-lex.europa.eu/legal-content/EN/ALL/?uri=uriserv:OJ.L_.2021.249.01.0038.01.ENG\" rel=\"noopener noreferrer\" target=\"_blank\">CEF Regulation 2021/1153</a></em></p><p><em><a href=\"https://eur-lex.europa.eu/eli/reg/2024/1679/oj\" rel=\"noopener noreferrer\" target=\"_blank\">TEN-T Regulation 1679/2024</a></em></p><p><em><a href=\"https://eur-lex.europa.eu/legal-content/EN/ALL/?uri=CELEX:32018R1046&qid=1535046024012\" rel=\"noopener noreferrer\" target=\"_blank\">EU Financial Regulation 2018/1046</a></em></p><p><em><a href=\"https://transport.ec.europa.eu/transport-themes/infrastructure-and-investment/connecting-europe-facility/reference-documents-work-programmes-selection-decisions_en\" rel=\"noopener noreferrer\" target=\"_blank\">Amended CEF-Transport Multi-Annual Work Programme 2021-2027 - 25 July 2023</a></em></p><p><em><a href=\"https://ec.europa.eu/info/funding-tenders/opportunities/docs/2021-2027/cef/guidance/cinea-guidance-on-economic-appraisal_cef-t_en.pdf\" rel=\"noopener noreferrer\" target=\"_blank\">CINEA Guide for Economic Appraisal for CEF Projects</a></em></p><p><em><a href=\"https://ec.europa.eu/regional_policy/en/information/publications/guides/2014/guide-to-cost-benefit-analysis-of-investment-projects-for-cohesion-policy-2014-2020\" rel=\"noopener noreferrer\" target=\"_blank\">DG REGIO Guide to Cost-Benefit Analysis of Investment Projects</a></em></p><p><em><a href=\"https://ec.europa.eu/regional_policy/en/information/publications/guides/2021/economic-appraisal-vademecum-2021-2027-general-principles-and-sector-applications\" rel=\"noopener noreferrer\" target=\"_blank\">DG REGIO CBA Economic Appraisal Vademecum</a> </em></p><p><em><a href=\"https://ec.europa.eu/info/funding-tenders/opportunities/docs/2021-2027/cef/agr-contr/mga_cef_en.pdf\" rel=\"noopener noreferrer\" target=\"_blank\">CEF Model Grant Agreement MGA</a></em></p><p><em><a href=\"https://ec.europa.eu/info/funding-tenders/opportunities/docs/2021-2027/common/guidance/unit-cost-decision-sme-owners-natural-persons_en.pdf\" rel=\"noopener noreferrer\" target=\"_blank\">Decision on unit costs for SME owners</a></em></p><p><em><a href=\"https://ec.europa.eu/info/funding-tenders/opportunities/docs/2021-2027/cef/guidance/unit-cost-decision-average-personnel-costs_cef_en.pdf\" rel=\"noopener noreferrer\" target=\"_blank\">Decision on unit costs for personnel (usual cost accounting practices)</a></em></p><p><br></p></div></div>",
+    "supportInfo": "<p>For help related to this call, please contact <a href=\"mailto:CINEA-CEF-TRANSPORT-CALLS@ec.europa.eu\" rel=\"noopener noreferrer\" target=\"_blank\">CINEA-CEF-TRANSPORT-CALLS@ec.europa.eu</a></p><p><a href=\"https://ec.europa.eu/info/funding-tenders/opportunities/portal/screen/support/faq?order=DESC&pageNumber=1&amp;pageSize=10&amp;sortBy=publicationDate&amp;isExactMatch=true&amp;type=1&amp;grantCategories=p_submission_eval\" rel=\"noopener noreferrer\" target=\"_blank\">Funding &amp; Tenders Portal FAQ – Submission of proposals</a>.</p><p><a href=\"https://ec.europa.eu/info/funding-tenders/opportunities/portal/screen/support/helpdesks/contact-form\" rel=\"noopener noreferrer\" target=\"_blank\">IT Helpdesk</a> – Contact the IT helpdesk for questions such as forgotten passwords, access rights and roles, technical aspects of submission of proposals, etc.</p><p><a href=\"https://webgate.ec.europa.eu/funding-tenders-opportunities/display/OM/Online+Manual\" rel=\"noopener noreferrer\" target=\"_blank\">Online Manual</a> – Step-by-step online guide through the Portal processes from proposal preparation and evaluation to reporting on your ongoing project. Valid for all 2021-2027 programmes.</p>",
+    "sepTemplate": "<p>To access the Electronic Submission Service, please click on the submission-button next to the <strong>type of action</strong> and the <strong>type of model grant agreement</strong> that corresponds to your proposal. You will then be asked to confirm your choice, as it cannot be changed in the submission system. Upon confirmation, you will be linked to the correct entry point.</p><p>To access existing draft proposals for this topic, please login to the Funding & Tenders Portal and select the My Proposals page of the My Area section.</p>",
+    "links": [
+      {
+        "callIdentifier": "CEF-T-2024-SAFEMOBGEN",
+        "criterionCode": "CEF-INFRA",
+        "criterionDescription": "CEF Infrastructure Projects",
+        "url": "https://ec.europa.eu/research/participants/submission/manage/screen/submission/create-draft/38179?topic=CEF-T-2024-SAFEMOBGEN-EXTBORDER-WORKS",
+        "startDate": "1727128800000",
+        "endDate": "1737414000000",
+        "mgaDescription": "CEF Action Grant Budget-Based",
+        "mgaCode": "CEF-AG"
+      }
+    ],
+    "additionalDossiers": [
+
+    ],
+    "infoPackDossiers": [
+
+    ],
+    "callDetailsJSONItem": {
+      "latestInfos": [
+        {
+          "approvalDate": "",
+          "lastChangeDate": "2024-09-24T00:01:00.215",
+          "content": "The submission session is now available for: CEF-T-2024-SAFEMOBGEN-PARKINGS-WORKS, CEF-T-2024-SAFEMOBGEN-EXTBORDER-WORKS, CEF-T-2024-SAFEMOBGEN-RESILIENCE-WORKS"
+        }
+      ],
+      "hasForthcomingTopics": false,
+      "hasOpenTopics": false,
+      "allClosedTopics": false
+    }
+  }
+}
