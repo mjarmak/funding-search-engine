@@ -12,6 +12,8 @@ public interface CSVMapper {
             EUCallDTO item,
             EUCallDetailDTO callDetailDTO
     ) {
+        String submissionProcedure = item.getDeadlineModel() != null ? item.getDeadlineModel() : callDetailDTO.getSubmissionProcedure();
+
         return CallCSVDetails.builder()
                 .identifier(item.getIdentifier())
                 .title(callDetailDTO.getTitle(item.getTitle()))
@@ -20,8 +22,8 @@ public interface CSVMapper {
                 .destinationDetails(callDetailDTO.getDestinationDetails())
                 .actionType(callDetailDTO.getActionType())
 
-                .deadline(item.getDeadlineDate(callDetailDTO.getSubmissionProcedure()))
-                .deadline2(item.getDeadlineDate2(callDetailDTO.getSubmissionProcedure()))
+                .deadline(item.getDeadlineDate(submissionProcedure))
+                .deadline2(item.getDeadlineDate2(submissionProcedure))
 
                 .startDate(item.getStartDate())
                 .budgetMin(callDetailDTO.getMinBudget())
@@ -31,7 +33,7 @@ public interface CSVMapper {
                 .reference(item.getReference())
 
                 .typeOfMGADescription(callDetailDTO.getTypeOfMGADescription())
-                .submissionProcedure(callDetailDTO.getSubmissionProcedure())
+                .submissionProcedure(submissionProcedure)
 
                 .beneficiaryAdministration(callDetailDTO.getBeneficiaryAdministration())
                 .furtherInformation(callDetailDTO.getFurtherInformation())

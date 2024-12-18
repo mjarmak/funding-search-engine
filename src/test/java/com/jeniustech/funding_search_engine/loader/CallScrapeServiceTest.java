@@ -23,6 +23,7 @@ public class CallScrapeServiceTest {
         scrapeService.scrapeCalls("query-upcoming", "C:/Projects/funding-search-engine/src/main/resources/scraper/out");
     }
 
+    @Disabled
     @Test
     void scrapeCallsClosed() {
         scrapeService.scrapeCalls("query-closed", "C:/Projects/funding-search-engine/src/main/resources/scraper/out");

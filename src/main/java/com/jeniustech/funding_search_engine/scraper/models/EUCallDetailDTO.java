@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jeniustech.funding_search_engine.exceptions.MapperException;
+import jakarta.annotation.Nullable;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -32,6 +33,7 @@ public class EUCallDetailDTO {
     }
 
     @JsonIgnore
+    @Nullable
     private BudgetItem getBudget() {
         String actionString = topicDetails.identifier + " - " + getActionType();
         ObjectMapper objectMapper = new ObjectMapper();
@@ -52,11 +54,15 @@ public class EUCallDetailDTO {
                 }
             }
         }
-        throw new MapperException("Budget is not found");
+        return null;
+//        throw new MapperException("Budget is not found");
     }
 
     @JsonIgnore
     public String getMinBudget() {
+        if (getBudget() == null) {
+            return null;
+        }
         if (getBudget().minContribution != null) {
             return getBudget().minContribution;
         }
@@ -66,6 +72,9 @@ public class EUCallDetailDTO {
 
     @JsonIgnore
     public String getMaxBudget() {
+        if (getBudget() == null) {
+            return null;
+        }
         if (getBudget().maxContribution != null) {
             return getBudget().maxContribution;
         }
@@ -74,11 +83,17 @@ public class EUCallDetailDTO {
 
     @JsonIgnore
     private String getLastYearBudget() {
+        if (getBudget() == null) {
+            return null;
+        }
         return getBudget().budgetYearMap.values().stream().max(String::compareTo).orElse(null);
     }
 
     @JsonIgnore
     public Integer getNumberOfGrants() {
+        if (getBudget() == null) {
+            return null;
+        }
         return getBudget().expectedGrants;
     }
 
@@ -104,6 +119,9 @@ public class EUCallDetailDTO {
                 topicDetails.actions.get(0).submissionProcedure == null ||
                 topicDetails.actions.get(0).submissionProcedure.description == null) {
             BudgetItem budget = getBudget();
+            if (getBudget() == null) {
+                return null;
+            }
             if (budget.getDeadlineModel() != null) {
                 return budget.getDeadlineModel();
             }

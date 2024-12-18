@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestTemplate;
 
 import java.io.BufferedWriter;
@@ -93,7 +94,7 @@ public class CallScrapeService {
                     CallCSVDetails details;
                     if (item.hasJsonUrl()) {
                         try {
-                            EUCallDetailDTO callDetails = getDetails(item.getJsonUrl());
+                            EUCallDetailDTO callDetails = getDetails(item.getJsonUrl(), true);
                             try {
                                 details = CSVMapper.map(item, callDetails);
                             } catch (Exception e) {
@@ -155,7 +156,7 @@ public class CallScrapeService {
         );
     }
 
-    private EUCallDetailDTO getDetails(String url) throws MismatchedInputException {
+    private EUCallDetailDTO getDetails(String url, boolean retry) throws MismatchedInputException {
         try {
 //            log.debug("Getting details from: {}", url);
             return restTemplateDetails.getForObject(url, EUCallDetailDTO.class);
@@ -165,7 +166,20 @@ public class CallScrapeService {
             } else {
                 log.error("Failed to get details from: {}", url);
             }
-            throw new SearchException("Failed to get details from: " + url);
+            if (retry) {
+                log.debug("Retrying...");
+                return getDetails(url, false);
+            } else {
+                throw new SearchException("Failed to get details from: " + url);
+            }
+        } catch (ResourceAccessException e) {
+            log.error("Failed to get details from: {}", url);
+            if (retry) {
+                log.debug("Retrying...");
+                return getDetails(url, false);
+            } else {
+                throw new SearchException("Failed to get details from: " + url);
+            }
         }
     }
 }

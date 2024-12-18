@@ -76,6 +76,63 @@ public class EUCallDetailDTOTest {
         );
 
         CallCSVDetails callCSVDetails = CSVMapper.map(callDTO, callDetails);
+        assertEquals("6000000", callCSVDetails.getBudgetMin());
+        assertEquals("6000000", callCSVDetails.getBudgetMax());
+    }
+
+    @Test
+    void CSVMapperTest_4() throws IOException {
+        ObjectMapper objectMapper = getObjectMapper();
+
+        EUCallDetailDTO callDetails = objectMapper.readValue(
+                FileUtil.readFile("test-data/call_details_dto_12_03_24.json"),
+                EUCallDetailDTO.class
+        );
+
+        EUCallDTO callDTO = objectMapper.readValue(
+                FileUtil.readFile(
+                "test-data/call_dto_12_03_24.json"),
+                EUCallDTO.class
+        );
+
+        CallCSVDetails callCSVDetails = CSVMapper.map(callDTO, callDetails);
+    }
+
+    @Test
+    void CSVMapperTest_5() throws IOException {
+        ObjectMapper objectMapper = getObjectMapper();
+
+        EUCallDetailDTO callDetails = objectMapper.readValue(
+                FileUtil.readFile("test-data/call_details_dto_12_03_24_2_pppa.json"),
+                EUCallDetailDTO.class
+        );
+
+        EUCallDTO callDTO = objectMapper.readValue(
+                FileUtil.readFile(
+                "test-data/call_dto_12_03_24_2_pppa.json"),
+                EUCallDTO.class
+        );
+
+        CallCSVDetails callCSVDetails = CSVMapper.map(callDTO, callDetails);
+    }
+
+    @Test
+    void CSVMapperTest_6() throws IOException {
+        ObjectMapper objectMapper = getObjectMapper();
+
+
+        EUCallDetailDTO callDetails = objectMapper.readValue(
+                FileUtil.readFile("test-data/call_details_dto_12_03_24_3.json"),
+                EUCallDetailDTO.class
+        );
+
+        EUCallDTO callDTO = objectMapper.readValue(
+                FileUtil.readFile(
+                "test-data/call_dto_12_03_24_3.json"),
+                EUCallDTO.class
+        );
+
+        CallCSVDetails callCSVDetails = CSVMapper.map(callDTO, callDetails);
     }
 
     @Test
