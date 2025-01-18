@@ -122,6 +122,28 @@ where user_id IN (22,26,27,28,19)
 order by date desc 
 ````
 
+
+````user subscription view
+select
+    ud.id as user_id,
+    ud.first_name || ' ' || ud.last_name as user,
+    ud.email as email,
+  CASE
+    WHEN type = 0 THEN 'trial'
+    WHEN type = 1 THEN 'individual monthly'
+    WHEN type = 2 THEN 'eu office monthly'
+    WHEN type = 3 THEN 'individual yearly'
+    WHEN type = 4 THEN 'eu office yesrly'
+    WHEN type = 5 THEN 'enterprise'
+    ELSE 'UNKNOWN' 
+  END AS subscription_type,
+sb.created_at as created_at
+from user_data ud
+left join subscription sb on sb.admin_user_id = ud.id
+order by created_at desc 
+````
+
+
 ## Back up db
 ````
 tar -czvf db_main_backup_09_11_24.tar.gz db_main
