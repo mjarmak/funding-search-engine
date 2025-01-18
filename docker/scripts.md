@@ -95,6 +95,11 @@ where o.id = 999902094;
 
 ```
 
+````postgresreadonly user
+admin_readonly
+BjVsuh____ee8277
+````
+
 
 ````log book view
 select
