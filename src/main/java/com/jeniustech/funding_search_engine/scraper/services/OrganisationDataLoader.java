@@ -285,7 +285,7 @@ public class OrganisationDataLoader {
                 .sme(SME_INDEX == -1 ? null : BooleanEnum.fromBoolean(row[SME_INDEX]))
                 .nutsCode(NUTS_CODE_INDEX == -1 ? null : valueOrDefault(row[NUTS_CODE_INDEX], null))
                 .rcn(RCN_INDEX == -1 ? null : valueOrDefault(row[RCN_INDEX], null))
-                .type(OrganisationTypeEnum.of(row[ACTIVITY_TYPE_INDEX]))
+                .type(OrganisationTypeEnum.valueOfName(row[ACTIVITY_TYPE_INDEX]))
                 .build();
 
         // set project, organisationProjectJoins
@@ -452,7 +452,7 @@ public class OrganisationDataLoader {
                 .city(city)
                 .build();
         if (isNotEmpty(country)) {
-            address.setCountry(CountryEnum.valueOf(country));
+            address.setCountry(CountryEnum.valueOfName(country));
         }
         if (isNotEmpty(street) || isNotEmpty(postCode) || isNotEmpty(city) || isNotEmpty(country)) {
             organisation.setAddress(address);

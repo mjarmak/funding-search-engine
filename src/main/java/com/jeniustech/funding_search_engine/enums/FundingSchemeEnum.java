@@ -1,10 +1,11 @@
 package com.jeniustech.funding_search_engine.enums;
 
-import com.jeniustech.funding_search_engine.exceptions.EnumException;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.List;
 
 // =UNIQUE(O:O)
+@Slf4j
 public enum FundingSchemeEnum {
     HORIZON_AG("HORIZON-AG"),
     HORIZON_CSA("HORIZON-CSA"),
@@ -193,6 +194,7 @@ public enum FundingSchemeEnum {
     STU("STU"),
     EAD("EAD"),
     CSA_LS("CSA-LS"),
+    HORIZON_EIC_ACC("HORIZON-EIC-ACC"),
     ;
 
 
@@ -214,12 +216,13 @@ public enum FundingSchemeEnum {
         if (name == null || name.isBlank()) {
             return null;
         }
-        for (FundingSchemeEnum fundingSchemeEnum : FundingSchemeEnum.values()) {
-            if (fundingSchemeEnum.name.contains(name)) {
-                return fundingSchemeEnum;
+        for (FundingSchemeEnum item : FundingSchemeEnum.values()) {
+            if (item.name.contains(name)) {
+                return item;
             }
         }
-        throw new EnumException("FundingSchemeEnum not found for name: " + name);
+        log.warn("FundingSchemeEnum not found for name: " + name);
+        return null;
     }
 
 }

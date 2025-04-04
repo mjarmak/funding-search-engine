@@ -1,7 +1,9 @@
 package com.jeniustech.funding_search_engine.enums;
 
 import com.jeniustech.funding_search_engine.util.StringUtil;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 public enum OrganisationTypeEnum {
     PUB("Public Company"), // 0
     PRC("Private Company"), // 1
@@ -25,7 +27,7 @@ public enum OrganisationTypeEnum {
     }
 
     public static String getDisplayName(String name) {
-        OrganisationTypeEnum organisationTypeEnum = of(name);
+        OrganisationTypeEnum organisationTypeEnum = OrganisationTypeEnum.valueOfName(name);
         if (organisationTypeEnum == null) {
             return null;
         }
@@ -40,10 +42,16 @@ public enum OrganisationTypeEnum {
         return name();
     }
 
-    public static OrganisationTypeEnum of(String name) {
-        if (!StringUtil.isNotEmpty(name)) {
+    public static OrganisationTypeEnum valueOfName(String name) {
+        if (name == null || name.isBlank()) {
             return null;
         }
-        return valueOf(name.toUpperCase());
+        for (OrganisationTypeEnum item : OrganisationTypeEnum.values()) {
+            if (item.getName().contains(name)) {
+                return item;
+            }
+        }
+        log.warn("OrganisationTypeEnum not found for name: " + name);
+        return null;
     }
 }

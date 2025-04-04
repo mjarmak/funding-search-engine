@@ -2,6 +2,7 @@ package com.jeniustech.funding_search_engine.dto.search;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.jeniustech.funding_search_engine.dto.LongTextDTO;
+import com.jeniustech.funding_search_engine.enums.UrlTypeEnum;
 import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -33,6 +34,8 @@ public class CallDTO extends SearchItemDTO {
     private String url;
 
     private String typeOfMGADescription;
+
+    private UrlTypeEnum urlType;
 
     private boolean favorite;
     private float score;

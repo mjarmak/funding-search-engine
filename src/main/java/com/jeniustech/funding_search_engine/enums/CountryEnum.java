@@ -1,5 +1,8 @@
 package com.jeniustech.funding_search_engine.enums;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 public enum CountryEnum {
     AU(0, "Australia", "+61", "🇦🇺"),
     CH(1, "Switzerland", "+41", "🇨🇭"),
@@ -260,6 +263,19 @@ public enum CountryEnum {
         this.displayName = displayName;
         this.phoneCode = phoneCode;
         this.emoji = emoji;
+    }
+
+    public static CountryEnum valueOfName(String name) {
+        if (name == null || name.isBlank()) {
+            return null;
+        }
+        for (CountryEnum item : CountryEnum.values()) {
+            if (item.getName().contains(name)) {
+                return item;
+            }
+        }
+        log.warn("CountryEnum not found for name: " + name);
+        return null;
     }
 
     public Integer getHierarchy() {

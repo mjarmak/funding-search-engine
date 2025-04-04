@@ -41,6 +41,7 @@ public interface CallMapper {
                 .projectNumber(call.getProjectNumber())
                 .url(isSearch ? null : call.getUrl())
                 .typeOfMGADescription(isSearch ? null : call.getTypeOfMGADescription())
+                .urlType(call.getUrlType())
                 .favorite(isFavorite)
                 .build();
     }
