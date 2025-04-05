@@ -13,6 +13,7 @@ public interface CallColumns {
     String BUDGET_MIN = "budget_min";
     String BUDGET_MAX = "budget_max";
     String PROJECT_NUMBER = "project_number";
+    String URL_TYPE = "url_type";
     String CREATED_AT = "created_date";
     String SCORE = "score";
     String SECRET = "secret";

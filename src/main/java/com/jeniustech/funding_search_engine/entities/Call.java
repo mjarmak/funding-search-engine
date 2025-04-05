@@ -207,4 +207,11 @@ public class Call {
         }
         return secret.toBoolean();
     }
+
+    public String getUrlTypeString() {
+        if (urlType != null) {
+            return urlType.name();
+        }
+        return null;
+    }
 }

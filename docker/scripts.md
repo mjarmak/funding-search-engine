@@ -1,8 +1,8 @@
 ### Run in order:
 ```
-docker build -t funding-search-engine:0.1.73 .
-docker tag funding-search-engine:0.1.73 jeniustech/funding-search-engine:0.1.73
-docker push jeniustech/funding-search-engine:0.1.73
+docker build -t funding-search-engine:0.1.8 .
+docker tag funding-search-engine:0.1.8 jeniustech/funding-search-engine:0.1.8
+docker push jeniustech/funding-search-engine:0.1.8
 
 ```
 

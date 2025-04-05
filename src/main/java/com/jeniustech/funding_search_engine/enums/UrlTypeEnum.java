@@ -28,6 +28,8 @@ public enum UrlTypeEnum {
             return COMPETITIVE_CALL;
         } else if (reference.contains("PROSPECTS")) {
             return PROSPECT;
+        } else if (reference.contains("INNOVILYSE")) {
+            return INNOVILYSE;
         } else {
             return TOPIC_DETAILS;
         }

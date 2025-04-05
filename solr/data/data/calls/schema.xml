@@ -18,6 +18,7 @@
   <field name="budget_max" type="text_general" indexed="true" stored="true" multiValued="false"/>
   <field name="project_number" type="tint" indexed="true" stored="true" multiValued="false"/>
   <field name="secret" type="boolean" indexed="true" stored="true" multiValued="false"/>
+  <field name="url_type" type="string" indexed="true" stored="true" multiValued="false"/>
 
   <!-- catch all -->
   <field name="text" type="text_en_splitting" indexed="true" stored="false" multiValued="true"/>

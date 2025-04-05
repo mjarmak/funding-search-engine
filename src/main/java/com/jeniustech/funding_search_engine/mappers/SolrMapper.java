@@ -10,6 +10,7 @@ import com.jeniustech.funding_search_engine.entities.Call;
 import com.jeniustech.funding_search_engine.entities.Organisation;
 import com.jeniustech.funding_search_engine.entities.Project;
 import com.jeniustech.funding_search_engine.enums.OrganisationTypeEnum;
+import com.jeniustech.funding_search_engine.enums.UrlTypeEnum;
 import com.jeniustech.funding_search_engine.scraper.util.ScraperStringUtil;
 import com.jeniustech.funding_search_engine.util.StringUtil;
 import org.apache.solr.common.SolrDocument;
@@ -63,6 +64,9 @@ public interface SolrMapper {
         if (StringUtil.isNotEmpty(call.getProjectNumber())) {
             document.addField(CallColumns.PROJECT_NUMBER, call.getProjectNumber());
         }
+        if (StringUtil.isNotEmpty(call.getUrlType())) {
+            document.addField(CallColumns.URL_TYPE, call.getUrlTypeString());
+        }
         if (call.getCreatedAt() != null) {
             document.addField(CallColumns.CREATED_AT, DateMapper.mapToSolrString(call.getCreatedAt()));
         } else {
@@ -106,6 +110,7 @@ public interface SolrMapper {
                 .endDate(getDateInUTC(solrDocument, CallColumns.END_DATE))
                 .endDate2(getDateInUTC(solrDocument, CallColumns.END_DATE_2))
                 .startDate(getDateInUTC(solrDocument, CallColumns.START_DATE))
+                .urlType(UrlTypeEnum.getType((String) solrDocument.getFieldValue(CallColumns.URL_TYPE)))
                 .budgetMin(NumberMapper.shortenNumber(valueOrDefault((String) solrDocument.getFieldValue(CallColumns.BUDGET_MIN), (String) solrDocument.getFieldValue(CallColumns.BUDGET_MAX))))
                 .budgetMax(NumberMapper.shortenNumber(valueOrDefault((String) solrDocument.getFieldValue(CallColumns.BUDGET_MAX), (String) solrDocument.getFieldValue(CallColumns.BUDGET_MIN))))
                 .projectNumber(getProjectNumber(solrDocument))
