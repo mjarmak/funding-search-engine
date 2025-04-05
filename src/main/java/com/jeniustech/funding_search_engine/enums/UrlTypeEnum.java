@@ -24,7 +24,10 @@ public enum UrlTypeEnum {
     }
 
     public static UrlTypeEnum getType(String reference) {
-        if (reference.contains("COMPETITIVE_CALL")) {
+        if (reference == null) {
+            return TOPIC_DETAILS;
+        }
+        else if (reference.contains("COMPETITIVE_CALL")) {
             return COMPETITIVE_CALL;
         } else if (reference.contains("PROSPECTS")) {
             return PROSPECT;
